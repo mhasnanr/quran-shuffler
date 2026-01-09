@@ -1,7 +1,7 @@
 import { Prayer, PrayerCategory, categoryLabels } from '@/types/prayer';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Minus, Plus, Lock } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PrayerConfigProps {
@@ -74,21 +74,14 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
                   key={prayer.id}
                   className={cn(
                     "flex items-center justify-between rounded-xl bg-card p-3.5 shadow-card transition-all duration-200",
-                    prayer.enabled ? "ring-1 ring-primary/10" : "opacity-50",
-                    prayer.fixed && "bg-primary/5"
+                    prayer.enabled ? "ring-1 ring-primary/10" : "opacity-50"
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    {prayer.fixed ? (
-                      <div className="flex h-5 w-9 items-center justify-center">
-                        <Lock className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                    ) : (
-                      <Switch
-                        checked={prayer.enabled}
-                        onCheckedChange={() => onToggle(prayer.id)}
-                      />
-                    )}
+                    <Switch
+                      checked={prayer.enabled}
+                      onCheckedChange={() => onToggle(prayer.id)}
+                    />
                     <div>
                       <p className="text-sm font-medium text-foreground">{prayer.name}</p>
                       <p className="font-arabic text-xs text-muted-foreground">{prayer.arabicName}</p>
