@@ -1,6 +1,7 @@
 import { DailyAssignment } from '@/types/prayer';
 import { Button } from '@/components/ui/button';
 import { Shuffle, RotateCcw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DailyScheduleProps {
   assignment: DailyAssignment | null;
@@ -9,6 +10,19 @@ interface DailyScheduleProps {
   usedCount: number;
   totalCount: number;
 }
+
+const getCategoryColor = (prayerId: string) => {
+  if (['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'].includes(prayerId)) {
+    return 'bg-primary/10 text-primary border-primary/20';
+  }
+  if (prayerId.startsWith('rawatib')) {
+    return 'bg-emerald-light/10 text-emerald-light border-emerald-light/20';
+  }
+  if (prayerId === 'witir') {
+    return 'bg-accent/20 text-accent-foreground border-accent/30';
+  }
+  return 'bg-muted text-muted-foreground border-border';
+};
 
 const DailySchedule = ({ 
   assignment, 
@@ -23,6 +37,10 @@ const DailySchedule = ({
     day: 'numeric' 
   });
 
+  const totalRakaat = assignment?.assignments.reduce(
+    (sum, a) => sum + a.rakaatSurahs.length, 0
+  ) || 0;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -31,9 +49,9 @@ const DailySchedule = ({
           <p className="text-sm text-muted-foreground">{today}</p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-muted-foreground">Pool Status</p>
+          <p className="text-xs text-muted-foreground">Surah Pool</p>
           <p className="text-sm font-medium text-foreground">
-            {totalCount - usedCount} / {totalCount} available
+            {totalCount - usedCount} / {totalCount}
           </p>
         </div>
       </div>
@@ -57,32 +75,39 @@ const DailySchedule = ({
         </div>
       ) : (
         <div className="space-y-3">
+          <div className="flex items-center justify-between rounded-xl bg-primary/5 px-4 py-2">
+            <span className="text-sm text-muted-foreground">Total rakaat today</span>
+            <span className="font-semibold text-primary">{totalRakaat} rakaat</span>
+          </div>
+
           {assignment.assignments.map((prayerAssignment, idx) => (
             <div 
               key={prayerAssignment.prayerId}
               className="animate-slide-up rounded-2xl bg-card p-4 shadow-card"
-              style={{ animationDelay: `${idx * 100}ms` }}
+              style={{ animationDelay: `${idx * 50}ms` }}
             >
               <div className="mb-3 flex items-center justify-between border-b border-border pb-2">
                 <h3 className="font-semibold text-foreground">{prayerAssignment.prayerName}</h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                <span className={cn(
+                  "rounded-full border px-2 py-0.5 text-xs font-medium",
+                  getCategoryColor(prayerAssignment.prayerId)
+                )}>
                   {prayerAssignment.rakaatSurahs.length} rakaat
                 </span>
               </div>
-              <div className="space-y-2">
+              <div className="grid gap-1.5">
                 {prayerAssignment.rakaatSurahs.map((rakaat) => (
                   <div 
                     key={`${prayerAssignment.prayerId}-${rakaat.rakaatNumber}`}
                     className="flex items-center gap-3 rounded-lg bg-muted/50 px-3 py-2"
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-foreground">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
                       {rakaat.rakaatNumber}
                     </span>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground">{rakaat.surahName}</p>
-                      <p className="font-arabic text-xs text-muted-foreground">{rakaat.arabicName}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{rakaat.surahName}</p>
                     </div>
-                    <span className="text-xs text-muted-foreground">#{rakaat.surahNumber}</span>
+                    <p className="font-arabic text-sm text-muted-foreground">{rakaat.arabicName}</p>
                   </div>
                 ))}
               </div>

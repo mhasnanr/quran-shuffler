@@ -8,14 +8,23 @@ const getInitialState = (): AppState => {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Merge with default prayers to handle new prayers added
+      const mergedPrayers = defaultPrayers.map(defaultPrayer => {
+        const storedPrayer = parsed.prayers?.find((p: Prayer) => p.id === defaultPrayer.id);
+        if (storedPrayer) {
+          return { ...defaultPrayer, enabled: storedPrayer.enabled, rakaat: storedPrayer.rakaat };
+        }
+        return defaultPrayer;
+      });
+      return { ...parsed, prayers: mergedPrayers };
     } catch {
       // Invalid stored data, return default
     }
   }
   return {
     prayers: defaultPrayers,
-    selectedJuz: [30], // Default to Juz 30
+    selectedJuz: [30],
     selectedSurahs: getSurahsByJuz([30]).map(s => s.number),
     usedSurahs: [],
     lastShuffleDate: '',
@@ -30,7 +39,6 @@ const getTodayDate = (): string => {
 export const useAppState = () => {
   const [state, setState] = useState<AppState>(getInitialState);
 
-  // Persist to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
@@ -43,7 +51,7 @@ export const useAppState = () => {
     setState(prev => ({
       ...prev,
       prayers: prev.prayers.map(p =>
-        p.id === prayerId ? { ...p, enabled: !p.enabled } : p
+        p.id === prayerId && !p.fixed ? { ...p, enabled: !p.enabled } : p
       ),
     }));
   };
@@ -51,9 +59,15 @@ export const useAppState = () => {
   const updatePrayerRakaat = (prayerId: string, rakaat: number) => {
     setState(prev => ({
       ...prev,
-      prayers: prev.prayers.map(p =>
-        p.id === prayerId ? { ...p, rakaat: Math.max(1, rakaat) } : p
-      ),
+      prayers: prev.prayers.map(p => {
+        if (p.id !== prayerId) return p;
+        
+        let newRakaat = rakaat;
+        if (p.minRakaat) newRakaat = Math.max(p.minRakaat, newRakaat);
+        if (p.maxRakaat) newRakaat = Math.min(p.maxRakaat, newRakaat);
+        
+        return { ...p, rakaat: newRakaat };
+      }),
     }));
   };
 
@@ -78,7 +92,6 @@ export const useAppState = () => {
   const shuffleForToday = (): DailyAssignment | null => {
     const today = getTodayDate();
     
-    // Check if we already have assignments for today
     const existingAssignment = state.dailyAssignments.find(a => a.date === today);
     if (existingAssignment) {
       return existingAssignment;
@@ -91,20 +104,16 @@ export const useAppState = () => {
       return null;
     }
 
-    // Get available surahs (not used recently)
     let availableSurahs = state.selectedSurahs.filter(s => !state.usedSurahs.includes(s));
     
-    // If we don't have enough surahs, reset the used list
     let newUsedSurahs = [...state.usedSurahs];
     if (availableSurahs.length < totalRakaatNeeded) {
       availableSurahs = [...state.selectedSurahs];
       newUsedSurahs = [];
     }
 
-    // Shuffle available surahs
     const shuffled = [...availableSurahs].sort(() => Math.random() - 0.5);
     
-    // Assign surahs to each rakaat
     const assignments: PrayerAssignment[] = [];
     let surahIndex = 0;
 
@@ -122,7 +131,6 @@ export const useAppState = () => {
           arabicName: surah.arabicName,
         });
         
-        // Track used surahs
         if (!newUsedSurahs.includes(surahNumber)) {
           newUsedSurahs.push(surahNumber);
         }
@@ -146,7 +154,7 @@ export const useAppState = () => {
       ...prev,
       usedSurahs: newUsedSurahs,
       lastShuffleDate: today,
-      dailyAssignments: [...prev.dailyAssignments.slice(-6), newAssignment], // Keep last 7 days
+      dailyAssignments: [...prev.dailyAssignments.slice(-6), newAssignment],
     }));
 
     return newAssignment;
