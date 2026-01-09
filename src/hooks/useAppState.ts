@@ -51,7 +51,7 @@ export const useAppState = () => {
     setState(prev => ({
       ...prev,
       prayers: prev.prayers.map(p =>
-        p.id === prayerId && !p.fixed ? { ...p, enabled: !p.enabled } : p
+        p.id === prayerId ? { ...p, enabled: !p.enabled } : p
       ),
     }));
   };
