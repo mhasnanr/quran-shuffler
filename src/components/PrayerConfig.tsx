@@ -1,7 +1,7 @@
 import { Prayer, PrayerCategory, categoryLabels } from '@/types/prayer';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PrayerConfigProps {
@@ -11,10 +11,13 @@ interface PrayerConfigProps {
 }
 
 const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) => {
-  const categories: PrayerCategory[] = ['main', 'rawatib', 'witir', 'optional'];
+  const categories: PrayerCategory[] = ['main', 'sunnah'];
+
+  // Sort prayers by order
+  const sortedPrayers = [...prayers].sort((a, b) => a.order - b.order);
 
   const getPrayersByCategory = (category: PrayerCategory) => {
-    return prayers.filter(p => p.category === category);
+    return sortedPrayers.filter(p => p.category === category);
   };
 
   const handleRakaatChange = (prayer: Prayer, delta: number) => {
@@ -52,6 +55,16 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
     return prayer.rakaat < max;
   };
 
+  const getPrayerIcon = (prayer: Prayer) => {
+    if (prayer.id === 'tahajud' || prayer.id === 'witir') {
+      return <Moon className="h-3 w-3 text-primary/60" />;
+    }
+    if (prayer.id === 'syuruq' || prayer.id === 'dhuha') {
+      return <Sun className="h-3 w-3 text-amber-500/70" />;
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       {categories.map((category) => {
@@ -82,9 +95,19 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
                       checked={prayer.enabled}
                       onCheckedChange={() => onToggle(prayer.id)}
                     />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{prayer.name}</p>
-                      <p className="font-arabic text-xs text-muted-foreground">{prayer.arabicName}</p>
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium text-foreground">{prayer.name}</p>
+                          {prayer.isRawatib && (
+                            <span className="rounded bg-emerald-light/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-light">
+                              Rawatib
+                            </span>
+                          )}
+                          {getPrayerIcon(prayer)}
+                        </div>
+                        <p className="font-arabic text-xs text-muted-foreground">{prayer.arabicName}</p>
+                      </div>
                     </div>
                   </div>
                   
