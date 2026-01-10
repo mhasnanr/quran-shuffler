@@ -32,13 +32,22 @@ export interface RakaatSurah {
   surahNumber: number;
   surahName: string;
   arabicName: string;
+  startAyah: number;
+  endAyah: number;
+}
+
+export interface SurahChunkSelection {
+  id: string; // "surahNumber-startAyah-endAyah"
+  surahNumber: number;
+  startAyah: number;
+  endAyah: number;
 }
 
 export interface AppState {
   prayers: Prayer[];
   selectedJuz: number[];
-  selectedSurahs: number[];
-  usedSurahs: number[];
+  selectedChunks: SurahChunkSelection[]; // Replaces selectedSurahs
+  usedChunks: string[]; // IDs of used chunks
   lastShuffleDate: string;
   dailyAssignments: DailyAssignment[];
 }
