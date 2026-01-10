@@ -97,8 +97,16 @@ export const useAppState = () => {
       return existingAssignment;
     }
 
-    const enabledPrayers = state.prayers.filter(p => p.enabled);
-    const totalRakaatNeeded = enabledPrayers.reduce((sum, p) => sum + p.rakaat, 0);
+    // Sort prayers by order for proper daily sequence
+    const enabledPrayers = state.prayers
+      .filter(p => p.enabled)
+      .sort((a, b) => a.order - b.order);
+    
+    // Calculate total rakaat needed (considering recitationRakaat)
+    const totalRakaatNeeded = enabledPrayers.reduce((sum, p) => {
+      const recitationCount = p.recitationRakaat ?? p.rakaat;
+      return sum + recitationCount;
+    }, 0);
     
     if (totalRakaatNeeded === 0 || state.selectedSurahs.length === 0) {
       return null;
@@ -119,8 +127,9 @@ export const useAppState = () => {
 
     for (const prayer of enabledPrayers) {
       const rakaatSurahs: RakaatSurah[] = [];
+      const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
       
-      for (let i = 0; i < prayer.rakaat; i++) {
+      for (let i = 0; i < recitationCount; i++) {
         const surahNumber = shuffled[surahIndex % shuffled.length];
         const surah = surahs.find(s => s.number === surahNumber)!;
         

@@ -1,4 +1,4 @@
-export type PrayerCategory = 'main' | 'witir' | 'rawatib' | 'optional';
+export type PrayerCategory = 'main' | 'sunnah';
 
 export interface Prayer {
   id: string;
@@ -11,6 +11,9 @@ export interface Prayer {
   minRakaat?: number;
   maxRakaat?: number;
   mustBeOdd?: boolean;
+  isRawatib?: boolean;
+  recitationRakaat?: number; // How many rakaat have surah recitation
+  order: number; // For sorting by prayer time
 }
 
 export interface DailyAssignment {
@@ -41,33 +44,37 @@ export interface AppState {
 }
 
 export const defaultPrayers: Prayer[] = [
-  // Main prayers - Can be toggled (e.g., when praying in jamaah)
-  { id: 'subuh', name: 'Subuh', arabicName: 'صبح', rakaat: 2, enabled: true, category: 'main', minRakaat: 2, maxRakaat: 2 },
-  { id: 'dzuhur', name: 'Dzuhur', arabicName: 'ظهر', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4 },
-  { id: 'ashar', name: 'Ashar', arabicName: 'عصر', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4 },
-  { id: 'maghrib', name: 'Maghrib', arabicName: 'مغرب', rakaat: 3, enabled: false, category: 'main', minRakaat: 3, maxRakaat: 3 },
-  { id: 'isya', name: 'Isya', arabicName: 'عشاء', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4 },
+  // Sunnah - Night prayers
+  { id: 'tahajud', name: 'Tahajud', arabicName: 'تهجد', rakaat: 4, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 12, order: 1 },
+  { id: 'witir', name: 'Witir', arabicName: 'وتر', rakaat: 3, enabled: true, category: 'sunnah', minRakaat: 1, maxRakaat: 11, mustBeOdd: true, order: 2 },
   
-  // Rawatib - Sunnah prayers before/after main prayers
-  { id: 'rawatib-subuh', name: 'Qabliyah Subuh', arabicName: 'قبلية الصبح', rakaat: 2, enabled: true, category: 'rawatib', minRakaat: 2, maxRakaat: 2 },
-  { id: 'rawatib-dzuhur-before', name: 'Qabliyah Dzuhur', arabicName: 'قبلية الظهر', rakaat: 2, enabled: true, category: 'rawatib', minRakaat: 2, maxRakaat: 4 },
-  { id: 'rawatib-dzuhur-after', name: "Ba'diyah Dzuhur", arabicName: 'بعدية الظهر', rakaat: 2, enabled: true, category: 'rawatib', minRakaat: 2, maxRakaat: 2 },
-  { id: 'rawatib-ashar', name: 'Qabliyah Ashar', arabicName: 'قبلية العصر', rakaat: 4, enabled: false, category: 'rawatib', minRakaat: 2, maxRakaat: 4 },
-  { id: 'rawatib-maghrib', name: "Ba'diyah Maghrib", arabicName: 'بعدية المغرب', rakaat: 2, enabled: true, category: 'rawatib', minRakaat: 2, maxRakaat: 2 },
-  { id: 'rawatib-isya', name: "Ba'diyah Isya", arabicName: 'بعدية العشاء', rakaat: 2, enabled: true, category: 'rawatib', minRakaat: 2, maxRakaat: 2 },
+  // Fajr time
+  { id: 'rawatib-subuh', name: 'Qabliyah Subuh', arabicName: 'قبلية الصبح', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 2, isRawatib: true, order: 3 },
+  { id: 'subuh', name: 'Subuh', arabicName: 'صبح', rakaat: 2, enabled: true, category: 'main', minRakaat: 2, maxRakaat: 2, order: 4 },
   
-  // Witir - Must be odd number
-  { id: 'witir', name: 'Witir', arabicName: 'وتر', rakaat: 3, enabled: true, category: 'witir', minRakaat: 1, maxRakaat: 11, mustBeOdd: true },
+  // Morning prayers
+  { id: 'syuruq', name: 'Syuruq/Isyraq', arabicName: 'شروق', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 4, order: 5 },
+  { id: 'dhuha', name: 'Dhuha', arabicName: 'ضحى', rakaat: 4, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 12, order: 6 },
   
-  // Optional prayers
-  { id: 'tahajud', name: 'Tahajud', arabicName: 'تهجد', rakaat: 4, enabled: true, category: 'optional', minRakaat: 2, maxRakaat: 12 },
-  { id: 'syuruq', name: 'Syuruq/Isyraq', arabicName: 'شروق', rakaat: 2, enabled: true, category: 'optional', minRakaat: 2, maxRakaat: 4 },
-  { id: 'dhuha', name: 'Dhuha', arabicName: 'ضحى', rakaat: 4, enabled: true, category: 'optional', minRakaat: 2, maxRakaat: 12 },
+  // Dzuhur time
+  { id: 'rawatib-dzuhur-before', name: 'Qabliyah Dzuhur', arabicName: 'قبلية الظهر', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 4, isRawatib: true, order: 7 },
+  { id: 'dzuhur', name: 'Dzuhur', arabicName: 'ظهر', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4, recitationRakaat: 2, order: 8 },
+  { id: 'rawatib-dzuhur-after', name: "Ba'diyah Dzuhur", arabicName: 'بعدية الظهر', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 2, isRawatib: true, order: 9 },
+  
+  // Ashar time
+  { id: 'rawatib-ashar', name: 'Qabliyah Ashar', arabicName: 'قبلية العصر', rakaat: 4, enabled: false, category: 'sunnah', minRakaat: 2, maxRakaat: 4, isRawatib: true, order: 10 },
+  { id: 'ashar', name: 'Ashar', arabicName: 'عصر', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4, recitationRakaat: 2, order: 11 },
+  
+  // Maghrib time
+  { id: 'maghrib', name: 'Maghrib', arabicName: 'مغرب', rakaat: 3, enabled: false, category: 'main', minRakaat: 3, maxRakaat: 3, recitationRakaat: 2, order: 12 },
+  { id: 'rawatib-maghrib', name: "Ba'diyah Maghrib", arabicName: 'بعدية المغرب', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 2, isRawatib: true, order: 13 },
+  
+  // Isya time
+  { id: 'isya', name: 'Isya', arabicName: 'عشاء', rakaat: 4, enabled: false, category: 'main', minRakaat: 4, maxRakaat: 4, recitationRakaat: 2, order: 14 },
+  { id: 'rawatib-isya', name: "Ba'diyah Isya", arabicName: 'بعدية العشاء', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 2, isRawatib: true, order: 15 },
 ];
 
 export const categoryLabels: Record<PrayerCategory, { name: string; arabicName: string; description: string }> = {
   main: { name: 'Fardhu', arabicName: 'فرض', description: 'Obligatory prayers' },
-  rawatib: { name: 'Rawatib', arabicName: 'رواتب', description: 'Sunnah before/after fardhu' },
-  witir: { name: 'Witir', arabicName: 'وتر', description: 'Odd-numbered prayer' },
-  optional: { name: 'Sunnah', arabicName: 'سنة', description: 'Optional prayers' },
+  sunnah: { name: 'Sunnah', arabicName: 'سنة', description: 'Recommended prayers' },
 };

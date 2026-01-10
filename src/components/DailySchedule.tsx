@@ -18,10 +18,8 @@ const getCategoryColor = (prayerId: string) => {
   if (prayerId.startsWith('rawatib')) {
     return 'bg-emerald-light/10 text-emerald-light border-emerald-light/20';
   }
-  if (prayerId === 'witir') {
-    return 'bg-accent/20 text-accent-foreground border-accent/30';
-  }
-  return 'bg-muted text-muted-foreground border-border';
+  // All other sunnah prayers
+  return 'bg-accent/20 text-accent-foreground border-accent/30';
 };
 
 const DailySchedule = ({ 
