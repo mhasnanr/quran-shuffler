@@ -1,8 +1,45 @@
 import { useState, useEffect } from 'react';
-import { AppState, Prayer, defaultPrayers, DailyAssignment, PrayerAssignment, RakaatSurah } from '@/types/prayer';
+import { AppState, Prayer, defaultPrayers, DailyAssignment, PrayerAssignment, RakaatSurah, SurahChunkSelection } from '@/types/prayer';
 import { surahs, getSurahsByJuz } from '@/data/quranData';
+import { generateDefaultChunks, DEFAULT_CHUNK_SIZE } from '@/types/surahSelection';
 
 const STORAGE_KEY = 'quran-shuffler-state';
+
+// Generate chunk ID
+const getChunkId = (surahNumber: number, startAyah: number, endAyah: number): string => {
+  return `${surahNumber}-${startAyah}-${endAyah}`;
+};
+
+// Generate default chunks for juz selection
+const generateChunksForJuz = (juzNumbers: number[]): SurahChunkSelection[] => {
+  const juzSurahs = getSurahsByJuz(juzNumbers);
+  const chunks: SurahChunkSelection[] = [];
+  
+  for (const surah of juzSurahs) {
+    // For short surahs (<=20 verses), use whole surah
+    if (surah.verses <= DEFAULT_CHUNK_SIZE) {
+      chunks.push({
+        id: getChunkId(surah.number, 1, surah.verses),
+        surahNumber: surah.number,
+        startAyah: 1,
+        endAyah: surah.verses,
+      });
+    } else {
+      // For longer surahs, create chunks
+      const ranges = generateDefaultChunks(surah.verses);
+      for (const range of ranges) {
+        chunks.push({
+          id: getChunkId(surah.number, range.start, range.end),
+          surahNumber: surah.number,
+          startAyah: range.start,
+          endAyah: range.end,
+        });
+      }
+    }
+  }
+  
+  return chunks;
+};
 
 const getInitialState = (): AppState => {
   const stored = localStorage.getItem(STORAGE_KEY);
@@ -17,16 +54,30 @@ const getInitialState = (): AppState => {
         }
         return defaultPrayer;
       });
+      
+      // Handle migration from old format
+      if (parsed.selectedSurahs && !parsed.selectedChunks) {
+        const defaultChunks = generateChunksForJuz(parsed.selectedJuz || [30]);
+        return {
+          ...parsed,
+          prayers: mergedPrayers,
+          selectedChunks: defaultChunks,
+          usedChunks: [],
+        };
+      }
+      
       return { ...parsed, prayers: mergedPrayers };
     } catch {
       // Invalid stored data, return default
     }
   }
+  
+  const defaultJuz = [30];
   return {
     prayers: defaultPrayers,
-    selectedJuz: [30],
-    selectedSurahs: getSurahsByJuz([30]).map(s => s.number),
-    usedSurahs: [],
+    selectedJuz: defaultJuz,
+    selectedChunks: generateChunksForJuz(defaultJuz),
+    usedChunks: [],
     lastShuffleDate: '',
     dailyAssignments: [],
   };
@@ -72,20 +123,62 @@ export const useAppState = () => {
   };
 
   const updateSelectedJuz = (juzNumbers: number[]) => {
-    const newSurahs = getSurahsByJuz(juzNumbers).map(s => s.number);
+    const newChunks = generateChunksForJuz(juzNumbers);
     setState(prev => ({
       ...prev,
       selectedJuz: juzNumbers,
-      selectedSurahs: newSurahs,
+      selectedChunks: newChunks,
+      usedChunks: [], // Reset used chunks when changing juz
     }));
   };
 
-  const toggleSurah = (surahNumber: number) => {
+  const toggleChunk = (chunkId: string) => {
     setState(prev => ({
       ...prev,
-      selectedSurahs: prev.selectedSurahs.includes(surahNumber)
-        ? prev.selectedSurahs.filter(s => s !== surahNumber)
-        : [...prev.selectedSurahs, surahNumber],
+      selectedChunks: prev.selectedChunks.some(c => c.id === chunkId)
+        ? prev.selectedChunks.filter(c => c.id !== chunkId)
+        : [...prev.selectedChunks, findChunkById(chunkId, prev.selectedJuz)].filter(Boolean) as SurahChunkSelection[],
+    }));
+  };
+
+  const findChunkById = (chunkId: string, juzNumbers: number[]): SurahChunkSelection | null => {
+    const [surahNum, startAyah, endAyah] = chunkId.split('-').map(Number);
+    const surah = surahs.find(s => s.number === surahNum);
+    if (!surah) return null;
+    return {
+      id: chunkId,
+      surahNumber: surahNum,
+      startAyah,
+      endAyah,
+    };
+  };
+
+  const updateChunkRange = (surahNumber: number, startAyah: number, endAyah: number, newStart: number, newEnd: number) => {
+    const oldId = getChunkId(surahNumber, startAyah, endAyah);
+    const newId = getChunkId(surahNumber, newStart, newEnd);
+    
+    setState(prev => ({
+      ...prev,
+      selectedChunks: prev.selectedChunks.map(c =>
+        c.id === oldId
+          ? { ...c, id: newId, startAyah: newStart, endAyah: newEnd }
+          : c
+      ),
+    }));
+  };
+
+  const selectAllChunks = () => {
+    const allChunks = generateChunksForJuz(state.selectedJuz);
+    setState(prev => ({
+      ...prev,
+      selectedChunks: allChunks,
+    }));
+  };
+
+  const deselectAllChunks = () => {
+    setState(prev => ({
+      ...prev,
+      selectedChunks: [],
     }));
   };
 
@@ -108,43 +201,45 @@ export const useAppState = () => {
       return sum + recitationCount;
     }, 0);
     
-    if (totalRakaatNeeded === 0 || state.selectedSurahs.length === 0) {
+    if (totalRakaatNeeded === 0 || state.selectedChunks.length === 0) {
       return null;
     }
 
-    let availableSurahs = state.selectedSurahs.filter(s => !state.usedSurahs.includes(s));
+    let availableChunks = state.selectedChunks.filter(c => !state.usedChunks.includes(c.id));
     
-    let newUsedSurahs = [...state.usedSurahs];
-    if (availableSurahs.length < totalRakaatNeeded) {
-      availableSurahs = [...state.selectedSurahs];
-      newUsedSurahs = [];
+    let newUsedChunks = [...state.usedChunks];
+    if (availableChunks.length < totalRakaatNeeded) {
+      availableChunks = [...state.selectedChunks];
+      newUsedChunks = [];
     }
 
-    const shuffled = [...availableSurahs].sort(() => Math.random() - 0.5);
+    const shuffled = [...availableChunks].sort(() => Math.random() - 0.5);
     
     const assignments: PrayerAssignment[] = [];
-    let surahIndex = 0;
+    let chunkIndex = 0;
 
     for (const prayer of enabledPrayers) {
       const rakaatSurahs: RakaatSurah[] = [];
       const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
       
       for (let i = 0; i < recitationCount; i++) {
-        const surahNumber = shuffled[surahIndex % shuffled.length];
-        const surah = surahs.find(s => s.number === surahNumber)!;
+        const chunk = shuffled[chunkIndex % shuffled.length];
+        const surah = surahs.find(s => s.number === chunk.surahNumber)!;
         
         rakaatSurahs.push({
           rakaatNumber: i + 1,
           surahNumber: surah.number,
           surahName: surah.name,
           arabicName: surah.arabicName,
+          startAyah: chunk.startAyah,
+          endAyah: chunk.endAyah,
         });
         
-        if (!newUsedSurahs.includes(surahNumber)) {
-          newUsedSurahs.push(surahNumber);
+        if (!newUsedChunks.includes(chunk.id)) {
+          newUsedChunks.push(chunk.id);
         }
         
-        surahIndex++;
+        chunkIndex++;
       }
 
       assignments.push({
@@ -161,7 +256,7 @@ export const useAppState = () => {
 
     setState(prev => ({
       ...prev,
-      usedSurahs: newUsedSurahs,
+      usedChunks: newUsedChunks,
       lastShuffleDate: today,
       dailyAssignments: [...prev.dailyAssignments.slice(-6), newAssignment],
     }));
@@ -169,10 +264,10 @@ export const useAppState = () => {
     return newAssignment;
   };
 
-  const resetUsedSurahs = () => {
+  const resetUsedChunks = () => {
     setState(prev => ({
       ...prev,
-      usedSurahs: [],
+      usedChunks: [],
     }));
   };
 
@@ -189,16 +284,25 @@ export const useAppState = () => {
     }));
   };
 
+  // Get all possible chunks for the selected juz (for UI)
+  const getAllPossibleChunks = () => {
+    return generateChunksForJuz(state.selectedJuz);
+  };
+
   return {
     state,
     updatePrayers,
     togglePrayer,
     updatePrayerRakaat,
     updateSelectedJuz,
-    toggleSurah,
+    toggleChunk,
+    updateChunkRange,
+    selectAllChunks,
+    deselectAllChunks,
     shuffleForToday,
-    resetUsedSurahs,
+    resetUsedChunks,
     getTodayAssignment,
     forceReshuffle,
+    getAllPossibleChunks,
   };
 };

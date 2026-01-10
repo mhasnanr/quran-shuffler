@@ -61,14 +61,17 @@ const HistoryView = ({ assignments }: HistoryViewProps) => {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {assignment.assignments.flatMap(a => 
-                a.rakaatSurahs.map(r => (
-                  <span 
-                    key={`${a.prayerId}-${r.rakaatNumber}`}
-                    className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground"
-                  >
-                    {r.surahName}
-                  </span>
-                ))
+                a.rakaatSurahs.map(r => {
+                  const showRange = r.startAyah !== r.endAyah || r.startAyah !== 1;
+                  return (
+                    <span 
+                      key={`${a.prayerId}-${r.rakaatNumber}`}
+                      className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground"
+                    >
+                      {r.surahName}{showRange && ` (${r.startAyah}-${r.endAyah})`}
+                    </span>
+                  );
+                })
               )}
             </div>
           </div>

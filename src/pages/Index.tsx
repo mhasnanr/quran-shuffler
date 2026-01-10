@@ -19,11 +19,14 @@ const Index = () => {
     togglePrayer,
     updatePrayerRakaat,
     updateSelectedJuz,
-    toggleSurah,
+    toggleChunk,
+    selectAllChunks,
+    deselectAllChunks,
     shuffleForToday,
-    resetUsedSurahs,
+    resetUsedChunks,
     getTodayAssignment,
     forceReshuffle,
+    getAllPossibleChunks,
   } = useAppState();
 
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
@@ -45,6 +48,8 @@ const Index = () => {
     }, 0);
   };
 
+  const allPossibleChunks = getAllPossibleChunks();
+
   return (
     <div className="flex min-h-screen flex-col bg-background geometric-pattern">
       <Header />
@@ -56,8 +61,8 @@ const Index = () => {
               assignment={todayAssignment}
               onShuffle={handleShuffle}
               onReshuffle={handleReshuffle}
-              usedCount={state.usedSurahs.length}
-              totalCount={state.selectedSurahs.length}
+              usedCount={state.usedChunks.length}
+              totalCount={state.selectedChunks.length}
             />
           )}
 
@@ -76,8 +81,11 @@ const Index = () => {
 
               <SurahList
                 selectedJuz={state.selectedJuz}
-                selectedSurahs={state.selectedSurahs}
-                onToggleSurah={toggleSurah}
+                selectedChunks={state.selectedChunks}
+                allPossibleChunks={allPossibleChunks}
+                onToggleChunk={toggleChunk}
+                onSelectAll={selectAllChunks}
+                onDeselectAll={deselectAllChunks}
               />
 
               <div className="rounded-xl bg-card p-4 shadow-card">
@@ -85,14 +93,14 @@ const Index = () => {
                   <div>
                     <p className="text-sm font-medium text-foreground">Reset Used Pool</p>
                     <p className="text-xs text-muted-foreground">
-                      {state.usedSurahs.length} surahs used recently
+                      {state.usedChunks.length} chunks used recently
                     </p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={resetUsedSurahs}
-                    disabled={state.usedSurahs.length === 0}
+                    onClick={resetUsedChunks}
+                    disabled={state.usedChunks.length === 0}
                   >
                     <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
                     Reset

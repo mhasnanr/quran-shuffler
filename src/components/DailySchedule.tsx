@@ -2,6 +2,7 @@ import { DailyAssignment } from '@/types/prayer';
 import { Button } from '@/components/ui/button';
 import { Shuffle, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AyahViewer from './AyahViewer';
 
 interface DailyScheduleProps {
   assignment: DailyAssignment | null;
@@ -93,21 +94,42 @@ const DailySchedule = ({
                   {prayerAssignment.rakaatSurahs.length} rakaat
                 </span>
               </div>
-              <div className="grid gap-1.5">
-                {prayerAssignment.rakaatSurahs.map((rakaat) => (
-                  <div 
-                    key={`${prayerAssignment.prayerId}-${rakaat.rakaatNumber}`}
-                    className="flex items-center gap-3 rounded-lg bg-muted/50 px-3 py-2"
-                  >
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
-                      {rakaat.rakaatNumber}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">{rakaat.surahName}</p>
+              <div className="space-y-2">
+                {prayerAssignment.rakaatSurahs.map((rakaat) => {
+                  const isFullSurah = rakaat.startAyah === 1 && rakaat.endAyah === rakaat.startAyah;
+                  const showAyahRange = rakaat.startAyah !== rakaat.endAyah || rakaat.startAyah !== 1;
+                  
+                  return (
+                    <div 
+                      key={`${prayerAssignment.prayerId}-${rakaat.rakaatNumber}`}
+                      className="rounded-lg bg-muted/50 px-3 py-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+                          {rakaat.rakaatNumber}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-foreground truncate">{rakaat.surahName}</p>
+                            {showAyahRange && (
+                              <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                {rakaat.startAyah}-{rakaat.endAyah}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <p className="font-arabic text-sm text-muted-foreground">{rakaat.arabicName}</p>
+                      </div>
+                      
+                      <AyahViewer
+                        surahNumber={rakaat.surahNumber}
+                        surahName={rakaat.surahName}
+                        startAyah={rakaat.startAyah}
+                        endAyah={rakaat.endAyah}
+                      />
                     </div>
-                    <p className="font-arabic text-sm text-muted-foreground">{rakaat.arabicName}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
