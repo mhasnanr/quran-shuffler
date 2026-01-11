@@ -77,7 +77,6 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
           <div key={category} className="space-y-3">
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-semibold text-foreground">{label.name}</h2>
-              <span className="font-arabic text-sm text-muted-foreground">{label.arabicName}</span>
               <span className="text-xs text-muted-foreground">• {label.description}</span>
             </div>
             
@@ -106,7 +105,6 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
                           )}
                           {getPrayerIcon(prayer)}
                         </div>
-                        <p className="font-arabic text-xs text-muted-foreground">{prayer.arabicName}</p>
                       </div>
                     </div>
                   </div>
