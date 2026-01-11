@@ -27,6 +27,9 @@ export const getChunkId = (surahNumber: number, startAyah: number, endAyah: numb
 // Default chunk size for long surahs
 export const DEFAULT_CHUNK_SIZE = 20;
 
+// Storage key for chunk size preference
+export const CHUNK_SIZE_STORAGE_KEY = 'quran-shuffler-chunk-size';
+
 // Generate default chunks for a surah based on verse count
 export const generateDefaultChunks = (totalVerses: number, chunkSize: number = DEFAULT_CHUNK_SIZE): AyahRange[] => {
   if (totalVerses <= chunkSize) {

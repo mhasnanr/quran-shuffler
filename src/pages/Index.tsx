@@ -6,6 +6,7 @@ import PrayerConfig from '@/components/PrayerConfig';
 import JuzSelector from '@/components/JuzSelector';
 import SurahList from '@/components/SurahList';
 import HistoryView from '@/components/HistoryView';
+import ChunkSizeConfig from '@/components/ChunkSizeConfig';
 import { useAppState } from '@/hooks/useAppState';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
@@ -16,12 +17,14 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('schedule');
   const {
     state,
+    chunkSize,
     togglePrayer,
     updatePrayerRakaat,
     updateSelectedJuz,
     toggleChunk,
     selectAllChunks,
     deselectAllChunks,
+    updateChunkSize,
     shuffleForToday,
     resetUsedChunks,
     getTodayAssignment,
@@ -77,6 +80,11 @@ const Index = () => {
               <JuzSelector
                 selectedJuz={state.selectedJuz}
                 onSelectJuz={updateSelectedJuz}
+              />
+
+              <ChunkSizeConfig
+                chunkSize={chunkSize}
+                onChunkSizeChange={updateChunkSize}
               />
 
               <SurahList
