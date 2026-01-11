@@ -118,7 +118,6 @@ const DailySchedule = ({
                             )}
                           </div>
                         </div>
-                        <p className="font-arabic text-sm text-muted-foreground">{rakaat.arabicName}</p>
                       </div>
                       
                       <AyahViewer
