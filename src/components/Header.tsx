@@ -9,7 +9,7 @@ const Header = () => {
         </div>
         <div className="text-center">
           <h1 className="text-xl font-semibold tracking-tight">Quran Shuffler</h1>
-          <p className="font-arabic text-sm opacity-90">مُرَتِّب القِرَاءَة</p>
+          <p className="text-sm opacity-90">Daily Recitation Planner</p>
         </div>
       </div>
     </header>
