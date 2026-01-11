@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AppState, Prayer, defaultPrayers, DailyAssignment, PrayerAssignment, RakaatSurah, SurahChunkSelection } from '@/types/prayer';
 import { surahs, getSurahsByJuz } from '@/data/quranData';
-import { generateDefaultChunks, DEFAULT_CHUNK_SIZE } from '@/types/surahSelection';
+import { generateDefaultChunks, CHUNK_SIZE_STORAGE_KEY, DEFAULT_CHUNK_SIZE } from '@/types/surahSelection';
 
 const STORAGE_KEY = 'quran-shuffler-state';
 
@@ -11,13 +11,13 @@ const getChunkId = (surahNumber: number, startAyah: number, endAyah: number): st
 };
 
 // Generate default chunks for juz selection
-const generateChunksForJuz = (juzNumbers: number[]): SurahChunkSelection[] => {
+const generateChunksForJuz = (juzNumbers: number[], chunkSize: number = DEFAULT_CHUNK_SIZE): SurahChunkSelection[] => {
   const juzSurahs = getSurahsByJuz(juzNumbers);
   const chunks: SurahChunkSelection[] = [];
   
   for (const surah of juzSurahs) {
-    // For short surahs (<=20 verses), use whole surah
-    if (surah.verses <= DEFAULT_CHUNK_SIZE) {
+    // For short surahs (<=chunkSize verses), use whole surah
+    if (surah.verses <= chunkSize) {
       chunks.push({
         id: getChunkId(surah.number, 1, surah.verses),
         surahNumber: surah.number,
@@ -26,7 +26,7 @@ const generateChunksForJuz = (juzNumbers: number[]): SurahChunkSelection[] => {
       });
     } else {
       // For longer surahs, create chunks
-      const ranges = generateDefaultChunks(surah.verses);
+      const ranges = generateDefaultChunks(surah.verses, chunkSize);
       for (const range of ranges) {
         chunks.push({
           id: getChunkId(surah.number, range.start, range.end),
@@ -41,8 +41,21 @@ const generateChunksForJuz = (juzNumbers: number[]): SurahChunkSelection[] => {
   return chunks;
 };
 
+const getStoredChunkSize = (): number => {
+  const stored = localStorage.getItem(CHUNK_SIZE_STORAGE_KEY);
+  if (stored) {
+    const parsed = parseInt(stored, 10);
+    if (!isNaN(parsed) && parsed >= 5 && parsed <= 50) {
+      return parsed;
+    }
+  }
+  return DEFAULT_CHUNK_SIZE;
+};
+
 const getInitialState = (): AppState => {
   const stored = localStorage.getItem(STORAGE_KEY);
+  const chunkSize = getStoredChunkSize();
+  
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
@@ -57,7 +70,7 @@ const getInitialState = (): AppState => {
       
       // Handle migration from old format
       if (parsed.selectedSurahs && !parsed.selectedChunks) {
-        const defaultChunks = generateChunksForJuz(parsed.selectedJuz || [30]);
+        const defaultChunks = generateChunksForJuz(parsed.selectedJuz || [30], chunkSize);
         return {
           ...parsed,
           prayers: mergedPrayers,
@@ -76,7 +89,7 @@ const getInitialState = (): AppState => {
   return {
     prayers: defaultPrayers,
     selectedJuz: defaultJuz,
-    selectedChunks: generateChunksForJuz(defaultJuz),
+    selectedChunks: generateChunksForJuz(defaultJuz, chunkSize),
     usedChunks: [],
     lastShuffleDate: '',
     dailyAssignments: [],
@@ -89,6 +102,7 @@ const getTodayDate = (): string => {
 
 export const useAppState = () => {
   const [state, setState] = useState<AppState>(getInitialState);
+  const [chunkSize, setChunkSizeState] = useState<number>(getStoredChunkSize);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -123,7 +137,7 @@ export const useAppState = () => {
   };
 
   const updateSelectedJuz = (juzNumbers: number[]) => {
-    const newChunks = generateChunksForJuz(juzNumbers);
+    const newChunks = generateChunksForJuz(juzNumbers, chunkSize);
     setState(prev => ({
       ...prev,
       selectedJuz: juzNumbers,
@@ -168,7 +182,7 @@ export const useAppState = () => {
   };
 
   const selectAllChunks = () => {
-    const allChunks = generateChunksForJuz(state.selectedJuz);
+    const allChunks = generateChunksForJuz(state.selectedJuz, chunkSize);
     setState(prev => ({
       ...prev,
       selectedChunks: allChunks,
@@ -181,6 +195,19 @@ export const useAppState = () => {
       selectedChunks: [],
     }));
   };
+
+  const updateChunkSize = useCallback((newSize: number) => {
+    localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
+    setChunkSizeState(newSize);
+    
+    // Regenerate chunks with new size
+    const newChunks = generateChunksForJuz(state.selectedJuz, newSize);
+    setState(prev => ({
+      ...prev,
+      selectedChunks: newChunks,
+      usedChunks: [], // Reset used chunks when changing chunk size
+    }));
+  }, [state.selectedJuz]);
 
   const shuffleForToday = (): DailyAssignment | null => {
     const today = getTodayDate();
@@ -286,11 +313,12 @@ export const useAppState = () => {
 
   // Get all possible chunks for the selected juz (for UI)
   const getAllPossibleChunks = () => {
-    return generateChunksForJuz(state.selectedJuz);
+    return generateChunksForJuz(state.selectedJuz, chunkSize);
   };
 
   return {
     state,
+    chunkSize,
     updatePrayers,
     togglePrayer,
     updatePrayerRakaat,
@@ -299,6 +327,7 @@ export const useAppState = () => {
     updateChunkRange,
     selectAllChunks,
     deselectAllChunks,
+    updateChunkSize,
     shuffleForToday,
     resetUsedChunks,
     getTodayAssignment,

@@ -1,4 +1,4 @@
-import { surahs, getSurahsByJuz } from '@/data/quranData';
+import { getSurahsByJuz } from '@/data/quranData';
 import { SurahChunkSelection } from '@/types/prayer';
 import { cn } from '@/lib/utils';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
@@ -69,13 +69,6 @@ const SurahList = ({
 
   const allSelected = selectedChunks.length === allPossibleChunks.length;
 
-  const formatAyahRange = (chunk: SurahChunkSelection, surah: typeof availableSurahs[0]) => {
-    if (chunk.startAyah === 1 && chunk.endAyah === surah.verses) {
-      return 'Full';
-    }
-    return `${chunk.startAyah}-${chunk.endAyah}`;
-  };
-
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -92,7 +85,7 @@ const SurahList = ({
         </Button>
       </div>
       
-      <div className="max-h-80 space-y-1.5 overflow-y-auto rounded-xl bg-card p-2 shadow-card">
+      <div className="max-h-80 space-y-2 overflow-y-auto rounded-xl bg-card p-3 shadow-card">
         {availableSurahs.map((surah) => {
           const surahChunks = getChunksForSurah(surah.number);
           const hasMultipleChunks = surahChunks.length > 1;
@@ -105,7 +98,7 @@ const SurahList = ({
               {/* Surah Header */}
               <div
                 className={cn(
-                  "flex w-full items-center justify-between px-3 py-2.5 text-left transition-all duration-200",
+                  "flex w-full items-center justify-between px-4 py-3 text-left transition-all duration-200 rounded-lg",
                   fullySelected
                     ? "bg-primary/10 text-primary"
                     : partiallySelected
@@ -115,10 +108,10 @@ const SurahList = ({
               >
                 <button
                   onClick={() => hasMultipleChunks ? toggleSurahExpand(surah.number) : onToggleChunk(surahChunks[0].id)}
-                  className="flex flex-1 items-center gap-3"
+                  className="flex flex-1 items-center gap-4"
                 >
                   <span className={cn(
-                    "flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium",
+                    "flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium",
                     fullySelected
                       ? "gradient-islamic text-primary-foreground"
                       : partiallySelected
@@ -136,26 +129,25 @@ const SurahList = ({
                         </span>
                       )}
                     </div>
-                    <p className="font-arabic text-xs text-muted-foreground">{surah.arabicName}</p>
                   </div>
                 </button>
                 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   {hasMultipleChunks && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-7 w-7"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleAllSurahChunks(surah.number);
                       }}
                     >
                       {fullySelected ? (
-                        <Check className="h-3.5 w-3.5 text-primary" />
+                        <Check className="h-4 w-4 text-primary" />
                       ) : (
                         <div className={cn(
-                          "h-3 w-3 rounded-sm border",
+                          "h-3.5 w-3.5 rounded-sm border",
                           partiallySelected ? "bg-primary/50 border-primary" : "border-muted-foreground"
                         )} />
                       )}
@@ -166,13 +158,13 @@ const SurahList = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-7 w-7"
                       onClick={() => toggleSurahExpand(surah.number)}
                     >
                       {isExpanded ? (
-                        <ChevronUp className="h-3.5 w-3.5" />
+                        <ChevronUp className="h-4 w-4" />
                       ) : (
-                        <ChevronDown className="h-3.5 w-3.5" />
+                        <ChevronDown className="h-4 w-4" />
                       )}
                     </Button>
                   ) : (
@@ -183,13 +175,13 @@ const SurahList = ({
 
               {/* Chunks (for multi-chunk surahs) */}
               {hasMultipleChunks && isExpanded && (
-                <div className="pl-10 pr-3 pb-2 space-y-1 bg-muted/30">
+                <div className="pl-12 pr-4 py-2 space-y-1.5 bg-muted/30">
                   {surahChunks.map((chunk) => (
                     <button
                       key={chunk.id}
                       onClick={() => onToggleChunk(chunk.id)}
                       className={cn(
-                        "flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-all",
+                        "flex w-full items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all",
                         isChunkSelected(chunk.id)
                           ? "bg-primary/10 text-primary"
                           : "bg-card hover:bg-muted text-foreground"
@@ -197,7 +189,7 @@ const SurahList = ({
                     >
                       <span>Ayah {chunk.startAyah} - {chunk.endAyah}</span>
                       {isChunkSelected(chunk.id) && (
-                        <Check className="h-3.5 w-3.5 text-primary" />
+                        <Check className="h-4 w-4 text-primary" />
                       )}
                     </button>
                   ))}
