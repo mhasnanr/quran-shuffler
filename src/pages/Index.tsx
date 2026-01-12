@@ -5,7 +5,6 @@ import DailySchedule from '@/components/DailySchedule';
 import PrayerConfig from '@/components/PrayerConfig';
 import JuzSelector from '@/components/JuzSelector';
 import SurahList from '@/components/SurahList';
-import HistoryView from '@/components/HistoryView';
 import ChunkSizeConfig from '@/components/ChunkSizeConfig';
 import PrayerGuideContent from '@/components/PrayerGuideContent';
 import { useAppState } from '@/hooks/useAppState';
@@ -21,6 +20,7 @@ const Index = () => {
     updatePrayerRakaat,
     updateSelectedJuz,
     toggleChunk,
+    toggleMandatory,
     selectAllChunks,
     deselectAllChunks,
     updateChunkSize,
@@ -93,8 +93,10 @@ const Index = () => {
               <SurahList
                 selectedJuz={state.selectedJuz}
                 selectedChunks={state.selectedChunks}
+                mandatoryChunks={state.mandatoryChunks}
                 allPossibleChunks={allPossibleChunks}
                 onToggleChunk={toggleChunk}
+                onToggleMandatory={toggleMandatory}
                 onSelectAll={selectAllChunks}
                 onDeselectAll={deselectAllChunks}
               />
@@ -121,9 +123,6 @@ const Index = () => {
             </div>
           )}
 
-          {activeTab === 'history' && (
-            <HistoryView assignments={state.dailyAssignments} />
-          )}
         </div>
       </main>
 

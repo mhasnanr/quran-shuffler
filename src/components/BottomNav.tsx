@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
-import { BookOpen, Settings, Calendar, BookOpenCheck } from 'lucide-react';
+import { BookOpen, Settings, BookOpenCheck } from 'lucide-react';
 
-export type TabType = 'guide' | 'schedule' | 'config' | 'history';
+export type TabType = 'guide' | 'schedule' | 'config';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -13,7 +13,6 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
     { id: 'guide' as TabType, label: 'Guide', icon: BookOpenCheck },
     { id: 'schedule' as TabType, label: 'Today', icon: BookOpen },
     { id: 'config' as TabType, label: 'Settings', icon: Settings },
-    { id: 'history' as TabType, label: 'History', icon: Calendar },
   ];
 
   return (
