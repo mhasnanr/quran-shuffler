@@ -22,12 +22,23 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
   useEffect(() => {
     if (isOpen && !hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
-        // Filter out bismillah (first ayah of most surahs except Al-Fatihah and At-Taubah)
+        // Filter out bismillah from first ayah of most surahs (except Al-Fatihah and At-Taubah)
         const filteredData = data.map(ayah => {
-          // Remove bismillah from the beginning of first ayah if present
           if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            const bismillahPattern = /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/;
-            const cleanedArabic = ayah.arabic.replace(bismillahPattern, '').trim();
+            // Multiple bismillah patterns to catch different variations
+            const bismillahPatterns = [
+              /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/,
+              /^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/,
+              /^بسم الله الرحمن الرحيم\s*/,
+              /^۞?\s*بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/,
+              /^۞?\s*بِسْمِ\s+ٱللَّهِ\s+ٱلرَّحْمَٰنِ\s+ٱلرَّحِيمِ\s*/,
+            ];
+            
+            let cleanedArabic = ayah.arabic;
+            for (const pattern of bismillahPatterns) {
+              cleanedArabic = cleanedArabic.replace(pattern, '').trim();
+            }
+            
             return { ...ayah, arabic: cleanedArabic || ayah.arabic };
           }
           return ayah;
