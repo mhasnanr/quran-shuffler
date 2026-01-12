@@ -200,11 +200,15 @@ export const useAppState = () => {
     localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
     setChunkSizeState(newSize);
     
-    // Regenerate chunks with new size
-    const newChunks = generateChunksForJuz(state.selectedJuz, newSize);
+    // Regenerate all possible chunks with new size, but preserve selection status
+    const newAllChunks = generateChunksForJuz(state.selectedJuz, newSize);
+    
+    // Keep only the chunks that were previously selected (by matching surah number)
+    // Since chunk boundaries change, we can't preserve exact selections
+    // Instead, just regenerate without auto-selecting all
     setState(prev => ({
       ...prev,
-      selectedChunks: newChunks,
+      // Don't change selectedChunks - user will need to re-select if they want different chunks
       usedChunks: [], // Reset used chunks when changing chunk size
     }));
   }, [state.selectedJuz]);

@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import BottomNav from '@/components/BottomNav';
+import BottomNav, { TabType } from '@/components/BottomNav';
 import DailySchedule from '@/components/DailySchedule';
 import PrayerConfig from '@/components/PrayerConfig';
 import JuzSelector from '@/components/JuzSelector';
 import SurahList from '@/components/SurahList';
 import HistoryView from '@/components/HistoryView';
 import ChunkSizeConfig from '@/components/ChunkSizeConfig';
+import PrayerGuideContent from '@/components/PrayerGuideContent';
 import { useAppState } from '@/hooks/useAppState';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
-
-type TabType = 'schedule' | 'config' | 'history';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('schedule');
@@ -59,6 +58,10 @@ const Index = () => {
       
       <main className="flex-1 overflow-y-auto px-4 pb-24 pt-6">
         <div className="mx-auto max-w-lg">
+          {activeTab === 'guide' && (
+            <PrayerGuideContent />
+          )}
+
           {activeTab === 'schedule' && (
             <DailySchedule
               assignment={todayAssignment}
