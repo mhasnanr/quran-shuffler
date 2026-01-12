@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { prayerReadings, categoryLabels, PrayerReading } from '@/data/prayerReadings';
 import { cn } from '@/lib/utils';
+import PrayerTimesCard from './PrayerTimesCard';
 
 type TranslationLang = 'id' | 'en';
 
@@ -19,6 +20,8 @@ const PrayerGuideContent = () => {
 
   return (
     <div className="space-y-6">
+      {/* Prayer Times based on Location */}
+      <PrayerTimesCard />
       {/* Translation Language Toggle */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm pb-3 -mx-4 px-4 pt-1">
         <div className="flex gap-1 p-1 bg-muted rounded-lg">
