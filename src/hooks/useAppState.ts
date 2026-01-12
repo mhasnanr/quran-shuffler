@@ -75,11 +75,16 @@ const getInitialState = (): AppState => {
           ...parsed,
           prayers: mergedPrayers,
           selectedChunks: defaultChunks,
+          mandatoryChunks: [],
           usedChunks: [],
         };
       }
       
-      return { ...parsed, prayers: mergedPrayers };
+      return { 
+        ...parsed, 
+        prayers: mergedPrayers,
+        mandatoryChunks: parsed.mandatoryChunks || [],
+      };
     } catch {
       // Invalid stored data, return default
     }
@@ -90,6 +95,7 @@ const getInitialState = (): AppState => {
     prayers: defaultPrayers,
     selectedJuz: defaultJuz,
     selectedChunks: generateChunksForJuz(defaultJuz, chunkSize),
+    mandatoryChunks: [],
     usedChunks: [],
     lastShuffleDate: '',
     dailyAssignments: [],
@@ -147,11 +153,27 @@ export const useAppState = () => {
   };
 
   const toggleChunk = (chunkId: string) => {
+    setState(prev => {
+      const isRemoving = prev.selectedChunks.some(c => c.id === chunkId);
+      return {
+        ...prev,
+        selectedChunks: isRemoving
+          ? prev.selectedChunks.filter(c => c.id !== chunkId)
+          : [...prev.selectedChunks, findChunkById(chunkId, prev.selectedJuz)].filter(Boolean) as SurahChunkSelection[],
+        // Also remove from mandatory if removing from selected
+        mandatoryChunks: isRemoving
+          ? prev.mandatoryChunks.filter(id => id !== chunkId)
+          : prev.mandatoryChunks,
+      };
+    });
+  };
+
+  const toggleMandatory = (chunkId: string) => {
     setState(prev => ({
       ...prev,
-      selectedChunks: prev.selectedChunks.some(c => c.id === chunkId)
-        ? prev.selectedChunks.filter(c => c.id !== chunkId)
-        : [...prev.selectedChunks, findChunkById(chunkId, prev.selectedJuz)].filter(Boolean) as SurahChunkSelection[],
+      mandatoryChunks: prev.mandatoryChunks.includes(chunkId)
+        ? prev.mandatoryChunks.filter(id => id !== chunkId)
+        : [...prev.mandatoryChunks, chunkId],
     }));
   };
 
@@ -193,6 +215,7 @@ export const useAppState = () => {
     setState(prev => ({
       ...prev,
       selectedChunks: [],
+      mandatoryChunks: [],
     }));
   };
 
@@ -236,15 +259,31 @@ export const useAppState = () => {
       return null;
     }
 
-    let availableChunks = state.selectedChunks.filter(c => !state.usedChunks.includes(c.id));
+    // Get mandatory chunks first (always included)
+    const mandatoryChunkObjects = state.selectedChunks.filter(c => 
+      state.mandatoryChunks.includes(c.id)
+    );
+    
+    // Get non-mandatory chunks that haven't been used
+    let availableNonMandatory = state.selectedChunks.filter(c => 
+      !state.mandatoryChunks.includes(c.id) && !state.usedChunks.includes(c.id)
+    );
     
     let newUsedChunks = [...state.usedChunks];
-    if (availableChunks.length < totalRakaatNeeded) {
-      availableChunks = [...state.selectedChunks];
+    
+    // If not enough non-mandatory chunks, reset used pool (but keep mandatory separate)
+    if (availableNonMandatory.length + mandatoryChunkObjects.length < totalRakaatNeeded) {
+      availableNonMandatory = state.selectedChunks.filter(c => 
+        !state.mandatoryChunks.includes(c.id)
+      );
       newUsedChunks = [];
     }
 
-    const shuffled = [...availableChunks].sort(() => Math.random() - 0.5);
+    // Shuffle non-mandatory chunks
+    const shuffledNonMandatory = [...availableNonMandatory].sort(() => Math.random() - 0.5);
+    
+    // Build final list: mandatory first, then shuffled non-mandatory
+    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
     
     const assignments: PrayerAssignment[] = [];
     let chunkIndex = 0;
@@ -328,6 +367,7 @@ export const useAppState = () => {
     updatePrayerRakaat,
     updateSelectedJuz,
     toggleChunk,
+    toggleMandatory,
     updateChunkRange,
     selectAllChunks,
     deselectAllChunks,

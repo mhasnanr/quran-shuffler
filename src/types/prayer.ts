@@ -47,6 +47,7 @@ export interface AppState {
   prayers: Prayer[];
   selectedJuz: number[];
   selectedChunks: SurahChunkSelection[]; // Replaces selectedSurahs
+  mandatoryChunks: string[]; // IDs of chunks that must always appear
   usedChunks: string[]; // IDs of used chunks
   lastShuffleDate: string;
   dailyAssignments: DailyAssignment[];
