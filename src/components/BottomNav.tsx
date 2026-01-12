@@ -1,8 +1,7 @@
 import { cn } from '@/lib/utils';
 import { BookOpen, Settings, Calendar, BookOpenCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-type TabType = 'schedule' | 'config' | 'history';
+export type TabType = 'guide' | 'schedule' | 'config' | 'history';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -11,6 +10,7 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const tabs = [
+    { id: 'guide' as TabType, label: 'Guide', icon: BookOpenCheck },
     { id: 'schedule' as TabType, label: 'Today', icon: BookOpen },
     { id: 'config' as TabType, label: 'Settings', icon: Settings },
     { id: 'history' as TabType, label: 'History', icon: Calendar },
@@ -43,15 +43,6 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             </button>
           );
         })}
-        
-        {/* Prayer Guide Link */}
-        <Link
-          to="/prayer-guide"
-          className="flex flex-1 flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-200 text-muted-foreground hover:text-foreground"
-        >
-          <BookOpenCheck className="h-5 w-5" />
-          <span className="text-xs font-medium">Guide</span>
-        </Link>
       </div>
     </nav>
   );

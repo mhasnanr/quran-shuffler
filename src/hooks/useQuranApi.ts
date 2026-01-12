@@ -94,9 +94,23 @@ export const useQuranApi = () => {
         const indonesianAyah = indonesianData.data.ayahs.find((a: Ayah) => a.numberInSurah === i);
         
         if (arabicAyah) {
+          let arabicText = arabicAyah.text;
+          
+          // Remove bismillah from first ayah of surahs (except Al-Fatihah:1 and At-Taubah:9)
+          if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
+            // Multiple patterns for bismillah variations
+            arabicText = arabicText
+              .replace(/^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u, '')
+              .replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/u, '')
+              .replace(/^بسم الله الرحمن الرحيم\s*/u, '')
+              .replace(/^۞?\s*بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/u, '')
+              .replace(/^۞?\s*بِسْمِ\s+ٱللَّهِ\s+ٱلرَّحْمَٰنِ\s+ٱلرَّحِيمِ\s*/u, '')
+              .trim();
+          }
+          
           result.push({
             numberInSurah: i,
-            arabic: arabicAyah.text,
+            arabic: arabicText,
             english: englishAyah?.text || '',
             indonesian: indonesianAyah?.text || '',
           });
