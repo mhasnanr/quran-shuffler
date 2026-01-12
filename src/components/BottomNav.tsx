@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
-import { BookOpen, Settings, Calendar } from 'lucide-react';
+import { BookOpen, Settings, Calendar, BookOpenCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 type TabType = 'schedule' | 'config' | 'history';
 
@@ -42,6 +43,15 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             </button>
           );
         })}
+        
+        {/* Prayer Guide Link */}
+        <Link
+          to="/prayer-guide"
+          className="flex flex-1 flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-200 text-muted-foreground hover:text-foreground"
+        >
+          <BookOpenCheck className="h-5 w-5" />
+          <span className="text-xs font-medium">Guide</span>
+        </Link>
       </div>
     </nav>
   );
