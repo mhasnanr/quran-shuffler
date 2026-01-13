@@ -20,14 +20,22 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
     return sortedPrayers.filter(p => p.category === category);
   };
 
+  // Determine increment step: sunnah prayers (except witir) use 2, others use 1
+  const getIncrementStep = (prayer: Prayer) => {
+    if (prayer.mustBeOdd) return 2; // Witir
+    if (prayer.category === 'sunnah') return 2; // All sunnah prayers increment by 2
+    return 1;
+  };
+
   const handleRakaatChange = (prayer: Prayer, delta: number) => {
-    let newRakaat = prayer.rakaat + delta;
+    const step = getIncrementStep(prayer);
+    let newRakaat = prayer.rakaat + (delta * step);
     
     // Clamp to min/max
     if (prayer.minRakaat) newRakaat = Math.max(prayer.minRakaat, newRakaat);
     if (prayer.maxRakaat) newRakaat = Math.min(prayer.maxRakaat, newRakaat);
     
-    // If must be odd, skip even numbers
+    // If must be odd, ensure odd number
     if (prayer.mustBeOdd && newRakaat % 2 === 0) {
       newRakaat += delta > 0 ? 1 : -1;
       if (prayer.minRakaat) newRakaat = Math.max(prayer.minRakaat, newRakaat);
@@ -40,19 +48,15 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
   const canDecrease = (prayer: Prayer) => {
     if (!prayer.enabled) return false;
     const min = prayer.minRakaat || 1;
-    if (prayer.mustBeOdd) {
-      return prayer.rakaat > min && (prayer.rakaat - 2) >= min;
-    }
-    return prayer.rakaat > min;
+    const step = getIncrementStep(prayer);
+    return (prayer.rakaat - step) >= min;
   };
 
   const canIncrease = (prayer: Prayer) => {
     if (!prayer.enabled) return false;
     const max = prayer.maxRakaat || 99;
-    if (prayer.mustBeOdd) {
-      return (prayer.rakaat + 2) <= max;
-    }
-    return prayer.rakaat < max;
+    const step = getIncrementStep(prayer);
+    return (prayer.rakaat + step) <= max;
   };
 
   const getPrayerIcon = (prayer: Prayer) => {
@@ -116,7 +120,7 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 rounded-full"
-                          onClick={() => handleRakaatChange(prayer, prayer.mustBeOdd ? -2 : -1)}
+                          onClick={() => handleRakaatChange(prayer, -1)}
                           disabled={!canDecrease(prayer)}
                         >
                           <Minus className="h-3 w-3" />
@@ -128,7 +132,7 @@ const PrayerConfig = ({ prayers, onToggle, onUpdateRakaat }: PrayerConfigProps) 
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 rounded-full"
-                          onClick={() => handleRakaatChange(prayer, prayer.mustBeOdd ? 2 : 1)}
+                          onClick={() => handleRakaatChange(prayer, 1)}
                           disabled={!canIncrease(prayer)}
                         >
                           <Plus className="h-3 w-3" />

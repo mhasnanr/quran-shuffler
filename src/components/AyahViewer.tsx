@@ -109,16 +109,16 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
             <div className="space-y-4">
               {ayahs.map((ayah) => (
                 <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
-                  <div className="flex items-start gap-2">
+                  <div className="flex items-start justify-end gap-2">
+                    <p className="font-arabic text-right text-base leading-loose text-foreground flex-1" dir="rtl">
+                      {ayah.arabic}
+                    </p>
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
                       {ayah.numberInSurah}
                     </span>
-                    <p className="font-arabic text-right text-base leading-loose text-foreground" dir="rtl">
-                      {ayah.arabic}
-                    </p>
                   </div>
                   
-                  <div className="pl-7">
+                  <div className="text-right">
                     <p className="text-xs leading-relaxed text-muted-foreground">
                       {translationLang === 'id' ? ayah.indonesian : ayah.english}
                     </p>
