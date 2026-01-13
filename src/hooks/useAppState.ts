@@ -103,7 +103,12 @@ const getInitialState = (): AppState => {
 };
 
 const getTodayDate = (): string => {
-  return new Date().toISOString().split('T')[0];
+  // Use local timezone for date
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 export const useAppState = () => {
@@ -143,13 +148,24 @@ export const useAppState = () => {
   };
 
   const updateSelectedJuz = (juzNumbers: number[]) => {
-    const newChunks = generateChunksForJuz(juzNumbers, chunkSize);
-    setState(prev => ({
-      ...prev,
-      selectedJuz: juzNumbers,
-      selectedChunks: newChunks,
-      usedChunks: [], // Reset used chunks when changing juz
-    }));
+    // Don't auto-select all chunks when changing juz
+    // Instead, keep only chunks that are still valid for the new juz selection
+    const newAllPossibleChunks = generateChunksForJuz(juzNumbers, chunkSize);
+    const newChunkIds = new Set(newAllPossibleChunks.map(c => c.id));
+    
+    setState(prev => {
+      // Keep only the chunks that exist in the new juz selection
+      const validChunks = prev.selectedChunks.filter(c => newChunkIds.has(c.id));
+      const validMandatory = prev.mandatoryChunks.filter(id => newChunkIds.has(id));
+      
+      return {
+        ...prev,
+        selectedJuz: juzNumbers,
+        selectedChunks: validChunks,
+        mandatoryChunks: validMandatory,
+        usedChunks: [], // Reset used chunks when changing juz
+      };
+    });
   };
 
   const toggleChunk = (chunkId: string) => {

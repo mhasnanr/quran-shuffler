@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { DailyAssignment } from '@/types/prayer';
+import { DailyAssignment, PrayerAssignment } from '@/types/prayer';
 import { Button } from '@/components/ui/button';
-import { Shuffle, RotateCcw, Check, CheckCircle2 } from 'lucide-react';
+import { Shuffle, RotateCcw, Check, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AyahViewer from './AyahViewer';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface DailyScheduleProps {
   assignment: DailyAssignment | null;
@@ -24,6 +25,25 @@ const getCategoryColor = (prayerId: string) => {
 };
 
 const getStorageKey = (date: string) => `completed-prayers-${date}`;
+const getRakaatStorageKey = (date: string) => `completed-rakaat-${date}`;
+
+// Helper to split rakaat into rounds of 2 (or 2+1 for odd)
+const splitIntoRounds = (totalRakaat: number): number[] => {
+  const rounds: number[] = [];
+  let remaining = totalRakaat;
+  
+  while (remaining > 0) {
+    if (remaining === 1) {
+      rounds.push(1);
+      remaining = 0;
+    } else {
+      rounds.push(2);
+      remaining -= 2;
+    }
+  }
+  
+  return rounds;
+};
 
 const DailySchedule = ({ 
   assignment, 
@@ -32,8 +52,10 @@ const DailySchedule = ({
   usedCount,
   totalCount 
 }: DailyScheduleProps) => {
-  const todayKey = new Date().toISOString().split('T')[0];
-  const today = new Date().toLocaleDateString('en-US', { 
+  // Use local timezone for date key
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const today = now.toLocaleDateString('en-US', { 
     weekday: 'long', 
     month: 'long', 
     day: 'numeric' 
@@ -44,9 +66,22 @@ const DailySchedule = ({
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [completedRakaat, setCompletedRakaat] = useState<string[]>(() => {
+    const saved = localStorage.getItem(getRakaatStorageKey(todayKey));
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [pendingOpen, setPendingOpen] = useState(true);
+  const [completedOpen, setCompletedOpen] = useState(false);
+  const [expandedRounds, setExpandedRounds] = useState<string[]>([]);
+
   useEffect(() => {
     localStorage.setItem(getStorageKey(todayKey), JSON.stringify(completedPrayers));
   }, [completedPrayers, todayKey]);
+
+  useEffect(() => {
+    localStorage.setItem(getRakaatStorageKey(todayKey), JSON.stringify(completedRakaat));
+  }, [completedRakaat, todayKey]);
 
   const toggleCompleted = (prayerId: string) => {
     setCompletedPrayers(prev => 
@@ -55,6 +90,24 @@ const DailySchedule = ({
         : [...prev, prayerId]
     );
   };
+
+  const toggleRakaatCompleted = (rakaatKey: string) => {
+    setCompletedRakaat(prev => 
+      prev.includes(rakaatKey) 
+        ? prev.filter(id => id !== rakaatKey)
+        : [...prev, rakaatKey]
+    );
+  };
+
+  const toggleRoundExpanded = (roundKey: string) => {
+    setExpandedRounds(prev => 
+      prev.includes(roundKey) 
+        ? prev.filter(k => k !== roundKey)
+        : [...prev, roundKey]
+    );
+  };
+
+  const isRakaatCompleted = (rakaatKey: string) => completedRakaat.includes(rakaatKey);
 
   const totalRakaat = assignment?.assignments.reduce(
     (sum, a) => sum + a.rakaatSurahs.length, 0
@@ -68,79 +121,171 @@ const DailySchedule = ({
     p => completedPrayers.includes(p.prayerId)
   ) || [];
 
-  const renderPrayerCard = (prayerAssignment: typeof assignment.assignments[0], idx: number, isCompleted: boolean) => (
-    <div 
-      key={prayerAssignment.prayerId}
-      className={cn(
-        "animate-slide-up rounded-2xl bg-card p-4 shadow-card transition-all",
-        isCompleted && "opacity-60"
-      )}
-      style={{ animationDelay: `${idx * 50}ms` }}
-    >
-      <div className="mb-3 flex items-center justify-between border-b border-border pb-2">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => toggleCompleted(prayerAssignment.prayerId)}
-            className={cn(
-              "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all",
-              isCompleted 
-                ? "border-emerald-500 bg-emerald-500 text-white" 
-                : "border-muted-foreground/30 hover:border-primary"
-            )}
-          >
-            {isCompleted && <Check className="h-4 w-4" />}
-          </button>
-          <h3 className={cn(
-            "font-semibold text-foreground",
-            isCompleted && "line-through text-muted-foreground"
-          )}>
-            {prayerAssignment.prayerName}
-          </h3>
-        </div>
-        <span className={cn(
-          "rounded-full border px-2 py-0.5 text-xs font-medium",
-          getCategoryColor(prayerAssignment.prayerId)
+  const renderRakaatRound = (
+    prayerAssignment: PrayerAssignment,
+    roundIndex: number,
+    roundSize: number,
+    startRakaatIndex: number,
+    isCompleted: boolean
+  ) => {
+    const roundKey = `${prayerAssignment.prayerId}-round-${roundIndex}`;
+    const isExpanded = expandedRounds.includes(roundKey);
+    const rakaatInRound = prayerAssignment.rakaatSurahs.slice(startRakaatIndex, startRakaatIndex + roundSize);
+    
+    const allRakaatInRoundCompleted = rakaatInRound.every((_, idx) => 
+      isRakaatCompleted(`${prayerAssignment.prayerId}-rakaat-${startRakaatIndex + idx}`)
+    );
+
+    const getRoundLabel = () => {
+      if (roundSize === 1) return "1 Rakaat";
+      return `${roundSize} Rakaat`;
+    };
+
+    return (
+      <Collapsible key={roundKey} open={isExpanded} onOpenChange={() => toggleRoundExpanded(roundKey)}>
+        <div className={cn(
+          "rounded-lg bg-muted/50 overflow-hidden",
+          allRakaatInRoundCompleted && "opacity-60"
         )}>
-          {prayerAssignment.rakaatSurahs.length} rakaat
-        </span>
-      </div>
-      <div className="space-y-2">
-        {prayerAssignment.rakaatSurahs.map((rakaat) => {
-          const showAyahRange = rakaat.startAyah !== rakaat.endAyah || rakaat.startAyah !== 1;
-          
-          return (
-            <div 
-              key={`${prayerAssignment.prayerId}-${rakaat.rakaatNumber}`}
-              className="rounded-lg bg-muted/50 px-3 py-2"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
-                  {rakaat.rakaatNumber}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-foreground truncate">{rakaat.surahName}</p>
-                    {showAyahRange && (
-                      <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                        {rakaat.startAyah}-{rakaat.endAyah}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              <AyahViewer
-                surahNumber={rakaat.surahNumber}
-                surahName={rakaat.surahName}
-                startAyah={rakaat.startAyah}
-                endAyah={rakaat.endAyah}
-              />
+          <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-muted/70 transition-colors">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+                {roundIndex + 1}
+              </span>
+              <span className="text-sm font-medium text-foreground">
+                {getRoundLabel()}
+              </span>
+              {allRakaatInRoundCompleted && (
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              )}
             </div>
-          );
-        })}
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            )}
+          </CollapsibleTrigger>
+          
+          <CollapsibleContent>
+            <div className="px-3 pb-3 space-y-2">
+              {rakaatInRound.map((rakaat, idx) => {
+                const rakaatKey = `${prayerAssignment.prayerId}-rakaat-${startRakaatIndex + idx}`;
+                const rakaatCompleted = isRakaatCompleted(rakaatKey);
+                const showAyahRange = rakaat.startAyah !== rakaat.endAyah || rakaat.startAyah !== 1;
+                
+                return (
+                  <div 
+                    key={rakaatKey}
+                    className={cn(
+                      "rounded-lg bg-card px-3 py-2 border border-border/50",
+                      rakaatCompleted && "opacity-60"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => toggleRakaatCompleted(rakaatKey)}
+                        className={cn(
+                          "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all shrink-0",
+                          rakaatCompleted 
+                            ? "border-emerald-500 bg-emerald-500 text-white" 
+                            : "border-muted-foreground/30 hover:border-primary"
+                        )}
+                      >
+                        {rakaatCompleted && <Check className="h-3 w-3" />}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                            Rakaat {startRakaatIndex + idx + 1}
+                          </span>
+                          <p className={cn(
+                            "text-sm font-medium text-foreground truncate",
+                            rakaatCompleted && "line-through text-muted-foreground"
+                          )}>
+                            {rakaat.surahName}
+                          </p>
+                          {showAyahRange && (
+                            <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                              {rakaat.startAyah}-{rakaat.endAyah}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <AyahViewer
+                      surahNumber={rakaat.surahNumber}
+                      surahName={rakaat.surahName}
+                      startAyah={rakaat.startAyah}
+                      endAyah={rakaat.endAyah}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
+    );
+  };
+
+  const renderPrayerCard = (prayerAssignment: PrayerAssignment, idx: number, isCompleted: boolean) => {
+    const totalPrayerRakaat = prayerAssignment.rakaatSurahs.length;
+    const rounds = splitIntoRounds(totalPrayerRakaat);
+    let rakaatIndex = 0;
+
+    return (
+      <div 
+        key={prayerAssignment.prayerId}
+        className={cn(
+          "animate-slide-up rounded-2xl bg-card p-4 shadow-card transition-all",
+          isCompleted && "opacity-60"
+        )}
+        style={{ animationDelay: `${idx * 50}ms` }}
+      >
+        <div className="mb-3 flex items-center justify-between border-b border-border pb-2">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => toggleCompleted(prayerAssignment.prayerId)}
+              className={cn(
+                "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all",
+                isCompleted 
+                  ? "border-emerald-500 bg-emerald-500 text-white" 
+                  : "border-muted-foreground/30 hover:border-primary"
+              )}
+            >
+              {isCompleted && <Check className="h-4 w-4" />}
+            </button>
+            <h3 className={cn(
+              "font-semibold text-foreground",
+              isCompleted && "line-through text-muted-foreground"
+            )}>
+              {prayerAssignment.prayerName}
+            </h3>
+          </div>
+          <span className={cn(
+            "rounded-full border px-2 py-0.5 text-xs font-medium",
+            getCategoryColor(prayerAssignment.prayerId)
+          )}>
+            {totalPrayerRakaat} rakaat
+          </span>
+        </div>
+        <div className="space-y-2">
+          {rounds.map((roundSize, roundIdx) => {
+            const component = renderRakaatRound(
+              prayerAssignment,
+              roundIdx,
+              roundSize,
+              rakaatIndex,
+              isCompleted
+            );
+            rakaatIndex += roundSize;
+            return component;
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="space-y-4">
@@ -181,26 +326,53 @@ const DailySchedule = ({
             <span className="font-semibold text-primary">{totalRakaat} rakaat</span>
           </div>
 
-          {/* Pending Prayers */}
+          {/* Pending Prayers - Collapsible */}
           {pendingPrayers.length > 0 && (
-            <div className="space-y-3">
-              {pendingPrayers.map((prayerAssignment, idx) => 
-                renderPrayerCard(prayerAssignment, idx, false)
-              )}
-            </div>
+            <Collapsible open={pendingOpen} onOpenChange={setPendingOpen}>
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg bg-muted/50 px-4 py-2 hover:bg-muted/70 transition-colors">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-foreground">
+                    Pending ({pendingPrayers.length})
+                  </span>
+                </div>
+                {pendingOpen ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-3 pt-3">
+                  {pendingPrayers.map((prayerAssignment, idx) => 
+                    renderPrayerCard(prayerAssignment, idx, false)
+                  )}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           )}
 
-          {/* Completed Section */}
+          {/* Completed Section - Collapsible */}
           {completedPrayersList.length > 0 && (
-            <div className="space-y-3 pt-4">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span className="text-sm font-medium">Completed ({completedPrayersList.length})</span>
-              </div>
-              {completedPrayersList.map((prayerAssignment, idx) => 
-                renderPrayerCard(prayerAssignment, idx, true)
-              )}
-            </div>
+            <Collapsible open={completedOpen} onOpenChange={setCompletedOpen}>
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg bg-emerald-500/10 px-4 py-2 hover:bg-emerald-500/20 transition-colors">
+                <div className="flex items-center gap-2 text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span className="text-sm font-medium">Completed ({completedPrayersList.length})</span>
+                </div>
+                {completedOpen ? (
+                  <ChevronUp className="h-4 w-4 text-emerald-600" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-emerald-600" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-3 pt-3">
+                  {completedPrayersList.map((prayerAssignment, idx) => 
+                    renderPrayerCard(prayerAssignment, idx, true)
+                  )}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           )}
 
           {/* All Completed Message */}

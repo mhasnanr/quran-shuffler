@@ -98,14 +98,27 @@ export const useQuranApi = () => {
           
           // Remove bismillah from first ayah of surahs (except Al-Fatihah:1 and At-Taubah:9)
           if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Multiple patterns for bismillah variations
-            arabicText = arabicText
-              .replace(/^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u, '')
-              .replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/u, '')
-              .replace(/^بسم الله الرحمن الرحيم\s*/u, '')
-              .replace(/^۞?\s*بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/u, '')
-              .replace(/^۞?\s*بِسْمِ\s+ٱللَّهِ\s+ٱلرَّحْمَٰنِ\s+ٱلرَّحِيمِ\s*/u, '')
-              .trim();
+            // Comprehensive bismillah removal - covers all known variations
+            const bismillahPatterns = [
+              // Standard patterns with different character variations
+              /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u,
+              /^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/u,
+              /^بسم الله الرحمن الرحيم\s*/u,
+              // With optional ornament prefix
+              /^۞?\s*بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ\s*/u,
+              /^۞?\s*بِسْمِ\s*ٱللَّهِ\s*ٱلرَّحْمَٰنِ\s*ٱلرَّحِيمِ\s*/u,
+              // More flexible pattern matching any bismillah-like text at start
+              /^[\s۞]*بِسْمِ[^ا]*الرَّحِيمِ\s*/u,
+              /^[\s۞]*بسم[^ا]*الرحيم\s*/u,
+            ];
+            
+            for (const pattern of bismillahPatterns) {
+              const newText = arabicText.replace(pattern, '').trim();
+              if (newText !== arabicText) {
+                arabicText = newText;
+                break;
+              }
+            }
           }
           
           result.push({
