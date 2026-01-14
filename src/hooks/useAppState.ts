@@ -235,6 +235,32 @@ export const useAppState = () => {
     }));
   };
 
+  // Include all ayahs for a surah as a single chunk (ignore chunk size)
+  const includeAllAyahs = (surahNumber: number) => {
+    const surah = surahs.find(s => s.number === surahNumber);
+    if (!surah) return;
+    
+    const fullChunkId = getChunkId(surahNumber, 1, surah.verses);
+    const fullChunk: SurahChunkSelection = {
+      id: fullChunkId,
+      surahNumber,
+      startAyah: 1,
+      endAyah: surah.verses,
+    };
+    
+    setState(prev => {
+      // Remove any existing chunks for this surah
+      const withoutSurah = prev.selectedChunks.filter(c => c.surahNumber !== surahNumber);
+      const mandatoryWithoutSurah = prev.mandatoryChunks.filter(id => !id.startsWith(`${surahNumber}-`));
+      
+      return {
+        ...prev,
+        selectedChunks: [...withoutSurah, fullChunk],
+        mandatoryChunks: mandatoryWithoutSurah,
+      };
+    });
+  };
+
   const updateChunkSize = useCallback((newSize: number) => {
     localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
     setChunkSizeState(newSize);
@@ -387,6 +413,7 @@ export const useAppState = () => {
     updateChunkRange,
     selectAllChunks,
     deselectAllChunks,
+    includeAllAyahs,
     updateChunkSize,
     shuffleForToday,
     resetUsedChunks,

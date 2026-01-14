@@ -63,7 +63,7 @@ export const defaultPrayers: Prayer[] = [
   { id: 'subuh', name: 'Subuh', arabicName: 'صبح', rakaat: 2, enabled: true, category: 'main', minRakaat: 2, maxRakaat: 2, order: 4 },
   
   // Morning prayers
-  { id: 'syuruq', name: 'Syuruq/Isyraq', arabicName: 'شروق', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 4, order: 5 },
+  { id: 'syuruq', name: 'Syuruq/Isyraq', arabicName: 'شروق', rakaat: 2, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 2, order: 5 },
   { id: 'dhuha', name: 'Dhuha', arabicName: 'ضحى', rakaat: 4, enabled: true, category: 'sunnah', minRakaat: 2, maxRakaat: 12, order: 6 },
   
   // Dzuhur time

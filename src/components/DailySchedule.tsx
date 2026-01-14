@@ -91,12 +91,24 @@ const DailySchedule = ({
     );
   };
 
-  const toggleRakaatCompleted = (rakaatKey: string) => {
-    setCompletedRakaat(prev => 
-      prev.includes(rakaatKey) 
+  const toggleRakaatCompleted = (rakaatKey: string, prayerId: string, totalRakaatForPrayer: number) => {
+    setCompletedRakaat(prev => {
+      const newCompleted = prev.includes(rakaatKey) 
         ? prev.filter(id => id !== rakaatKey)
-        : [...prev, rakaatKey]
-    );
+        : [...prev, rakaatKey];
+      
+      // Check if all rakaat for this prayer are now completed
+      const allRakaatCompleted = Array.from({ length: totalRakaatForPrayer }, (_, i) => 
+        `${prayerId}-rakaat-${i}`
+      ).every(key => newCompleted.includes(key));
+      
+      // Auto-complete the prayer if all rakaat are done
+      if (allRakaatCompleted && !completedPrayers.includes(prayerId)) {
+        setCompletedPrayers(p => [...p, prayerId]);
+      }
+      
+      return newCompleted;
+    });
   };
 
   const toggleRoundExpanded = (roundKey: string) => {
@@ -126,7 +138,8 @@ const DailySchedule = ({
     roundIndex: number,
     roundSize: number,
     startRakaatIndex: number,
-    isCompleted: boolean
+    isCompleted: boolean,
+    totalRakaatForPrayer: number
   ) => {
     const roundKey = `${prayerAssignment.prayerId}-round-${roundIndex}`;
     const isExpanded = expandedRounds.includes(roundKey);
@@ -183,7 +196,7 @@ const DailySchedule = ({
                   >
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => toggleRakaatCompleted(rakaatKey)}
+                        onClick={() => toggleRakaatCompleted(rakaatKey, prayerAssignment.prayerId, totalRakaatForPrayer)}
                         className={cn(
                           "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all shrink-0",
                           rakaatCompleted 
@@ -277,7 +290,8 @@ const DailySchedule = ({
               roundIdx,
               roundSize,
               rakaatIndex,
-              isCompleted
+              isCompleted,
+              totalPrayerRakaat
             );
             rakaatIndex += roundSize;
             return component;
@@ -326,13 +340,13 @@ const DailySchedule = ({
             <span className="font-semibold text-primary">{totalRakaat} rakaat</span>
           </div>
 
-          {/* Pending Prayers - Collapsible */}
+          {/* To Do Prayers - Collapsible */}
           {pendingPrayers.length > 0 && (
             <Collapsible open={pendingOpen} onOpenChange={setPendingOpen}>
               <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg bg-muted/50 px-4 py-2 hover:bg-muted/70 transition-colors">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-foreground">
-                    Pending ({pendingPrayers.length})
+                    To Do ({pendingPrayers.length})
                   </span>
                 </div>
                 {pendingOpen ? (
