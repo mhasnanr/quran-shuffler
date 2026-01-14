@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
-        arabic: ['Amiri', 'serif'],
+        arabic: ['Scheherazade New', 'Amiri', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
