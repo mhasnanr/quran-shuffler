@@ -110,7 +110,7 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
               {ayahs.map((ayah) => (
                 <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
                   <div className="flex items-start justify-end gap-2">
-                    <p className="font-arabic text-right text-base leading-loose text-foreground flex-1" dir="rtl">
+                    <p className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1" dir="rtl">
                       {ayah.arabic}
                     </p>
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
