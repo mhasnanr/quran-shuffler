@@ -1,7 +1,7 @@
 import { getSurahsByJuz } from '@/data/quranData';
 import { SurahChunkSelection } from '@/types/prayer';
 import { cn } from '@/lib/utils';
-import { Check, ChevronDown, ChevronUp, Star, Search } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Star, Search, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ interface SurahListProps {
   onToggleMandatory: (chunkId: string) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
+  onIncludeAllAyahs: (surahNumber: number) => void;
 }
 
 const SurahList = ({ 
@@ -26,7 +27,8 @@ const SurahList = ({
   onToggleChunk,
   onToggleMandatory,
   onSelectAll, 
-  onDeselectAll 
+  onDeselectAll,
+  onIncludeAllAyahs
 }: SurahListProps) => {
   const [expandedSurahs, setExpandedSurahs] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -230,6 +232,16 @@ const SurahList = ({
                 {/* Chunks (for multi-chunk surahs) */}
                 {hasMultipleChunks && isExpanded && (
                   <div className="pl-12 pr-4 py-2 space-y-1.5 bg-muted/30">
+                    {/* Include All Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mb-2 text-xs"
+                      onClick={() => onIncludeAllAyahs(surah.number)}
+                    >
+                      <Maximize2 className="h-3 w-3 mr-1.5" />
+                      Include All {surah.verses} Ayahs as One
+                    </Button>
                     {surahChunks.map((chunk) => {
                       const selected = isChunkSelected(chunk.id);
                       const mandatory = isChunkMandatory(chunk.id);
