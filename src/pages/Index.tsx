@@ -7,7 +7,9 @@ import JuzSelector from '@/components/JuzSelector';
 import SurahList from '@/components/SurahList';
 import ChunkSizeConfig from '@/components/ChunkSizeConfig';
 import PrayerGuideContent from '@/components/PrayerGuideContent';
+import ReviewList from '@/components/ReviewList';
 import { useAppState } from '@/hooks/useAppState';
+import { useReviewItems } from '@/hooks/useReviewItems';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 
@@ -33,6 +35,7 @@ const Index = () => {
     getAllPossibleChunks,
   } = useAppState();
 
+  const { reviewItems, addReviewItem, removeReviewItem } = useReviewItems();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
   useEffect(() => {
@@ -71,6 +74,15 @@ const Index = () => {
               onReshuffle={handleReshuffle}
               usedCount={state.usedChunks.length}
               totalCount={state.selectedChunks.length}
+              onAddToReview={addReviewItem}
+            />
+          )}
+
+          {activeTab === 'review' && (
+            <ReviewList
+              items={reviewItems}
+              onRemove={removeReviewItem}
+              onComplete={removeReviewItem}
             />
           )}
 
