@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { DailyAssignment, PrayerAssignment } from '@/types/prayer';
+import { DailyAssignment, PrayerAssignment, RakaatSurah } from '@/types/prayer';
 import { Button } from '@/components/ui/button';
 import { Shuffle, RotateCcw, Check, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AyahViewer from './AyahViewer';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import RecallFeedbackDialog from './RecallFeedbackDialog';
 
 interface DailyScheduleProps {
   assignment: DailyAssignment | null;
@@ -12,6 +13,14 @@ interface DailyScheduleProps {
   onReshuffle: () => void;
   usedCount: number;
   totalCount: number;
+  onAddToReview: (item: {
+    surahNumber: number;
+    surahName: string;
+    arabicName: string;
+    startAyah: number;
+    endAyah: number;
+    prayerName?: string;
+  }) => void;
 }
 
 const getCategoryColor = (prayerId: string) => {
@@ -50,7 +59,8 @@ const DailySchedule = ({
   onShuffle, 
   onReshuffle,
   usedCount,
-  totalCount 
+  totalCount,
+  onAddToReview,
 }: DailyScheduleProps) => {
   // Use local timezone for date key
   const now = new Date();
@@ -74,7 +84,14 @@ const DailySchedule = ({
   const [pendingOpen, setPendingOpen] = useState(true);
   const [completedOpen, setCompletedOpen] = useState(false);
   const [expandedRounds, setExpandedRounds] = useState<string[]>([]);
-
+  
+  // Feedback dialog state
+  const [feedbackDialog, setFeedbackDialog] = useState<{
+    open: boolean;
+    rakaat: RakaatSurah | null;
+    prayerName: string;
+    rakaatKey: string;
+  }>({ open: false, rakaat: null, prayerName: '', rakaatKey: '' });
   useEffect(() => {
     localStorage.setItem(getStorageKey(todayKey), JSON.stringify(completedPrayers));
   }, [completedPrayers, todayKey]);
@@ -91,11 +108,66 @@ const DailySchedule = ({
     );
   };
 
-  const toggleRakaatCompleted = (rakaatKey: string, prayerId: string, totalRakaatForPrayer: number) => {
+  const handleRakaatCheck = (
+    rakaatKey: string, 
+    prayerId: string, 
+    totalRakaatForPrayer: number,
+    rakaat: RakaatSurah,
+    prayerName: string
+  ) => {
+    const isAlreadyCompleted = completedRakaat.includes(rakaatKey);
+    
+    if (isAlreadyCompleted) {
+      // If unchecking, just remove it
+      setCompletedRakaat(prev => prev.filter(id => id !== rakaatKey));
+    } else {
+      // If checking, show feedback dialog
+      setFeedbackDialog({
+        open: true,
+        rakaat,
+        prayerName,
+        rakaatKey,
+      });
+    }
+  };
+
+  const handleFeedbackRemembered = () => {
+    const { rakaatKey, rakaat } = feedbackDialog;
+    if (!rakaat) return;
+    
+    // Mark as completed
+    completeRakaat(rakaatKey);
+    setFeedbackDialog({ open: false, rakaat: null, prayerName: '', rakaatKey: '' });
+  };
+
+  const handleFeedbackForgot = () => {
+    const { rakaat, prayerName, rakaatKey } = feedbackDialog;
+    if (!rakaat) return;
+    
+    // Add to review list
+    onAddToReview({
+      surahNumber: rakaat.surahNumber,
+      surahName: rakaat.surahName,
+      arabicName: rakaat.arabicName,
+      startAyah: rakaat.startAyah,
+      endAyah: rakaat.endAyah,
+      prayerName,
+    });
+    
+    // Still mark as completed
+    completeRakaat(rakaatKey);
+    setFeedbackDialog({ open: false, rakaat: null, prayerName: '', rakaatKey: '' });
+  };
+
+  const completeRakaat = (rakaatKey: string) => {
+    // Extract prayerId and find prayer to get total rakaat
+    const parts = rakaatKey.split('-rakaat-');
+    const prayerId = parts[0];
+    const prayerAssignment = assignment?.assignments.find(a => a.prayerId === prayerId);
+    const totalRakaatForPrayer = prayerAssignment?.rakaatSurahs.length || 0;
+
     setCompletedRakaat(prev => {
-      const newCompleted = prev.includes(rakaatKey) 
-        ? prev.filter(id => id !== rakaatKey)
-        : [...prev, rakaatKey];
+      const newCompleted = [...prev, rakaatKey];
       
       // Check if all rakaat for this prayer are now completed
       const allRakaatCompleted = Array.from({ length: totalRakaatForPrayer }, (_, i) => 
@@ -196,7 +268,7 @@ const DailySchedule = ({
                   >
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => toggleRakaatCompleted(rakaatKey, prayerAssignment.prayerId, totalRakaatForPrayer)}
+                        onClick={() => handleRakaatCheck(rakaatKey, prayerAssignment.prayerId, totalRakaatForPrayer, rakaat, prayerAssignment.prayerName)}
                         className={cn(
                           "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all shrink-0",
                           rakaatCompleted 
@@ -299,6 +371,12 @@ const DailySchedule = ({
         </div>
       </div>
     );
+  };
+
+  const getAyahRangeText = (rakaat: RakaatSurah | null) => {
+    if (!rakaat) return '';
+    if (rakaat.startAyah === rakaat.endAyah) return `Ayat ${rakaat.startAyah}`;
+    return `Ayat ${rakaat.startAyah}-${rakaat.endAyah}`;
   };
 
   return (
@@ -408,6 +486,20 @@ const DailySchedule = ({
           </Button>
         </div>
       )}
+
+      {/* Recall Feedback Dialog */}
+      <RecallFeedbackDialog
+        open={feedbackDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setFeedbackDialog({ open: false, rakaat: null, prayerName: '', rakaatKey: '' });
+          }
+        }}
+        surahName={feedbackDialog.rakaat?.surahName || ''}
+        ayahRange={getAyahRangeText(feedbackDialog.rakaat)}
+        onRemembered={handleFeedbackRemembered}
+        onForgot={handleFeedbackForgot}
+      />
     </div>
   );
 };
