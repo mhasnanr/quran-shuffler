@@ -235,7 +235,7 @@ export const useAppState = () => {
     }));
   };
 
-  // Include all ayahs for a surah as a single chunk (ignore chunk size)
+  // Include all ayat for a surah as a single chunk (ignore chunk size)
   const includeAllAyahs = (surahNumber: number) => {
     const surah = surahs.find(s => s.number === surahNumber);
     if (!surah) return;
@@ -257,6 +257,26 @@ export const useAppState = () => {
         ...prev,
         selectedChunks: [...withoutSurah, fullChunk],
         mandatoryChunks: mandatoryWithoutSurah,
+      };
+    });
+  };
+
+  // Revert a "full surah" selection back to chunked selection
+  const revertToChunks = (surahNumber: number) => {
+    const surah = surahs.find(s => s.number === surahNumber);
+    if (!surah) return;
+    
+    // Generate the default chunks for this surah
+    const surahChunks = generateChunksForJuz([...state.selectedJuz], chunkSize)
+      .filter(c => c.surahNumber === surahNumber);
+    
+    setState(prev => {
+      // Remove the full surah chunk
+      const withoutFullSurah = prev.selectedChunks.filter(c => c.surahNumber !== surahNumber);
+      
+      return {
+        ...prev,
+        selectedChunks: [...withoutFullSurah, ...surahChunks],
       };
     });
   };
@@ -414,6 +434,7 @@ export const useAppState = () => {
     selectAllChunks,
     deselectAllChunks,
     includeAllAyahs,
+    revertToChunks,
     updateChunkSize,
     shuffleForToday,
     resetUsedChunks,

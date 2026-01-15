@@ -98,21 +98,22 @@ export const useQuranApi = () => {
           
           // Remove bismillah from first ayah of surahs (except Al-Fatihah:1 and At-Taubah:9)
           if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Most aggressive approach: check if text starts with بسم or بِسْمِ and contains الرحيم
-            // Then remove everything up to and including الرحيم or الرَّحِيمِ
-            const bismillahEndPatterns = [
-              /^.*?الرَّحِيمِ\s*/u,
-              /^.*?الرحيم\s*/u,
+            // Comprehensive bismillah patterns covering various Unicode representations
+            const bismillahPatterns = [
+              // Full bismillah with various diacritics
+              /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u,
+              /^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/u,
+              /^بسم الله الرحمن الرحيم\s*/u,
+              /^بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\s*/u,
+              // With optional ornament at start
+              /^۞?\s*بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ\s*/u,
+              /^۞?\s*بِسْمِ\s*ٱللَّهِ\s*ٱلرَّحْمَٰنِ\s*ٱلرَّحِيمِ\s*/u,
             ];
             
-            // Only apply if text appears to start with bismillah
-            if (arabicText.match(/^[\s۞]*ب[سِ]/u)) {
-              for (const pattern of bismillahEndPatterns) {
-                const match = arabicText.match(pattern);
-                if (match) {
-                  arabicText = arabicText.substring(match[0].length).trim();
-                  break;
-                }
+            for (const pattern of bismillahPatterns) {
+              if (pattern.test(arabicText)) {
+                arabicText = arabicText.replace(pattern, '').trim();
+                break;
               }
             }
           }
