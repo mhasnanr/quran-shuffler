@@ -24,6 +24,7 @@ const Index = () => {
     selectAllChunks,
     deselectAllChunks,
     includeAllAyahs,
+    revertToChunks,
     updateChunkSize,
     shuffleForToday,
     resetUsedChunks,
@@ -101,6 +102,7 @@ const Index = () => {
                 onSelectAll={selectAllChunks}
                 onDeselectAll={deselectAllChunks}
                 onIncludeAllAyahs={includeAllAyahs}
+                onRevertToChunks={revertToChunks}
               />
 
               <div className="rounded-xl bg-card p-4 shadow-card">

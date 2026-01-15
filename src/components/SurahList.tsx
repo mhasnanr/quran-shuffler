@@ -1,7 +1,7 @@
-import { getSurahsByJuz } from '@/data/quranData';
+import { getSurahsByJuz, surahs } from '@/data/quranData';
 import { SurahChunkSelection } from '@/types/prayer';
 import { cn } from '@/lib/utils';
-import { Check, ChevronDown, ChevronUp, Star, Search, Maximize2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Star, Search, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,7 @@ interface SurahListProps {
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onIncludeAllAyahs: (surahNumber: number) => void;
+  onRevertToChunks: (surahNumber: number) => void;
 }
 
 const SurahList = ({ 
@@ -28,7 +29,8 @@ const SurahList = ({
   onToggleMandatory,
   onSelectAll, 
   onDeselectAll,
-  onIncludeAllAyahs
+  onIncludeAllAyahs,
+  onRevertToChunks
 }: SurahListProps) => {
   const [expandedSurahs, setExpandedSurahs] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,12 +56,21 @@ const SurahList = ({
     return mandatoryChunks.includes(chunkId);
   };
 
+  // Check if surah is included as full (single chunk with all ayat)
+  const isSurahIncludedAsFull = (surahNumber: number) => {
+    const surah = surahs.find(s => s.number === surahNumber);
+    if (!surah) return false;
+    const fullChunkId = `${surahNumber}-1-${surah.verses}`;
+    return selectedChunks.some(c => c.id === fullChunkId);
+  };
+
   const isSurahFullySelected = (surahNumber: number) => {
     const surahChunks = getChunksForSurah(surahNumber);
-    return surahChunks.every(c => isChunkSelected(c.id));
+    return surahChunks.every(c => isChunkSelected(c.id)) || isSurahIncludedAsFull(surahNumber);
   };
 
   const isSurahPartiallySelected = (surahNumber: number) => {
+    if (isSurahIncludedAsFull(surahNumber)) return false;
     const surahChunks = getChunksForSurah(surahNumber);
     const selectedCount = surahChunks.filter(c => isChunkSelected(c.id)).length;
     return selectedCount > 0 && selectedCount < surahChunks.length;
@@ -159,9 +170,14 @@ const SurahList = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-medium truncate">{surah.name}</p>
-                        {hasMultipleChunks && (
+                        {hasMultipleChunks && !isSurahIncludedAsFull(surah.number) && (
                           <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                             {surah.verses} ayat
+                          </span>
+                        )}
+                        {isSurahIncludedAsFull(surah.number) && (
+                          <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded font-medium">
+                            All {surah.verses} ayat
                           </span>
                         )}
                       </div>
@@ -232,61 +248,80 @@ const SurahList = ({
                 {/* Chunks (for multi-chunk surahs) */}
                 {hasMultipleChunks && isExpanded && (
                   <div className="pl-12 pr-4 py-2 space-y-1.5 bg-muted/30">
-                    {/* Include All Button */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full mb-2 text-xs"
-                      onClick={() => onIncludeAllAyahs(surah.number)}
-                    >
-                      <Maximize2 className="h-3 w-3 mr-1.5" />
-                      Include All {surah.verses} Ayahs as One
-                    </Button>
-                    {surahChunks.map((chunk) => {
-                      const selected = isChunkSelected(chunk.id);
-                      const mandatory = isChunkMandatory(chunk.id);
-                      return (
-                        <div
-                          key={chunk.id}
-                          className={cn(
-                            "flex w-full items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all",
-                            selected
-                              ? "bg-primary/10 text-primary"
-                              : "bg-card hover:bg-muted text-foreground"
-                          )}
-                        >
-                          <button
-                            onClick={() => onToggleChunk(chunk.id)}
-                            className="flex-1 text-left"
+                    {/* Include All / Revert Button */}
+                    {isSurahIncludedAsFull(surah.number) ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mb-2 text-xs border-primary text-primary"
+                        onClick={() => onRevertToChunks(surah.number)}
+                      >
+                        <Minimize2 className="h-3 w-3 mr-1.5" />
+                        Split Back to Chunks
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mb-2 text-xs"
+                        onClick={() => onIncludeAllAyahs(surah.number)}
+                      >
+                        <Maximize2 className="h-3 w-3 mr-1.5" />
+                        Include All {surah.verses} Ayat as One
+                      </Button>
+                    )}
+                    {/* Show ayat list when included as full OR show chunk list */}
+                    {isSurahIncludedAsFull(surah.number) ? (
+                      <div className="text-xs text-primary bg-primary/5 rounded-md px-3 py-2">
+                        All {surah.verses} ayat included as a single recitation
+                      </div>
+                    ) : (
+                      surahChunks.map((chunk) => {
+                        const selected = isChunkSelected(chunk.id);
+                        const mandatory = isChunkMandatory(chunk.id);
+                        return (
+                          <div
+                            key={chunk.id}
+                            className={cn(
+                              "flex w-full items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all",
+                              selected
+                                ? "bg-primary/10 text-primary"
+                                : "bg-card hover:bg-muted text-foreground"
+                            )}
                           >
-                            <span>Ayah {chunk.startAyah} - {chunk.endAyah}</span>
-                          </button>
-                          <div className="flex items-center gap-1">
-                            {selected && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onToggleMandatory(chunk.id);
-                                }}
-                              >
-                                <Star className={cn(
-                                  "h-3.5 w-3.5",
-                                  mandatory 
-                                    ? "fill-amber-400 text-amber-400" 
-                                    : "text-muted-foreground"
-                                )} />
-                              </Button>
-                            )}
-                            {selected && (
-                              <Check className="h-4 w-4 text-primary" />
-                            )}
+                            <button
+                              onClick={() => onToggleChunk(chunk.id)}
+                              className="flex-1 text-left"
+                            >
+                              <span>Ayat {chunk.startAyah} - {chunk.endAyah}</span>
+                            </button>
+                            <div className="flex items-center gap-1">
+                              {selected && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleMandatory(chunk.id);
+                                  }}
+                                >
+                                  <Star className={cn(
+                                    "h-3.5 w-3.5",
+                                    mandatory 
+                                      ? "fill-amber-400 text-amber-400" 
+                                      : "text-muted-foreground"
+                                  )} />
+                                </Button>
+                              )}
+                              {selected && (
+                                <Check className="h-4 w-4 text-primary" />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    )}
                   </div>
                 )}
               </div>
