@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, Maximize2 } from 'lucide-react';
 import { useQuranApi, AyahWithTranslations } from '@/hooks/useQuranApi';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import FullscreenAyahViewer from './FullscreenAyahViewer';
+import { surahs } from '@/data/quranData';
 
 interface AyahViewerProps {
   surahNumber: number;
@@ -17,7 +20,11 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [translationLang, setTranslationLang] = useState<TranslationLang>('id');
+  const [showFullscreen, setShowFullscreen] = useState(false);
   const { fetchAyahs, loading, error } = useQuranApi();
+
+  const surah = surahs.find(s => s.number === surahNumber);
+  const arabicName = surah?.arabicName || '';
 
   useEffect(() => {
     if (isOpen && !hasLoaded) {
@@ -53,84 +60,107 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
   const isFullSurah = startAyah === 1 && endAyah === startAyah;
 
   return (
-    <div className="mt-2">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
-      >
-        <span>
-          {isFullSurah ? 'View Ayat' : `Ayat ${startAyah}-${endAyah}`}
-        </span>
-        {isOpen ? (
-          <ChevronUp className="h-3.5 w-3.5" />
-        ) : (
-          <ChevronDown className="h-3.5 w-3.5" />
-        )}
-      </button>
-
-      {isOpen && (
-        <div className="mt-2 max-h-64 overflow-y-auto rounded-lg bg-card p-3 shadow-inner">
-          {/* Translation Language Tabs */}
-          <div className="flex gap-1 mb-3 p-1 bg-muted rounded-lg">
-            <button
-              onClick={() => setTranslationLang('id')}
-              className={cn(
-                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-                translationLang === 'id'
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Indonesia
-            </button>
-            <button
-              onClick={() => setTranslationLang('en')}
-              className={cn(
-                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-                translationLang === 'en'
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              English
-            </button>
-          </div>
-
-          {loading && (
-            <div className="flex items-center justify-center py-4">
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            </div>
-          )}
-
-          {error && (
-            <p className="text-center text-xs text-destructive">{error}</p>
-          )}
-
-          {!loading && !error && ayahs.length > 0 && (
-            <div className="space-y-4">
-              {ayahs.map((ayah) => (
-                <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
-                  <div className="flex items-start justify-end gap-2">
-                    <p className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1" dir="rtl">
-                      {ayah.arabic}
-                    </p>
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
-                      {ayah.numberInSurah}
-                    </span>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p className="text-xs leading-relaxed text-muted-foreground">
-                      {translationLang === 'id' ? ayah.indonesian : ayah.english}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+    <>
+      <div className="mt-2">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex flex-1 items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+          >
+            <span>
+              {isFullSurah ? 'View Ayat' : `Ayat ${startAyah}-${endAyah}`}
+            </span>
+            {isOpen ? (
+              <ChevronUp className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5" />
+            )}
+          </button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowFullscreen(true)}
+            className="h-8 w-8 p-0 text-primary hover:text-primary hover:bg-primary/10"
+            title="View fullscreen"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Button>
         </div>
-      )}
-    </div>
+
+        {isOpen && (
+          <div className="mt-2 max-h-64 overflow-y-auto rounded-lg bg-card p-3 shadow-inner">
+            {/* Translation Language Tabs */}
+            <div className="flex gap-1 mb-3 p-1 bg-muted rounded-lg">
+              <button
+                onClick={() => setTranslationLang('id')}
+                className={cn(
+                  "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                  translationLang === 'id'
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Indonesia
+              </button>
+              <button
+                onClick={() => setTranslationLang('en')}
+                className={cn(
+                  "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                  translationLang === 'en'
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                English
+              </button>
+            </div>
+
+            {loading && (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            )}
+
+            {error && (
+              <p className="text-center text-xs text-destructive">{error}</p>
+            )}
+
+            {!loading && !error && ayahs.length > 0 && (
+              <div className="space-y-4">
+                {ayahs.map((ayah) => (
+                  <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
+                    <div className="flex items-start justify-end gap-2">
+                      <p className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1" dir="rtl">
+                        {ayah.arabic}
+                      </p>
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
+                        {ayah.numberInSurah}
+                      </span>
+                    </div>
+                    
+                    <div className="text-right">
+                      <p className="text-xs leading-relaxed text-muted-foreground">
+                        {translationLang === 'id' ? ayah.indonesian : ayah.english}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <FullscreenAyahViewer
+        open={showFullscreen}
+        onOpenChange={setShowFullscreen}
+        surahNumber={surahNumber}
+        surahName={surahName}
+        arabicName={arabicName}
+        startAyah={startAyah}
+        endAyah={endAyah}
+      />
+    </>
   );
 };
 

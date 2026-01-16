@@ -6,6 +6,7 @@ import PrayerConfig from '@/components/PrayerConfig';
 import JuzSelector from '@/components/JuzSelector';
 import SurahList from '@/components/SurahList';
 import ChunkSizeConfig from '@/components/ChunkSizeConfig';
+import ChunkModeToggle from '@/components/ChunkModeToggle';
 import PrayerGuideContent from '@/components/PrayerGuideContent';
 import ReviewList from '@/components/ReviewList';
 import { useAppState } from '@/hooks/useAppState';
@@ -18,6 +19,8 @@ const Index = () => {
   const {
     state,
     chunkSize,
+    chunksEnabled,
+    setChunksEnabled,
     togglePrayer,
     updatePrayerRakaat,
     updateSelectedJuz,
@@ -99,16 +102,24 @@ const Index = () => {
                 onSelectJuz={updateSelectedJuz}
               />
 
-              <ChunkSizeConfig
-                chunkSize={chunkSize}
-                onChunkSizeChange={updateChunkSize}
+              <ChunkModeToggle
+                chunksEnabled={chunksEnabled}
+                onToggle={setChunksEnabled}
               />
+
+              {chunksEnabled && (
+                <ChunkSizeConfig
+                  chunkSize={chunkSize}
+                  onChunkSizeChange={updateChunkSize}
+                />
+              )}
 
               <SurahList
                 selectedJuz={state.selectedJuz}
                 selectedChunks={state.selectedChunks}
                 mandatoryChunks={state.mandatoryChunks}
                 allPossibleChunks={allPossibleChunks}
+                chunksEnabled={chunksEnabled}
                 onToggleChunk={toggleChunk}
                 onToggleMandatory={toggleMandatory}
                 onSelectAll={selectAllChunks}

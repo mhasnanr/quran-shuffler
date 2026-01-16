@@ -4,6 +4,7 @@ import { surahs, getSurahsByJuz } from '@/data/quranData';
 import { generateDefaultChunks, CHUNK_SIZE_STORAGE_KEY, DEFAULT_CHUNK_SIZE } from '@/types/surahSelection';
 
 const STORAGE_KEY = 'quran-shuffler-state';
+const CHUNKS_ENABLED_KEY = 'quran-shuffler-chunks-enabled';
 
 // Generate chunk ID
 const getChunkId = (surahNumber: number, startAyah: number, endAyah: number): string => {
@@ -111,13 +112,24 @@ const getTodayDate = (): string => {
   return `${year}-${month}-${day}`;
 };
 
+const getStoredChunksEnabled = (): boolean => {
+  const stored = localStorage.getItem(CHUNKS_ENABLED_KEY);
+  return stored === null ? true : stored === 'true';
+};
+
 export const useAppState = () => {
   const [state, setState] = useState<AppState>(getInitialState);
   const [chunkSize, setChunkSizeState] = useState<number>(getStoredChunkSize);
+  const [chunksEnabled, setChunksEnabledState] = useState<boolean>(getStoredChunksEnabled);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
+
+  const setChunksEnabled = (enabled: boolean) => {
+    localStorage.setItem(CHUNKS_ENABLED_KEY, String(enabled));
+    setChunksEnabledState(enabled);
+  };
 
   const updatePrayers = (prayers: Prayer[]) => {
     setState(prev => ({ ...prev, prayers }));
@@ -424,6 +436,8 @@ export const useAppState = () => {
   return {
     state,
     chunkSize,
+    chunksEnabled,
+    setChunksEnabled,
     updatePrayers,
     togglePrayer,
     updatePrayerRakaat,
