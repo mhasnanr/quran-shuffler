@@ -39,17 +39,17 @@ const RecallFeedbackDialog = ({
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="flex-row gap-3 sm:justify-center mt-4">
+        <AlertDialogFooter className="flex flex-col gap-3 sm:flex-row sm:justify-center mt-4">
           <AlertDialogCancel
             onClick={onForgot}
-            className="flex-1 flex items-center justify-center border-amber-500/30 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 hover:text-amber-700"
+            className="m-0 flex-1 flex items-center justify-center border-amber-500/30 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 hover:text-amber-700"
           >
             <ThumbsDown className="mr-2 h-4 w-4" />
             Need Review
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onRemembered}
-            className="flex-1 flex items-center justify-center bg-emerald-500 text-white hover:bg-emerald-600"
+            className="m-0 flex-1 flex items-center justify-center bg-emerald-500 text-white hover:bg-emerald-600"
           >
             <ThumbsUp className="mr-2 h-4 w-4" />
             Remembered
