@@ -96,24 +96,20 @@ export const useQuranApi = () => {
         if (arabicAyah) {
           let arabicText = arabicAyah.text;
           
-          // Remove bismillah from first ayah of surahs (except Al-Fatihah:1 and At-Taubah:9)
+          // Remove bismillah from first ayat of surahs (except Al-Fatihah:1 and At-Taubah:9)
           if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Comprehensive bismillah patterns covering various Unicode representations
-            const bismillahPatterns = [
-              // Full bismillah with various diacritics
-              /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u,
-              /^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/u,
-              /^بسم الله الرحمن الرحيم\s*/u,
-              /^بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ\s*/u,
-              // With optional ornament at start
-              /^۞?\s*بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ\s*/u,
-              /^۞?\s*بِسْمِ\s*ٱللَّهِ\s*ٱلرَّحْمَٰنِ\s*ٱلرَّحِيمِ\s*/u,
-            ];
+            // Universal regex to match any form of bismillah at the start
+            // Matches: بسم followed by variations of الله الرحمن الرحيم with any diacritics
+            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
             
-            for (const pattern of bismillahPatterns) {
-              if (pattern.test(arabicText)) {
-                arabicText = arabicText.replace(pattern, '').trim();
-                break;
+            arabicText = arabicText.replace(bismillahRegex, '').trim();
+            
+            // Fallback: if regex didn't work, try removing by detecting common starting words
+            if (arabicText === arabicAyah.text && arabicAyah.text.startsWith('بِسْمِ')) {
+              // Find the end of bismillah by looking for الرحيم and removing everything before it plus the word
+              const rahimIndex = arabicAyah.text.indexOf('الرَّحِيمِ');
+              if (rahimIndex !== -1) {
+                arabicText = arabicAyah.text.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
               }
             }
           }
