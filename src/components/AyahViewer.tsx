@@ -22,21 +22,22 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
   useEffect(() => {
     if (isOpen && !hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
-        // Filter out bismillah from first ayah of most surahs (except Al-Fatihah and At-Taubah)
+        // Filter out bismillah from first ayat of most surahs (except Al-Fatihah and At-Taubah)
         const filteredData = data.map(ayah => {
           if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Multiple bismillah patterns to catch different variations
-            const bismillahPatterns = [
-              /^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/,
-              /^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/,
-              /^بسم الله الرحمن الرحيم\s*/,
-              /^۞?\s*بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/,
-              /^۞?\s*بِسْمِ\s+ٱللَّهِ\s+ٱلرَّحْمَٰنِ\s+ٱلرَّحِيمِ\s*/,
-            ];
+            // Universal regex to match any form of bismillah at the start
+            // Matches: بسم followed by variations of الله الرحمن الرحيم with any diacritics
+            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
             
-            let cleanedArabic = ayah.arabic;
-            for (const pattern of bismillahPatterns) {
-              cleanedArabic = cleanedArabic.replace(pattern, '').trim();
+            let cleanedArabic = ayah.arabic.replace(bismillahRegex, '').trim();
+            
+            // Fallback: if regex didn't work, try removing by detecting common starting words
+            if (cleanedArabic === ayah.arabic && ayah.arabic.startsWith('بِسْمِ')) {
+              // Find the end of bismillah by looking for الرحيم and removing everything before it plus the word
+              const rahimIndex = ayah.arabic.indexOf('الرَّحِيمِ');
+              if (rahimIndex !== -1) {
+                cleanedArabic = ayah.arabic.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
+              }
             }
             
             return { ...ayah, arabic: cleanedArabic || ayah.arabic };
@@ -58,7 +59,7 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
         className="flex w-full items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
       >
         <span>
-          {isFullSurah ? 'View Ayahs' : `Ayah ${startAyah}-${endAyah}`}
+          {isFullSurah ? 'View Ayat' : `Ayat ${startAyah}-${endAyah}`}
         </span>
         {isOpen ? (
           <ChevronUp className="h-3.5 w-3.5" />
