@@ -370,7 +370,7 @@ const DailySchedule = ({
                   <div
                     key={rakaatKey}
                     className={cn(
-                      "rounded-lg bg-card px-3 py-2 border border-border/50",
+                      "rounded-lg bg-card px-3 py-2 border border-border/50 flex flex-col gap-2",
                       rakaatCompleted && "opacity-60",
                     )}
                   >
@@ -416,7 +416,6 @@ const DailySchedule = ({
                         </div>
                       </div>
                     </div>
-
                     <AyahViewer
                       surahNumber={rakaat.surahNumber}
                       surahName={rakaat.surahName}

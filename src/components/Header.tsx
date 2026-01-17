@@ -1,44 +1,46 @@
-import { BookOpen, Moon, Sun } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark');
+    if (typeof window !== "undefined") {
+      return document.documentElement.classList.contains("dark");
     }
     return false;
   });
 
   useEffect(() => {
     if (isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [isDark]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
       setIsDark(true);
-    } else if (savedTheme === 'light') {
+    } else if (savedTheme === "light") {
       setIsDark(false);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setIsDark(true);
     }
   }, []);
 
   return (
     <header className="gradient-islamic px-4 py-4 text-primary-foreground">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between max-w-lg mx-auto w-full">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/20">
-            <BookOpen className="h-4 w-4" />
+          <div className="flex items-center justify-center rounded-full">
+            <img src="/qushu-logo.png" alt="App Icon" className="h-7 w-7" />
           </div>
-          <h1 className="text-sm font-semibold tracking-tight">Quran Shuffler</h1>
+          <h1 className="text-md font-semibold tracking-tight">
+            Quran Shuffler
+          </h1>
         </div>
         <Button
           variant="ghost"

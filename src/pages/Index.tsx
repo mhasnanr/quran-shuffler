@@ -48,7 +48,7 @@ const Index = () => {
 
   useEffect(() => {
     setTodayAssignment(getTodayAssignment());
-  }, [state.dailyAssignments]);
+  }, [state.dailyAssignments, getTodayAssignment]);
 
   const handleShuffle = () => {
     const assignment = shuffleForToday();
@@ -101,11 +101,7 @@ const Index = () => {
           )}
 
           {activeTab === "review" && (
-            <ReviewList
-              items={reviewItems}
-              onRemove={removeReviewItem}
-              onComplete={removeReviewItem}
-            />
+            <ReviewList items={reviewItems} onComplete={removeReviewItem} />
           )}
 
           {activeTab === "config" && (
