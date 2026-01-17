@@ -1,12 +1,28 @@
-import { ReviewItem } from '@/types/review';
-import { Trash2, CheckCircle2, BookOpen, ChevronDown, ChevronUp, Maximize2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { useState } from 'react';
-import FullscreenAyahViewer from './FullscreenAyahViewer';
-import { useQuranApi, AyahWithTranslations } from '@/hooks/useQuranApi';
-import { Loader2 } from 'lucide-react';
+import { ReviewItem } from "@/types/review";
+import {
+  Trash2,
+  CheckCircle2,
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { useState, useEffect } from "react";
+import FullscreenAyahViewer from "./FullscreenAyahViewer";
+import { useQuranApi, AyahWithTranslations } from "@/hooks/useQuranApi";
+import { Loader2 } from "lucide-react";
+import {
+  BISMILLAH,
+  BISMILLAH_ENGLISH,
+  BISMILLAH_INDONESIAN,
+} from "@/data/quranAyat";
 
 interface ReviewListProps {
   items: ReviewItem[];
@@ -14,7 +30,7 @@ interface ReviewListProps {
   onComplete: (id: string) => void;
 }
 
-type TranslationLang = 'id' | 'en';
+type TranslationLang = "id" | "en";
 
 interface InlineAyahViewerProps {
   surahNumber: number;
@@ -22,57 +38,51 @@ interface InlineAyahViewerProps {
   endAyah: number;
 }
 
-const InlineAyahViewer = ({ surahNumber, startAyah, endAyah }: InlineAyahViewerProps) => {
+const InlineAyahViewer = ({
+  surahNumber,
+  startAyah,
+  endAyah,
+}: InlineAyahViewerProps) => {
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [translationLang, setTranslationLang] = useState<TranslationLang>('id');
+  const [translationLang, setTranslationLang] = useState<TranslationLang>("id");
   const { fetchAyahs, loading, error } = useQuranApi();
 
-  useState(() => {
+  // Show bismillah separately for surahs other than Al-Fatihah (1) and At-Taubah (9)
+  const showBismillah =
+    startAyah === 1 && surahNumber !== 1 && surahNumber !== 9;
+
+  useEffect(() => {
     if (!hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
-        const filteredData = data.map(ayah => {
-          if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
-            let cleanedArabic = ayah.arabic.replace(bismillahRegex, '').trim();
-            if (cleanedArabic === ayah.arabic && ayah.arabic.startsWith('بِسْمِ')) {
-              const rahimIndex = ayah.arabic.indexOf('الرَّحِيمِ');
-              if (rahimIndex !== -1) {
-                cleanedArabic = ayah.arabic.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
-              }
-            }
-            return { ...ayah, arabic: cleanedArabic || ayah.arabic };
-          }
-          return ayah;
-        });
-        setAyahs(filteredData);
+        setAyahs(data);
         setHasLoaded(true);
       });
     }
-  });
+  }, [hasLoaded, surahNumber, startAyah, endAyah, fetchAyahs]);
 
   return (
     <div className="mt-2">
       {/* Translation Language Tabs */}
       <div className="flex gap-1 mb-3 p-1 bg-muted rounded-lg">
         <button
-          onClick={() => setTranslationLang('id')}
+          onClick={() => setTranslationLang("id")}
           className={cn(
             "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-            translationLang === 'id'
+            translationLang === "id"
               ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           Indonesia
         </button>
         <button
-          onClick={() => setTranslationLang('en')}
+          onClick={() => setTranslationLang("en")}
           className={cn(
             "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-            translationLang === 'en'
+            translationLang === "en"
               ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           English
@@ -85,25 +95,46 @@ const InlineAyahViewer = ({ surahNumber, startAyah, endAyah }: InlineAyahViewerP
         </div>
       )}
 
-      {error && (
-        <p className="text-center text-xs text-destructive">{error}</p>
-      )}
+      {error && <p className="text-center text-xs text-destructive">{error}</p>}
 
       {!loading && !error && ayahs.length > 0 && (
         <div className="space-y-4 max-h-48 overflow-y-auto">
+          {/* Bismillah - shown separately at top */}
+          {showBismillah && (
+            <div className="space-y-2 border-b border-border pb-3 bg-primary/5 rounded-lg p-3 -mx-1">
+              <p
+                className="font-arabic text-center text-lg leading-[2.2] text-primary"
+                dir="rtl"
+              >
+                {BISMILLAH}
+              </p>
+              <p className="text-xs leading-relaxed text-muted-foreground text-center">
+                {translationLang === "id"
+                  ? BISMILLAH_INDONESIAN
+                  : BISMILLAH_ENGLISH}
+              </p>
+            </div>
+          )}
+
           {ayahs.map((ayah) => (
-            <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
+            <div
+              key={ayah.numberInSurah}
+              className="space-y-2 border-b border-border pb-3 last:border-0"
+            >
               <div className="flex items-start justify-end gap-2">
-                <p className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1" dir="rtl">
+                <p
+                  className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1"
+                  dir="rtl"
+                >
                   {ayah.arabic}
                 </p>
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
                   {ayah.numberInSurah}
                 </span>
               </div>
-              <div className="text-right">
+              <div className="text-left">
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  {translationLang === 'id' ? ayah.indonesian : ayah.english}
+                  {translationLang === "id" ? ayah.indonesian : ayah.english}
                 </p>
               </div>
             </div>
@@ -119,8 +150,8 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
   const [fullscreenItem, setFullscreenItem] = useState<ReviewItem | null>(null);
 
   const toggleExpanded = (id: string) => {
-    setExpandedItems(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    setExpandedItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -141,30 +172,45 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
   }
 
   // Group items by surah
-  const groupedBySurah = items.reduce((acc, item) => {
-    const key = item.surahNumber;
-    if (!acc[key]) {
-      acc[key] = {
-        surahNumber: item.surahNumber,
-        surahName: item.surahName,
-        arabicName: item.arabicName,
-        chunks: [],
-      };
-    }
-    acc[key].chunks.push(item);
-    return acc;
-  }, {} as Record<number, { surahNumber: number; surahName: string; arabicName: string; chunks: ReviewItem[] }>);
+  const groupedBySurah = items.reduce(
+    (acc, item) => {
+      const key = item.surahNumber;
+      if (!acc[key]) {
+        acc[key] = {
+          surahNumber: item.surahNumber,
+          surahName: item.surahName,
+          arabicName: item.arabicName,
+          chunks: [],
+        };
+      }
+      acc[key].chunks.push(item);
+      return acc;
+    },
+    {} as Record<
+      number,
+      {
+        surahNumber: number;
+        surahName: string;
+        arabicName: string;
+        chunks: ReviewItem[];
+      }
+    >,
+  );
 
-  const sortedSurahs = Object.values(groupedBySurah).sort((a, b) => a.surahNumber - b.surahNumber);
+  const sortedSurahs = Object.values(groupedBySurah).sort(
+    (a, b) => a.surahNumber - b.surahNumber,
+  );
 
   return (
     <>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Review List</h2>
+            <h2 className="text-lg font-semibold text-foreground">
+              Review List
+            </h2>
             <p className="text-sm text-muted-foreground">
-              {items.length} {items.length === 1 ? 'item' : 'items'} to review
+              {items.length} {items.length === 1 ? "item" : "items"} to review
             </p>
           </div>
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/10">
@@ -173,8 +219,8 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
         </div>
 
         <div className="space-y-3">
-          {sortedSurahs.map(surah => (
-            <div 
+          {sortedSurahs.map((surah) => (
+            <div
               key={surah.surahNumber}
               className="rounded-2xl bg-card p-4 shadow-card"
             >
@@ -183,32 +229,38 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
                   {surah.surahNumber}
                 </span>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-foreground">{surah.surahName}</h3>
-                  <p className="font-arabic text-sm text-muted-foreground">{surah.arabicName}</p>
+                  <h3 className="font-semibold text-foreground">
+                    {surah.surahName}
+                  </h3>
+                  <p className="font-arabic text-sm text-muted-foreground">
+                    {surah.arabicName}
+                  </p>
                 </div>
                 <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600">
-                  {surah.chunks.length} {surah.chunks.length === 1 ? 'chunk' : 'chunks'}
+                  {surah.chunks.length}{" "}
+                  {surah.chunks.length === 1 ? "chunk" : "chunks"}
                 </span>
               </div>
 
               <div className="space-y-2">
-                {surah.chunks.map(chunk => {
+                {surah.chunks.map((chunk) => {
                   const isExpanded = expandedItems.includes(chunk.id);
-                  
+
                   return (
-                    <Collapsible 
-                      key={chunk.id} 
-                      open={isExpanded} 
+                    <Collapsible
+                      key={chunk.id}
+                      open={isExpanded}
                       onOpenChange={() => toggleExpanded(chunk.id)}
                     >
-                      <div className={cn(
-                        "rounded-lg bg-muted/50 overflow-hidden"
-                      )}>
+                      <div
+                        className={cn("rounded-lg bg-muted/50 overflow-hidden")}
+                      >
                         <div className="flex items-center justify-between px-3 py-2.5">
                           <CollapsibleTrigger className="flex flex-1 items-center gap-2 text-left">
                             <span className="text-sm font-medium text-foreground">
                               Ayat {chunk.startAyah}
-                              {chunk.startAyah !== chunk.endAyah && `-${chunk.endAyah}`}
+                              {chunk.startAyah !== chunk.endAyah &&
+                                `-${chunk.endAyah}`}
                             </span>
                             {chunk.prayerName && (
                               <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
@@ -221,7 +273,7 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
                               <ChevronDown className="h-4 w-4 text-muted-foreground ml-auto" />
                             )}
                           </CollapsibleTrigger>
-                          
+
                           <div className="flex items-center gap-1 ml-2">
                             <Button
                               variant="ghost"
@@ -243,7 +295,7 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
                             </Button>
                           </div>
                         </div>
-                        
+
                         <CollapsibleContent>
                           <div className="px-3 pb-3">
                             <InlineAyahViewer
