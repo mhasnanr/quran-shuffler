@@ -12,6 +12,8 @@ import ReviewList from "@/components/ReviewList";
 import { useAppState } from "@/hooks/useAppState";
 import { useReviewItems } from "@/hooks/useReviewItems";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { RotateCcw } from "lucide-react";
 
 const Index = () => {
@@ -21,6 +23,8 @@ const Index = () => {
     chunkSize,
     chunksEnabled,
     setChunksEnabled,
+    showTranslation,
+    setShowTranslation,
     togglePrayer,
     updatePrayerRakaat,
     updateSelectedJuz,
@@ -92,6 +96,7 @@ const Index = () => {
               onAddToReview={addReviewItem}
               enabledPrayers={enabledPrayers}
               onAddTemporaryPrayers={handleAddTemporaryPrayers}
+              showTranslation={showTranslation}
             />
           )}
 
@@ -120,6 +125,28 @@ const Index = () => {
                 chunksEnabled={chunksEnabled}
                 onToggle={setChunksEnabled}
               />
+
+              {/* Translation Visibility Toggle */}
+              <div className="rounded-xl bg-card p-4 shadow-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label
+                      htmlFor="show-translation"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Show Translation
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Display translation text below ayah
+                    </p>
+                  </div>
+                  <Switch
+                    id="show-translation"
+                    checked={showTranslation}
+                    onCheckedChange={setShowTranslation}
+                  />
+                </div>
+              </div>
 
               {chunksEnabled && (
                 <ChunkSizeConfig

@@ -17,6 +17,7 @@ import {
 
 const STORAGE_KEY = "quran-shuffler-state";
 const CHUNKS_ENABLED_KEY = "quran-shuffler-chunks-enabled";
+const SHOW_TRANSLATION_KEY = "quran-shuffler-show-translation";
 
 // Generate chunk ID
 const getChunkId = (
@@ -145,12 +146,25 @@ const getStoredChunksEnabled = (): boolean => {
   return stored === null ? false : stored === "true";
 };
 
+const getStoredShowTranslation = (): boolean => {
+  const stored = localStorage.getItem(SHOW_TRANSLATION_KEY);
+  return stored === null ? true : stored === "true";
+};
+
 export const useAppState = () => {
   const [state, setState] = useState<AppState>(getInitialState);
   const [chunkSize, setChunkSizeState] = useState<number>(getStoredChunkSize);
   const [chunksEnabled, setChunksEnabledState] = useState<boolean>(
     getStoredChunksEnabled,
   );
+  const [showTranslation, setShowTranslationState] = useState<boolean>(
+    getStoredShowTranslation,
+  );
+
+  const setShowTranslation = (show: boolean) => {
+    localStorage.setItem(SHOW_TRANSLATION_KEY, String(show));
+    setShowTranslationState(show);
+  };
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -918,6 +932,8 @@ export const useAppState = () => {
     chunkSize,
     chunksEnabled,
     setChunksEnabled,
+    showTranslation,
+    setShowTranslation,
     updatePrayers,
     togglePrayer,
     updatePrayerRakaat,

@@ -54,6 +54,7 @@ interface DailyScheduleProps {
       rakaat: number;
     }>,
   ) => void;
+  showTranslation?: boolean;
 }
 
 const getCategoryColor = (prayerId: string) => {
@@ -97,6 +98,7 @@ const DailySchedule = ({
   onAddToReview,
   enabledPrayers,
   onAddTemporaryPrayers,
+  showTranslation = true,
 }: DailyScheduleProps) => {
   // Use local timezone for date key
   const now = new Date();
@@ -411,6 +413,7 @@ const DailySchedule = ({
                       surahName={rakaat.surahName}
                       startAyah={rakaat.startAyah}
                       endAyah={rakaat.endAyah}
+                      showTranslation={showTranslation}
                     />
                   </div>
                 );
