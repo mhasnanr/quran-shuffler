@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 
 interface TourContextType {
   restartCurrentTour: () => void;
@@ -8,7 +14,9 @@ interface TourContextType {
 const TourContext = createContext<TourContextType | null>(null);
 
 export const TourProvider = ({ children }: { children: ReactNode }) => {
-  const [restartHandler, setRestartHandler] = useState<(() => void) | null>(null);
+  const [restartHandler, setRestartHandler] = useState<(() => void) | null>(
+    null,
+  );
 
   const restartCurrentTour = useCallback(() => {
     if (restartHandler) {
@@ -21,7 +29,9 @@ export const TourProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <TourContext.Provider value={{ restartCurrentTour, setRestartHandler: setHandler }}>
+    <TourContext.Provider
+      value={{ restartCurrentTour, setRestartHandler: setHandler }}
+    >
       {children}
     </TourContext.Provider>
   );

@@ -25,10 +25,10 @@ const SchedulePage = () => {
   // Track state with refs for tour callbacks
   const assignmentRef = useRef(todayAssignment);
   assignmentRef.current = todayAssignment;
-  
+
   const reviewItemsRef = useRef(reviewItems);
   reviewItemsRef.current = reviewItems;
-  
+
   const isFirstTimeRef = useRef(!isOnboardingComplete());
   const initialReviewCountRef = useRef(reviewItems.length);
 
@@ -81,7 +81,9 @@ const SchedulePage = () => {
           waitForAction: {
             text: "👆 Klik untuk expand dan melihat detail rakaat.",
             checkComplete: () => {
-              const trigger = document.querySelector("[data-tour='expand-round']");
+              const trigger = document.querySelector(
+                "[data-tour='expand-round']",
+              );
               const collapsible = trigger?.closest("[data-state]");
               return collapsible?.getAttribute("data-state") === "open";
             },
@@ -122,7 +124,9 @@ const SchedulePage = () => {
             text: "👆 Klik 'Need Review' untuk menambahkan surat ke daftar review.",
             checkComplete: () => {
               // Check if a new review item was added
-              return reviewItemsRef.current.length > initialReviewCountRef.current;
+              return (
+                reviewItemsRef.current.length > initialReviewCountRef.current
+              );
             },
           },
         }),
@@ -136,15 +140,23 @@ const SchedulePage = () => {
   }, []); // Empty deps - only create once
 
   // Navigate to review after completing schedule tour
-  const tourOptions = useMemo(() => ({
-    onComplete: () => {
-      if (isFirstTimeRef.current) {
-        navigate("/review");
-      }
-    },
-  }), [navigate]);
+  const tourOptions = useMemo(
+    () => ({
+      onComplete: () => {
+        if (isFirstTimeRef.current) {
+          navigate("/review");
+        }
+      },
+    }),
+    [navigate],
+  );
 
-  const { restartTour } = useTour(SCHEDULE_TOUR_ID, scheduleTourSteps, true, tourOptions);
+  const { restartTour } = useTour(
+    SCHEDULE_TOUR_ID,
+    scheduleTourSteps,
+    true,
+    tourOptions,
+  );
   const { setRestartHandler } = useTourContext();
 
   useEffect(() => {

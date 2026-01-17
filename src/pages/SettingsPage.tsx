@@ -51,7 +51,7 @@ const SettingsPage = () => {
   // Create tour steps only once
   const settingsTourSteps: TourStep[] = useMemo(() => {
     const isFirstTime = isFirstTimeRef.current;
-    
+
     return [
       {
         id: "settings-intro",
@@ -70,17 +70,20 @@ const SettingsPage = () => {
         ...(isFirstTime && {
           waitForAction: {
             text: "👆 Aktifkan minimal satu shalat untuk melanjutkan. Klik toggle untuk mengaktifkan.",
-            checkComplete: () => stateRef.current.prayers.filter(p => p.enabled).length > 0,
+            checkComplete: () =>
+              stateRef.current.prayers.filter((p) => p.enabled).length > 0,
           },
           when: {
             show: () => {
               // Enable first prayer if none enabled
-              if (stateRef.current.prayers.filter(p => p.enabled).length === 0) {
+              if (
+                stateRef.current.prayers.filter((p) => p.enabled).length === 0
+              ) {
                 const first = stateRef.current.prayers[0];
                 if (first) togglePrayer(first.id);
               }
-            }
-          }
+            },
+          },
         }),
       },
       {
@@ -103,8 +106,8 @@ const SettingsPage = () => {
               if (stateRef.current.selectedJuz.length === 0) {
                 updateSelectedJuz([1]);
               }
-            }
-          }
+            },
+          },
         }),
       },
       {
@@ -144,11 +147,14 @@ const SettingsPage = () => {
           when: {
             show: () => {
               // Select first chunk if none selected
-              if (stateRef.current.selectedChunks.length === 0 && allPossibleChunks.length > 0) {
+              if (
+                stateRef.current.selectedChunks.length === 0 &&
+                allPossibleChunks.length > 0
+              ) {
                 toggleChunk(allPossibleChunks[0].id);
               }
-            }
-          }
+            },
+          },
         }),
       },
       {
@@ -163,23 +169,31 @@ const SettingsPage = () => {
           {
             text: "Done",
             action: "complete",
-            classes: "shepherd-button-primary"
-          }
-        ]
+            classes: "shepherd-button-primary",
+          },
+        ],
       },
     ];
   }, []); // Empty deps - only create once
 
   // Navigate to schedule after completing onboarding tour
-  const tourOptions = useMemo(() => ({
-    onComplete: () => {
-      if (isFirstTimeRef.current) {
-        navigateToNextStep("settings");
-      }
-    },
-  }), [navigateToNextStep]);
+  const tourOptions = useMemo(
+    () => ({
+      onComplete: () => {
+        if (isFirstTimeRef.current) {
+          navigateToNextStep("settings");
+        }
+      },
+    }),
+    [navigateToNextStep],
+  );
 
-  const { restartTour } = useTour(SETTINGS_TOUR_ID, settingsTourSteps, true, tourOptions);
+  const { restartTour } = useTour(
+    SETTINGS_TOUR_ID,
+    settingsTourSteps,
+    true,
+    tourOptions,
+  );
   const { setRestartHandler } = useTourContext();
 
   useEffect(() => {
@@ -212,7 +226,10 @@ const SettingsPage = () => {
       </div>
 
       {/* Translation Visibility Toggle */}
-      <div data-tour="translation-toggle" className="rounded-xl bg-card p-4 shadow-card">
+      <div
+        data-tour="translation-toggle"
+        className="rounded-xl bg-card p-4 shadow-card"
+      >
         <div className="flex items-center justify-between">
           <div>
             <Label
@@ -256,7 +273,10 @@ const SettingsPage = () => {
         />
       </div>
 
-      <div data-tour="reset-pool" className="rounded-xl bg-card p-4 shadow-card">
+      <div
+        data-tour="reset-pool"
+        className="rounded-xl bg-card p-4 shadow-card"
+      >
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-foreground">

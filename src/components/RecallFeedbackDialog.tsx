@@ -7,8 +7,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface RecallFeedbackDialogProps {
   open: boolean;
@@ -31,7 +31,9 @@ const RecallFeedbackDialog = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-center">How did it go?</AlertDialogTitle>
+          <AlertDialogTitle className="text-center">
+            How did it go?
+          </AlertDialogTitle>
           <AlertDialogDescription className="text-center">
             <span className="font-medium text-foreground">{surahName}</span>
             {ayahRange && (

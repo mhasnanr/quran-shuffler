@@ -15,7 +15,7 @@ export const resetOnboarding = () => {
   localStorage.removeItem(ONBOARDING_KEY);
   // Also reset individual tour completions
   const keys = Object.keys(localStorage).filter((key) =>
-    key.startsWith("quran-shuffler-tour-")
+    key.startsWith("quran-shuffler-tour-"),
   );
   keys.forEach((key) => localStorage.removeItem(key));
 };
@@ -32,19 +32,22 @@ export const useOnboarding = () => {
     markOnboardingComplete();
   }, []);
 
-  const navigateToNextStep = useCallback((currentStep: "settings" | "schedule" | "review") => {
-    switch (currentStep) {
-      case "settings":
-        navigate("/");
-        break;
-      case "schedule":
-        navigate("/review");
-        break;
-      case "review":
-        markOnboardingComplete();
-        break;
-    }
-  }, [navigate]);
+  const navigateToNextStep = useCallback(
+    (currentStep: "settings" | "schedule" | "review") => {
+      switch (currentStep) {
+        case "settings":
+          navigate("/");
+          break;
+        case "schedule":
+          navigate("/review");
+          break;
+        case "review":
+          markOnboardingComplete();
+          break;
+      }
+    },
+    [navigate],
+  );
 
   return {
     isComplete: isOnboardingComplete(),

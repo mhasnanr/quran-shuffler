@@ -8,24 +8,32 @@ import { markOnboardingComplete } from "@/hooks/useOnboarding";
 
 const ReviewPage = () => {
   const { reviewItems, removeReviewItem } = useReviewItems();
-  
+
   // Filter tour steps based on whether there are review items
   const filteredTourSteps = useMemo(() => {
     if (reviewItems.length === 0) {
       // Only show intro if no review items
-      return reviewTourSteps.filter(step => step.id === "review-intro");
+      return reviewTourSteps.filter((step) => step.id === "review-intro");
     }
     return reviewTourSteps;
   }, [reviewItems.length]);
 
   // Mark onboarding complete after review tour
-  const tourOptions = useMemo(() => ({
-    onComplete: () => {
-      markOnboardingComplete();
-    },
-  }), []);
-  
-  const { restartTour } = useTour(REVIEW_TOUR_ID, filteredTourSteps, true, tourOptions);
+  const tourOptions = useMemo(
+    () => ({
+      onComplete: () => {
+        markOnboardingComplete();
+      },
+    }),
+    [],
+  );
+
+  const { restartTour } = useTour(
+    REVIEW_TOUR_ID,
+    filteredTourSteps,
+    true,
+    tourOptions,
+  );
   const { setRestartHandler } = useTourContext();
 
   useEffect(() => {

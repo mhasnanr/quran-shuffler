@@ -314,7 +314,7 @@ const DailySchedule = ({
               "border-2 border-violet-500/40 bg-violet-500/5",
           )}
         >
-          <CollapsibleTrigger 
+          <CollapsibleTrigger
             data-tour={isFirstRound ? "expand-round" : undefined}
             className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-muted/70 transition-colors"
           >
@@ -362,7 +362,8 @@ const DailySchedule = ({
                 const rakaatCompleted = isRakaatCompleted(rakaatKey);
                 const showAyahRange =
                   rakaat.startAyah !== rakaat.endAyah || rakaat.startAyah !== 1;
-                const isFirstRakaat = isFirstPrayer && roundIndex === 0 && idx === 0;
+                const isFirstRakaat =
+                  isFirstPrayer && roundIndex === 0 && idx === 0;
 
                 return (
                   <div
@@ -374,7 +375,9 @@ const DailySchedule = ({
                   >
                     <div className="flex items-center gap-3">
                       <button
-                        data-tour={isFirstRakaat ? "complete-rakaat" : undefined}
+                        data-tour={
+                          isFirstRakaat ? "complete-rakaat" : undefined
+                        }
                         onClick={() =>
                           handleRakaatCheck(
                             rakaatKey,

@@ -30,7 +30,8 @@ export interface UseTourOptions {
 
 const TOUR_STORAGE_PREFIX = "quran-shuffler-tour-";
 
-const getTourCompletedKey = (tourId: string) => `${TOUR_STORAGE_PREFIX}${tourId}`;
+const getTourCompletedKey = (tourId: string) =>
+  `${TOUR_STORAGE_PREFIX}${tourId}`;
 
 const isTourCompleted = (tourId: string): boolean => {
   return localStorage.getItem(getTourCompletedKey(tourId)) === "true";
@@ -46,16 +47,16 @@ export const resetTourCompletion = (tourId: string) => {
 
 export const resetAllTours = () => {
   const keys = Object.keys(localStorage).filter((key) =>
-    key.startsWith(TOUR_STORAGE_PREFIX)
+    key.startsWith(TOUR_STORAGE_PREFIX),
   );
   keys.forEach((key) => localStorage.removeItem(key));
 };
 
 export const useTour = (
-  tourId: string, 
-  steps: TourStep[], 
+  tourId: string,
+  steps: TourStep[],
   autoStart = true,
-  options?: UseTourOptions
+  options?: UseTourOptions,
 ) => {
   const tourRef = useRef<InstanceType<typeof Shepherd.Tour> | null>(null);
   const intervalsRef = useRef<NodeJS.Timeout[]>([]);
@@ -68,7 +69,7 @@ export const useTour = (
 
   const createTour = useCallback(() => {
     clearAllIntervals();
-    
+
     if (tourRef.current) {
       tourRef.current.complete();
     }
@@ -153,16 +154,16 @@ export const useTour = (
                     clearInterval(interval);
                     if (textEl) textEl.textContent = step.text;
                     currentStep.updateStepOptions({ buttons: defaultButtons });
-                    
+
                     // Reposition the popup after a small delay
                     setTimeout(() => {
-                      const targetEl = step.attachTo?.element 
+                      const targetEl = step.attachTo?.element
                         ? document.querySelector(step.attachTo.element)
                         : null;
                       if (targetEl) {
                         // Force Shepherd to recalculate position by updating attachTo
                         currentStep.updateStepOptions({
-                          attachTo: step.attachTo
+                          attachTo: step.attachTo,
                         });
                       }
                     }, 100);

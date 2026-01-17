@@ -16,7 +16,6 @@ const OnboardingRedirect = ({ children }: OnboardingRedirectProps) => {
 
   const [ready, setReady] = useState(false);
 
-
   useLayoutEffect(() => {
     const needsOnboarding = !isOnboardingComplete();
     const onSettingsPage = location.pathname === "/settings";
