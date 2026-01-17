@@ -149,22 +149,21 @@ const SurahList = ({
   ) => {
     if (!chunksEnabled) {
       // When chunks disabled, toggle full surah
+      const surah = surahs.find((s) => s.number === surahNumber);
+      if (!surah) return;
+      const fullChunkId = `${surahNumber}-1-${surah.verses}`;
       if (isSurahIncludedAsFull(surahNumber)) {
-        // Simply remove the full surah chunk by toggling it off
-        const surah = surahs.find((s) => s.number === surahNumber);
-        if (surah) {
-          const fullChunkId = `${surahNumber}-1-${surah.verses}`;
-          onToggleChunk(fullChunkId);
-        }
-      } else if (isSurahFullySelected(surahNumber)) {
-        // Surah is selected via individual chunks, deselect all of them
+        // Remove the full surah chunk
+        onToggleChunk(fullChunkId);
+      } else {
+        // Remove all chunks for this surah first
         const surahChunks = getChunksForSurah(surahNumber);
         surahChunks.forEach((chunk) => {
           if (isChunkSelected(chunk.id)) {
             onToggleChunk(chunk.id);
           }
         });
-      } else {
+        // Add the full surah chunk
         onIncludeAllAyahs(surahNumber);
       }
     } else if (hasMultipleChunks) {

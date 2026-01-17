@@ -13,7 +13,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Info,
+  ClockFading,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AyahViewer from "./AyahViewer";
@@ -328,9 +328,18 @@ const DailySchedule = ({
               </span>
               {hasTemporaryRakaat && (
                 <TooltipProvider>
-                  <Tooltip>
+                  <Tooltip disableHoverableContent={false}>
                     <TooltipTrigger asChild>
-                      <Info className="h-4 w-4 text-violet-500" />
+                      <button
+                        type="button"
+                        className="flex items-center justify-center rounded-full bg-violet-100 hover:bg-violet-200 focus:bg-violet-200 focus:outline-none"
+                        aria-label="Show info"
+                      >
+                        <ClockFading
+                          className="h-4 w-4 text-violet-500"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </button>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Added via temporary prayer</p>

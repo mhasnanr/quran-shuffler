@@ -26,7 +26,6 @@ import {
 
 interface ReviewListProps {
   items: ReviewItem[];
-  onRemove: (id: string) => void;
   onComplete: (id: string) => void;
 }
 
@@ -145,7 +144,7 @@ const InlineAyahViewer = ({
   );
 };
 
-const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
+const ReviewList = ({ items, onComplete }: ReviewListProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [fullscreenItem, setFullscreenItem] = useState<ReviewItem | null>(null);
 
@@ -287,11 +286,11 @@ const ReviewList = ({ items, onRemove, onComplete }: ReviewListProps) => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => onRemove(chunk.id)}
-                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              title="Remove from review"
+                              onClick={() => onComplete(chunk.id)}
+                              className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-600 hover:bg-emerald-500/10"
+                              title="Mark as completed"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <CheckCircle2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>

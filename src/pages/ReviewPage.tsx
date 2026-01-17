@@ -4,13 +4,7 @@ import { useReviewItems } from "@/hooks/useReviewItems";
 const ReviewPage = () => {
   const { reviewItems, removeReviewItem } = useReviewItems();
 
-  return (
-    <ReviewList
-      items={reviewItems}
-      onRemove={removeReviewItem}
-      onComplete={removeReviewItem}
-    />
-  );
+  return <ReviewList items={reviewItems} onComplete={removeReviewItem} />;
 };
 
 export default ReviewPage;
