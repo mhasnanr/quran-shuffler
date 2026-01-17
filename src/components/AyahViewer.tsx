@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import FullscreenAyahViewer from './FullscreenAyahViewer';
 import { surahs } from '@/data/quranData';
+import { BISMILLAH, BISMILLAH_ENGLISH, BISMILLAH_INDONESIAN } from '@/data/quranAyat';
 
 interface AyahViewerProps {
   surahNumber: number;
@@ -26,32 +27,13 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
   const surah = surahs.find(s => s.number === surahNumber);
   const arabicName = surah?.arabicName || '';
 
+  // Show bismillah separately for surahs other than Al-Fatihah (1) and At-Taubah (9)
+  const showBismillah = startAyah === 1 && surahNumber !== 1 && surahNumber !== 9;
+
   useEffect(() => {
     if (isOpen && !hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
-        // Filter out bismillah from first ayat of most surahs (except Al-Fatihah and At-Taubah)
-        const filteredData = data.map(ayah => {
-          if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Universal regex to match any form of bismillah at the start
-            // Matches: بسم followed by variations of الله الرحمن الرحيم with any diacritics
-            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
-            
-            let cleanedArabic = ayah.arabic.replace(bismillahRegex, '').trim();
-            
-            // Fallback: if regex didn't work, try removing by detecting common starting words
-            if (cleanedArabic === ayah.arabic && ayah.arabic.startsWith('بِسْمِ')) {
-              // Find the end of bismillah by looking for الرحيم and removing everything before it plus the word
-              const rahimIndex = ayah.arabic.indexOf('الرَّحِيمِ');
-              if (rahimIndex !== -1) {
-                cleanedArabic = ayah.arabic.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
-              }
-            }
-            
-            return { ...ayah, arabic: cleanedArabic || ayah.arabic };
-          }
-          return ayah;
-        });
-        setAyahs(filteredData);
+        setAyahs(data);
         setHasLoaded(true);
       });
     }
@@ -127,6 +109,18 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
 
             {!loading && !error && ayahs.length > 0 && (
               <div className="space-y-4">
+                {/* Bismillah - shown separately at top */}
+                {showBismillah && (
+                  <div className="space-y-2 border-b border-border pb-3 bg-primary/5 rounded-lg p-3 -mx-1">
+                    <p className="font-arabic text-center text-xl leading-[2.2] text-primary" dir="rtl">
+                      {BISMILLAH}
+                    </p>
+                    <p className="text-xs leading-relaxed text-muted-foreground text-center">
+                      {translationLang === 'id' ? BISMILLAH_INDONESIAN : BISMILLAH_ENGLISH}
+                    </p>
+                  </div>
+                )}
+                
                 {ayahs.map((ayah) => (
                   <div key={ayah.numberInSurah} className="space-y-2 border-b border-border pb-3 last:border-0">
                     <div className="flex items-start justify-end gap-2">
@@ -138,7 +132,7 @@ const AyahViewer = ({ surahNumber, surahName, startAyah, endAyah }: AyahViewerPr
                       </span>
                     </div>
                     
-                    <div className="text-right">
+                    <div className="text-left">
                       <p className="text-xs leading-relaxed text-muted-foreground">
                         {translationLang === 'id' ? ayah.indonesian : ayah.english}
                       </p>

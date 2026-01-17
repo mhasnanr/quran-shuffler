@@ -1,0 +1,767 @@
+// Hardcoded Quran data for offline use - Juz 30 (Juz Amma)
+// Format: { surahNumber: { ayahNumber: { arabic, english, indonesian } } }
+
+export interface AyahData {
+  arabic: string;
+  english: string;
+  indonesian: string;
+}
+
+export const BISMILLAH = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+export const BISMILLAH_ENGLISH = "In the name of Allah, the Entirely Merciful, the Especially Merciful.";
+export const BISMILLAH_INDONESIAN = "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.";
+
+// Juz 30 Surahs (78-114)
+export const quranAyat: Record<number, Record<number, AyahData>> = {
+  // Surah 78 - An-Naba (40 ayat)
+  78: {
+    1: { arabic: "عَمَّ يَتَسَاءَلُونَ", english: "About what are they asking one another?", indonesian: "Tentang apakah mereka saling bertanya-tanya?" },
+    2: { arabic: "عَنِ النَّبَإِ الْعَظِيمِ", english: "About the great news -", indonesian: "Tentang berita besar," },
+    3: { arabic: "الَّذِي هُمْ فِيهِ مُخْتَلِفُونَ", english: "That over which they are in disagreement.", indonesian: "yang mereka perselisihkan tentangnya." },
+    4: { arabic: "كَلَّا سَيَعْلَمُونَ", english: "No! They are going to know.", indonesian: "Sekali-kali tidak! Kelak mereka akan mengetahui," },
+    5: { arabic: "ثُمَّ كَلَّا سَيَعْلَمُونَ", english: "Then, no! They are going to know.", indonesian: "kemudian sekali-kali tidak! Kelak mereka akan mengetahui." },
+    6: { arabic: "أَلَمْ نَجْعَلِ الْأَرْضَ مِهَادًا", english: "Have We not made the earth a resting place?", indonesian: "Bukankah Kami telah menjadikan bumi itu sebagai hamparan?" },
+    7: { arabic: "وَالْجِبَالَ أَوْتَادًا", english: "And the mountains as stakes?", indonesian: "dan gunung-gunung sebagai pasak?" },
+    8: { arabic: "وَخَلَقْنَاكُمْ أَزْوَاجًا", english: "And We created you in pairs", indonesian: "Dan Kami menciptakan kamu berpasang-pasangan," },
+    9: { arabic: "وَجَعَلْنَا نَوْمَكُمْ سُبَاتًا", english: "And made your sleep [a means for] rest", indonesian: "dan Kami jadikan tidurmu untuk istirahat," },
+    10: { arabic: "وَجَعَلْنَا اللَّيْلَ لِبَاسًا", english: "And made the night as clothing", indonesian: "dan Kami jadikan malam sebagai pakaian," },
+    11: { arabic: "وَجَعَلْنَا النَّهَارَ مَعَاشًا", english: "And made the day for livelihood", indonesian: "dan Kami jadikan siang untuk mencari penghidupan," },
+    12: { arabic: "وَبَنَيْنَا فَوْقَكُمْ سَبْعًا شِدَادًا", english: "And constructed above you seven strong [heavens]", indonesian: "dan Kami bangun di atas kamu tujuh (langit) yang kokoh," },
+    13: { arabic: "وَجَعَلْنَا سِرَاجًا وَهَّاجًا", english: "And made [therein] a burning lamp", indonesian: "dan Kami jadikan pelita yang terang benderang (matahari)," },
+    14: { arabic: "وَأَنزَلْنَا مِنَ الْمُعْصِرَاتِ مَاءً ثَجَّاجًا", english: "And sent down, from the rain clouds, pouring water", indonesian: "dan Kami turunkan dari awan air yang banyak tercurah," },
+    15: { arabic: "لِّنُخْرِجَ بِهِ حَبًّا وَنَبَاتًا", english: "That We may bring forth thereby grain and vegetation", indonesian: "supaya Kami tumbuhkan dengan air itu biji-bijian dan tumbuh-tumbuhan," },
+    16: { arabic: "وَجَنَّاتٍ أَلْفَافًا", english: "And gardens of entwined growth.", indonesian: "dan kebun-kebun yang lebat." },
+    17: { arabic: "إِنَّ يَوْمَ الْفَصْلِ كَانَ مِيقَاتًا", english: "Indeed, the Day of Judgement is an appointed time -", indonesian: "Sesungguhnya hari keputusan itu adalah waktu yang telah ditentukan," },
+    18: { arabic: "يَوْمَ يُنفَخُ فِي الصُّورِ فَتَأْتُونَ أَفْوَاجًا", english: "The Day the Horn is blown and you will come forth in multitudes", indonesian: "yaitu pada hari sangkakala ditiup lalu kamu datang berkelompok-kelompok," },
+    19: { arabic: "وَفُتِحَتِ السَّمَاءُ فَكَانَتْ أَبْوَابًا", english: "And the heaven is opened and will become gateways", indonesian: "dan langit dibuka, maka jadilah pintu-pintu," },
+    20: { arabic: "وَسُيِّرَتِ الْجِبَالُ فَكَانَتْ سَرَابًا", english: "And the mountains are removed and will be [but] a mirage.", indonesian: "dan gunung-gunung dijalankan, maka jadilah fatamorgana." },
+    21: { arabic: "إِنَّ جَهَنَّمَ كَانَتْ مِرْصَادًا", english: "Indeed, Hell has been lying in wait", indonesian: "Sesungguhnya neraka Jahanam itu mengintai," },
+    22: { arabic: "لِّلطَّاغِينَ مَآبًا", english: "For the transgressors, a place of return,", indonesian: "lagi menjadi tempat kembali bagi orang-orang yang melampaui batas," },
+    23: { arabic: "لَّابِثِينَ فِيهَا أَحْقَابًا", english: "In which they will remain for ages [unending].", indonesian: "mereka tinggal di dalamnya berabad-abad lamanya," },
+    24: { arabic: "لَّا يَذُوقُونَ فِيهَا بَرْدًا وَلَا شَرَابًا", english: "They will not taste therein [any] coolness or drink", indonesian: "mereka tidak merasakan kesejukan di dalamnya dan tidak (pula mendapat) minuman," },
+    25: { arabic: "إِلَّا حَمِيمًا وَغَسَّاقًا", english: "Except scalding water and [foul] purulence -", indonesian: "selain air yang mendidih dan nanah," },
+    26: { arabic: "جَزَاءً وِفَاقًا", english: "An appropriate recompense.", indonesian: "sebagai balasan yang setimpal." },
+    27: { arabic: "إِنَّهُمْ كَانُوا لَا يَرْجُونَ حِسَابًا", english: "Indeed, they were not expecting an account", indonesian: "Sesungguhnya mereka tidak takut kepada hisab," },
+    28: { arabic: "وَكَذَّبُوا بِآيَاتِنَا كِذَّابًا", english: "And denied Our verses with [emphatic] denial.", indonesian: "dan mereka mendustakan ayat-ayat Kami dengan sesungguh-sungguhnya." },
+    29: { arabic: "وَكُلَّ شَيْءٍ أَحْصَيْنَاهُ كِتَابًا", english: "But all things We have enumerated in writing.", indonesian: "Dan segala sesuatu telah Kami catat dalam suatu kitab." },
+    30: { arabic: "فَذُوقُوا فَلَن نَّزِيدَكُمْ إِلَّا عَذَابًا", english: "So taste [the penalty], and never will We increase you except in torment.", indonesian: "Maka rasakanlah, dan Kami tidak akan menambah kepada kamu selain azab." },
+    31: { arabic: "إِنَّ لِلْمُتَّقِينَ مَفَازًا", english: "Indeed, for the righteous is attainment -", indonesian: "Sesungguhnya orang-orang yang bertakwa mendapat kemenangan," },
+    32: { arabic: "حَدَائِقَ وَأَعْنَابًا", english: "Gardens and grapevines", indonesian: "yaitu kebun-kebun dan buah anggur," },
+    33: { arabic: "وَكَوَاعِبَ أَتْرَابًا", english: "And full-breasted [companions] of equal age", indonesian: "dan gadis-gadis montok yang sebaya," },
+    34: { arabic: "وَكَأْسًا دِهَاقًا", english: "And a full cup.", indonesian: "dan gelas-gelas yang penuh (minuman)." },
+    35: { arabic: "لَّا يَسْمَعُونَ فِيهَا لَغْوًا وَلَا كِذَّابًا", english: "No ill speech will they hear therein or any falsehood -", indonesian: "Di dalamnya mereka tidak mendengar perkataan sia-sia dan tidak (pula perkataan) dusta." },
+    36: { arabic: "جَزَاءً مِّن رَّبِّكَ عَطَاءً حِسَابًا", english: "[As] reward from your Lord, [a generous] gift [made due by] account,", indonesian: "Sebagai balasan dari Tuhanmu dan pemberian yang cukup banyak." },
+    37: { arabic: "رَّبِّ السَّمَاوَاتِ وَالْأَرْضِ وَمَا بَيْنَهُمَا الرَّحْمَٰنِ ۖ لَا يَمْلِكُونَ مِنْهُ خِطَابًا", english: "[From] the Lord of the heavens and the earth and whatever is between them, the Most Merciful. They possess not from Him [authority for] speech.", indonesian: "Tuhan (yang menguasai) langit dan bumi dan apa yang ada di antara keduanya; Yang Maha Pengasih. Mereka tidak dapat berbicara dengan Dia." },
+    38: { arabic: "يَوْمَ يَقُومُ الرُّوحُ وَالْمَلَائِكَةُ صَفًّا ۖ لَّا يَتَكَلَّمُونَ إِلَّا مَنْ أَذِنَ لَهُ الرَّحْمَٰنُ وَقَالَ صَوَابًا", english: "The Day that the Spirit and the angels will stand in rows, they will not speak except for one whom the Most Merciful permits, and he will say what is correct.", indonesian: "Pada hari, ketika Ruh dan para malaikat berdiri bershaf-shaf, mereka tidak berkata-kata, kecuali siapa yang telah diberi izin kepadanya oleh Tuhan Yang Maha Pengasih; dan ia mengucapkan kata yang benar." },
+    39: { arabic: "ذَٰلِكَ الْيَوْمُ الْحَقُّ ۖ فَمَن شَاءَ اتَّخَذَ إِلَىٰ رَبِّهِ مَآبًا", english: "That is the True Day; so he who wills may take to his Lord a [way of] return.", indonesian: "Itulah hari yang pasti terjadi. Maka barang siapa yang menghendaki, niscaya ia menempuh jalan kembali kepada Tuhannya." },
+    40: { arabic: "إِنَّا أَنذَرْنَاكُمْ عَذَابًا قَرِيبًا يَوْمَ يَنظُرُ الْمَرْءُ مَا قَدَّمَتْ يَدَاهُ وَيَقُولُ الْكَافِرُ يَا لَيْتَنِي كُنتُ تُرَابًا", english: "Indeed, We have warned you of a near punishment on the Day when a man will observe what his hands have put forth and the disbeliever will say, \"Oh, I wish that I were dust!\"", indonesian: "Sesungguhnya Kami telah memperingatkan kepadamu (hai orang kafir) siksa yang dekat, pada hari manusia melihat apa yang telah diperbuat oleh kedua tangannya; dan orang kafir berkata: \"Alangkah baiknya sekiranya aku dahulu adalah tanah\"." },
+  },
+  
+  // Surah 112 - Al-Ikhlas (4 ayat)
+  112: {
+    1: { arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ", english: "Say, \"He is Allah, [who is] One,", indonesian: "Katakanlah (Muhammad), \"Dialah Allah, Yang Maha Esa," },
+    2: { arabic: "اللَّهُ الصَّمَدُ", english: "Allah, the Eternal Refuge.", indonesian: "Allah tempat meminta segala sesuatu." },
+    3: { arabic: "لَمْ يَلِدْ وَلَمْ يُولَدْ", english: "He neither begets nor is born,", indonesian: "Dia tidak beranak dan tidak pula diperanakkan," },
+    4: { arabic: "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ", english: "Nor is there to Him any equivalent.\"", indonesian: "dan tidak ada sesuatu yang setara dengan Dia.\"" },
+  },
+  
+  // Surah 113 - Al-Falaq (5 ayat)
+  113: {
+    1: { arabic: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ", english: "Say, \"I seek refuge in the Lord of daybreak", indonesian: "Katakanlah, \"Aku berlindung kepada Tuhan yang menguasai subuh (fajar)," },
+    2: { arabic: "مِن شَرِّ مَا خَلَقَ", english: "From the evil of that which He created", indonesian: "dari kejahatan (makhluk yang) Dia ciptakan," },
+    3: { arabic: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ", english: "And from the evil of darkness when it settles", indonesian: "dan dari kejahatan malam apabila telah gelap gulita," },
+    4: { arabic: "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ", english: "And from the evil of the blowers in knots", indonesian: "dan dari kejahatan (perempuan-perempuan) penyihir yang meniup pada buhul-buhul (talinya)," },
+    5: { arabic: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ", english: "And from the evil of an envier when he envies.\"", indonesian: "dan dari kejahatan orang yang dengki apabila dia dengki.\"" },
+  },
+  
+  // Surah 114 - An-Nas (6 ayat)
+  114: {
+    1: { arabic: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ", english: "Say, \"I seek refuge in the Lord of mankind,", indonesian: "Katakanlah, \"Aku berlindung kepada Tuhannya manusia," },
+    2: { arabic: "مَلِكِ النَّاسِ", english: "The Sovereign of mankind,", indonesian: "Raja manusia," },
+    3: { arabic: "إِلَٰهِ النَّاسِ", english: "The God of mankind,", indonesian: "Sembahan manusia," },
+    4: { arabic: "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ", english: "From the evil of the retreating whisperer -", indonesian: "dari kejahatan (bisikan) setan yang bersembunyi," },
+    5: { arabic: "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ", english: "Who whispers [evil] into the breasts of mankind -", indonesian: "yang membisikkan (kejahatan) ke dalam dada manusia," },
+    6: { arabic: "مِنَ الْجِنَّةِ وَالنَّاسِ", english: "From among the jinn and mankind.\"", indonesian: "dari (golongan) jin dan manusia.\"" },
+  },
+  
+  // Surah 103 - Al-'Asr (3 ayat)
+  103: {
+    1: { arabic: "وَالْعَصْرِ", english: "By time,", indonesian: "Demi masa." },
+    2: { arabic: "إِنَّ الْإِنسَانَ لَفِي خُسْرٍ", english: "Indeed, mankind is in loss,", indonesian: "Sungguh, manusia berada dalam kerugian," },
+    3: { arabic: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ", english: "Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience.", indonesian: "kecuali orang-orang yang beriman dan mengerjakan kebajikan serta saling menasihati untuk kebenaran dan saling menasihati untuk kesabaran." },
+  },
+  
+  // Surah 108 - Al-Kausar (3 ayat)
+  108: {
+    1: { arabic: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ", english: "Indeed, We have granted you, [O Muhammad], al-Kawthar.", indonesian: "Sesungguhnya Kami telah memberikan kepadamu nikmat yang banyak." },
+    2: { arabic: "فَصَلِّ لِرَبِّكَ وَانْحَرْ", english: "So pray to your Lord and sacrifice [to Him alone].", indonesian: "Maka laksanakanlah salat karena Tuhanmu, dan berkurbanlah (sebagai ibadah dan mendekatkan diri kepada Allah)." },
+    3: { arabic: "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ", english: "Indeed, your enemy is the one cut off.", indonesian: "Sesungguhnya orang-orang yang membencimu dialah yang terputus (dari rahmat Allah)." },
+  },
+  
+  // Surah 110 - An-Nasr (3 ayat)
+  110: {
+    1: { arabic: "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ", english: "When the victory of Allah has come and the conquest,", indonesian: "Apabila telah datang pertolongan Allah dan kemenangan," },
+    2: { arabic: "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا", english: "And you see the people entering into the religion of Allah in multitudes,", indonesian: "dan engkau melihat manusia berbondong-bondong masuk agama Allah," },
+    3: { arabic: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا", english: "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of repentance.", indonesian: "maka bertasbihlah dengan memuji Tuhanmu dan mohonlah ampunan kepada-Nya. Sungguh, Dia adalah Maha Penerima tobat." },
+  },
+  
+  // Surah 111 - Al-Lahab (5 ayat)
+  111: {
+    1: { arabic: "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ", english: "May the hands of Abu Lahab be ruined, and ruined is he.", indonesian: "Binasalah kedua tangan Abu Lahab dan benar-benar binasa dia!" },
+    2: { arabic: "مَا أَغْنَىٰ عَنْهُ مَالُهُ وَمَا كَسَبَ", english: "His wealth will not avail him or that which he gained.", indonesian: "Tidaklah berguna baginya hartanya dan apa yang dia usahakan." },
+    3: { arabic: "سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ", english: "He will [enter to] burn in a Fire of [blazing] flame", indonesian: "Kelak dia akan masuk ke dalam api yang bergejolak (neraka)." },
+    4: { arabic: "وَامْرَأَتُهُ حَمَّالَةَ الْحَطَبِ", english: "And his wife [as well] - the carrier of firewood.", indonesian: "Dan (begitu pula) istrinya, pembawa kayu bakar (penyebar fitnah)." },
+    5: { arabic: "فِي جِيدِهَا حَبْلٌ مِّن مَّسَدٍ", english: "Around her neck is a rope of [twisted] fiber.", indonesian: "Di lehernya ada tali dari sabut yang dipintal." },
+  },
+  
+  // Surah 109 - Al-Kafirun (6 ayat)
+  109: {
+    1: { arabic: "قُلْ يَا أَيُّهَا الْكَافِرُونَ", english: "Say, \"O disbelievers,", indonesian: "Katakanlah (Muhammad), \"Wahai orang-orang kafir!" },
+    2: { arabic: "لَا أَعْبُدُ مَا تَعْبُدُونَ", english: "I do not worship what you worship.", indonesian: "Aku tidak akan menyembah apa yang kamu sembah." },
+    3: { arabic: "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ", english: "Nor are you worshippers of what I worship.", indonesian: "Dan kamu bukan penyembah apa yang aku sembah." },
+    4: { arabic: "وَلَا أَنَا عَابِدٌ مَّا عَبَدتُّمْ", english: "Nor will I be a worshipper of what you worship.", indonesian: "Dan aku tidak pernah menjadi penyembah apa yang kamu sembah." },
+    5: { arabic: "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ", english: "Nor will you be worshippers of what I worship.", indonesian: "Dan kamu tidak pernah (pula) menjadi penyembah apa yang aku sembah." },
+    6: { arabic: "لَكُمْ دِينُكُمْ وَلِيَ دِينِ", english: "For you is your religion, and for me is my religion.\"", indonesian: "Untukmu agamamu, dan untukku agamaku.\"" },
+  },
+  
+  // Surah 107 - Al-Ma'un (7 ayat)
+  107: {
+    1: { arabic: "أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ", english: "Have you seen the one who denies the Recompense?", indonesian: "Tahukah kamu (orang) yang mendustakan agama?" },
+    2: { arabic: "فَذَٰلِكَ الَّذِي يَدُعُّ الْيَتِيمَ", english: "For that is the one who drives away the orphan", indonesian: "Maka itulah orang yang menghardik anak yatim," },
+    3: { arabic: "وَلَا يَحُضُّ عَلَىٰ طَعَامِ الْمِسْكِينِ", english: "And does not encourage the feeding of the poor.", indonesian: "dan tidak mendorong memberi makan orang miskin." },
+    4: { arabic: "فَوَيْلٌ لِّلْمُصَلِّينَ", english: "So woe to those who pray", indonesian: "Maka celakalah orang yang salat," },
+    5: { arabic: "الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ", english: "[But] who are heedless of their prayer -", indonesian: "(yaitu) orang-orang yang lalai terhadap salatnya," },
+    6: { arabic: "الَّذِينَ هُمْ يُرَاءُونَ", english: "Those who make show [of their deeds]", indonesian: "yang berbuat ria," },
+    7: { arabic: "وَيَمْنَعُونَ الْمَاعُونَ", english: "And withhold [simple] assistance.", indonesian: "dan enggan (memberikan) bantuan." },
+  },
+  
+  // Surah 106 - Quraisy (4 ayat)
+  106: {
+    1: { arabic: "لِإِيلَافِ قُرَيْشٍ", english: "For the accustomed security of the Quraysh -", indonesian: "Karena kebiasaan orang-orang Quraisy," },
+    2: { arabic: "إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ", english: "Their accustomed security [in] the caravan of winter and summer -", indonesian: "(yaitu) kebiasaan mereka bepergian pada musim dingin dan musim panas." },
+    3: { arabic: "فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ", english: "Let them worship the Lord of this House,", indonesian: "Maka hendaklah mereka menyembah Tuhan (pemilik) rumah ini (Ka'bah)." },
+    4: { arabic: "الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ", english: "Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear.", indonesian: "Yang telah memberi makanan kepada mereka untuk menghilangkan lapar dan mengamankan mereka dari rasa takut." },
+  },
+  
+  // Surah 105 - Al-Fil (5 ayat)
+  105: {
+    1: { arabic: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ", english: "Have you not considered, [O Muhammad], how your Lord dealt with the companions of the elephant?", indonesian: "Tidakkah engkau perhatikan bagaimana Tuhanmu telah bertindak terhadap pasukan bergajah?" },
+    2: { arabic: "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ", english: "Did He not make their plan into misguidance?", indonesian: "Bukankah Dia telah menjadikan tipu daya mereka itu sia-sia?" },
+    3: { arabic: "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ", english: "And He sent against them birds in flocks,", indonesian: "Dan Dia mengirimkan kepada mereka burung yang berbondong-bondong," },
+    4: { arabic: "تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ", english: "Striking them with stones of hard clay,", indonesian: "yang melempari mereka dengan batu dari tanite liat yang dibakar," },
+    5: { arabic: "فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ", english: "And He made them like eaten straw.", indonesian: "sehingga mereka dijadikan-Nya seperti daun-daun yang dimakan (ulat)." },
+  },
+  
+  // Surah 104 - Al-Humazah (9 ayat)
+  104: {
+    1: { arabic: "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ", english: "Woe to every scorner and mocker", indonesian: "Celakalah bagi setiap pengumpat dan pencela," },
+    2: { arabic: "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ", english: "Who collects wealth and [continuously] counts it.", indonesian: "yang mengumpulkan harta dan menghitung-hitungnya." },
+    3: { arabic: "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ", english: "He thinks that his wealth will make him immortal.", indonesian: "Dia (manusia) mengira bahwa hartanya itu dapat mengkekalkannya." },
+    4: { arabic: "كَلَّا ۖ لَيُنبَذَنَّ فِي الْحُطَمَةِ", english: "No! He will surely be thrown into the Crusher.", indonesian: "Sekali-kali tidak! Pasti dia akan dilemparkan ke dalam (neraka) Huthamah." },
+    5: { arabic: "وَمَا أَدْرَاكَ مَا الْحُطَمَةُ", english: "And what can make you know what is the Crusher?", indonesian: "Dan tahukah kamu apa (neraka) Huthamah itu?" },
+    6: { arabic: "نَارُ اللَّهِ الْمُوقَدَةُ", english: "It is the fire of Allah, [eternally] fueled,", indonesian: "(Yaitu) api (azab) Allah yang dinyalakan," },
+    7: { arabic: "الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ", english: "Which mounts directed at the hearts.", indonesian: "yang (naik) sampai ke hati." },
+    8: { arabic: "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ", english: "Indeed, it [i.e., Hellfire] will be closed down upon them", indonesian: "Sesungguhnya api itu ditutup rapat atas mereka," },
+    9: { arabic: "فِي عَمَدٍ مُّمَدَّدَةٍ", english: "In extended columns.", indonesian: "(sedang mereka itu) diikat pada tiang-tiang yang panjang." },
+  },
+  
+  // Surah 102 - At-Takasur (8 ayat)
+  102: {
+    1: { arabic: "أَلْهَاكُمُ التَّكَاثُرُ", english: "Competition in [worldly] increase diverts you", indonesian: "Bermegah-megahan telah melalaikan kamu," },
+    2: { arabic: "حَتَّىٰ زُرْتُمُ الْمَقَابِرَ", english: "Until you visit the graveyards.", indonesian: "sampai kamu masuk ke dalam kubur." },
+    3: { arabic: "كَلَّا سَوْفَ تَعْلَمُونَ", english: "No! You are going to know.", indonesian: "Sekali-kali tidak! Kelak kamu akan mengetahui (akibat perbuatanmu itu)," },
+    4: { arabic: "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ", english: "Then no! You are going to know.", indonesian: "kemudian sekali-kali tidak! Kelak kamu akan mengetahui." },
+    5: { arabic: "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ الْيَقِينِ", english: "No! If you only knew with knowledge of certainty...", indonesian: "Sekali-kali tidak! Sekiranya kamu mengetahui dengan pasti," },
+    6: { arabic: "لَتَرَوُنَّ الْجَحِيمَ", english: "You will surely see the Hellfire.", indonesian: "niscaya kamu benar-benar akan melihat neraka Jahim." },
+    7: { arabic: "ثُمَّ لَتَرَوُنَّهَا عَيْنَ الْيَقِينِ", english: "Then you will surely see it with the eye of certainty.", indonesian: "Kemudian kamu benar-benar akan melihatnya dengan mata kepala sendiri." },
+    8: { arabic: "ثُمَّ لَتُسْأَلُنَّ يَوْمَئِذٍ عَنِ النَّعِيمِ", english: "Then you will surely be asked that Day about pleasure.", indonesian: "Kemudian kamu benar-benar akan ditanya pada hari itu tentang kenikmatan (yang megah di dunia itu)." },
+  },
+  
+  // Surah 101 - Al-Qari'ah (11 ayat)
+  101: {
+    1: { arabic: "الْقَارِعَةُ", english: "The Striking Calamity -", indonesian: "Hari Kiamat." },
+    2: { arabic: "مَا الْقَارِعَةُ", english: "What is the Striking Calamity?", indonesian: "Apakah hari Kiamat itu?" },
+    3: { arabic: "وَمَا أَدْرَاكَ مَا الْقَارِعَةُ", english: "And what can make you know what is the Striking Calamity?", indonesian: "Dan tahukah kamu apakah hari Kiamat itu?" },
+    4: { arabic: "يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ", english: "It is the Day when people will be like moths, dispersed,", indonesian: "(Yaitu) pada hari (ketika) manusia seperti laron yang bertebaran," },
+    5: { arabic: "وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنفُوشِ", english: "And the mountains will be like wool, fluffed up.", indonesian: "dan gunung-gunung seperti bulu yang dihamburkan." },
+    6: { arabic: "فَأَمَّا مَن ثَقُلَتْ مَوَازِينُهُ", english: "Then as for one whose scales are heavy [with good deeds],", indonesian: "Maka adapun orang yang berat timbangan (kebaikan)nya," },
+    7: { arabic: "فَهُوَ فِي عِيشَةٍ رَّاضِيَةٍ", english: "He will be in a pleasant life.", indonesian: "maka dia berada dalam kehidupan yang memuaskan (senang)." },
+    8: { arabic: "وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ", english: "But as for one whose scales are light,", indonesian: "Dan adapun orang yang ringan timbangan (kebaikan)nya," },
+    9: { arabic: "فَأُمُّهُ هَاوِيَةٌ", english: "His refuge will be an abyss.", indonesian: "maka tempat kembalinya adalah neraka Hawiyah." },
+    10: { arabic: "وَمَا أَدْرَاكَ مَا هِيَهْ", english: "And what can make you know what that is?", indonesian: "Dan tahukah kamu apakah (neraka Hawiyah) itu?" },
+    11: { arabic: "نَارٌ حَامِيَةٌ", english: "It is a Fire, intensely hot.", indonesian: "(Yaitu) api yang sangat panas." },
+  },
+  
+  // Surah 100 - Al-'Adiyat (11 ayat)
+  100: {
+    1: { arabic: "وَالْعَادِيَاتِ ضَبْحًا", english: "By the racers, panting,", indonesian: "Demi kuda perang yang berlari kencang dengan terengah-engah," },
+    2: { arabic: "فَالْمُورِيَاتِ قَدْحًا", english: "And the producers of sparks [when] striking", indonesian: "dan kuda yang mencetuskan api dengan pukulan (kuku kakinya)," },
+    3: { arabic: "فَالْمُغِيرَاتِ صُبْحًا", english: "And the chargers at dawn,", indonesian: "dan kuda yang menyerang di waktu pagi," },
+    4: { arabic: "فَأَثَرْنَ بِهِ نَقْعًا", english: "Stirring up thereby [clouds of] dust,", indonesian: "maka ia menerbangkan debu," },
+    5: { arabic: "فَوَسَطْنَ بِهِ جَمْعًا", english: "Arriving thereby in the center collectively,", indonesian: "dan menyerbu ke tengah-tengah kumpulan (musuh)," },
+    6: { arabic: "إِنَّ الْإِنسَانَ لِرَبِّهِ لَكَنُودٌ", english: "Indeed mankind, to his Lord, is ungrateful.", indonesian: "sungguh, manusia itu sangat ingkar kepada Tuhannya," },
+    7: { arabic: "وَإِنَّهُ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ", english: "And indeed, he is to that a witness.", indonesian: "dan sungguh, dia menyaksikan (sendiri) keingkarannya," },
+    8: { arabic: "وَإِنَّهُ لِحُبِّ الْخَيْرِ لَشَدِيدٌ", english: "And indeed he is, in love of wealth, intense.", indonesian: "dan sungguh, kecintaannya kepada harta benar-benar berlebihan." },
+    9: { arabic: "أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِي الْقُبُورِ", english: "But does he not know that when the contents of the graves are scattered", indonesian: "Maka tidakkah dia mengetahui apabila apa yang di dalam kubur dikeluarkan," },
+    10: { arabic: "وَحُصِّلَ مَا فِي الصُّدُورِ", english: "And that within the breasts is obtained,", indonesian: "dan apa yang tersimpan di dalam dada dilahirkan." },
+    11: { arabic: "إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍ لَّخَبِيرٌ", english: "Indeed, their Lord with them, that Day, is [fully] Acquainted.", indonesian: "Sungguh, Tuhan mereka pada hari itu Maha Mengetahui keadaan mereka." },
+  },
+  
+  // Surah 99 - Az-Zalzalah (8 ayat)
+  99: {
+    1: { arabic: "إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا", english: "When the earth is shaken with its [final] earthquake", indonesian: "Apabila bumi diguncangkan dengan guncangan yang dahsyat," },
+    2: { arabic: "وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا", english: "And the earth discharges its burdens", indonesian: "dan bumi telah mengeluarkan beban-beban berat (yang dikandung)nya," },
+    3: { arabic: "وَقَالَ الْإِنسَانُ مَا لَهَا", english: "And man says, \"What is [wrong] with it?\" -", indonesian: "dan manusia bertanya, \"Apa yang terjadi pada bumi ini?\"" },
+    4: { arabic: "يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا", english: "That Day, it will report its news", indonesian: "Pada hari itu bumi menyampaikan beritanya," },
+    5: { arabic: "بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا", english: "Because your Lord has commanded it.", indonesian: "karena sesungguhnya Tuhanmu telah memerintahkan (yang demikian itu) kepadanya." },
+    6: { arabic: "يَوْمَئِذٍ يَصْدُرُ النَّاسُ أَشْتَاتًا لِّيُرَوْا أَعْمَالَهُمْ", english: "That Day, the people will depart separated [into categories] to be shown [the result of] their deeds.", indonesian: "Pada hari itu manusia keluar dari kuburnya dalam keadaan berkelompok-kelompok, untuk diperlihatkan kepada mereka (balasan) semua pekerjaannya." },
+    7: { arabic: "فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ", english: "So whoever does an atom's weight of good will see it,", indonesian: "Maka barangsiapa mengerjakan kebaikan seberat zarrah, niscaya dia akan melihat (balasan)nya," },
+    8: { arabic: "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ", english: "And whoever does an atom's weight of evil will see it.", indonesian: "dan barangsiapa mengerjakan kejahatan seberat zarrah, niscaya dia akan melihat (balasan)nya." },
+  },
+  
+  // Surah 98 - Al-Bayyinah (8 ayat)
+  98: {
+    1: { arabic: "لَمْ يَكُنِ الَّذِينَ كَفَرُوا مِنْ أَهْلِ الْكِتَابِ وَالْمُشْرِكِينَ مُنفَكِّينَ حَتَّىٰ تَأْتِيَهُمُ الْبَيِّنَةُ", english: "Those who disbelieved among the People of the Scripture and the polytheists were not to be parted [from misbelief] until there came to them clear evidence -", indonesian: "Orang-orang kafir dari golongan Ahli Kitab dan orang-orang musyrik tidak akan meninggalkan (agama mereka) sampai datang kepada mereka bukti yang nyata," },
+    2: { arabic: "رَسُولٌ مِّنَ اللَّهِ يَتْلُو صُحُفًا مُّطَهَّرَةً", english: "A Messenger from Allah, reciting purified scriptures", indonesian: "(yaitu) seorang rasul dari Allah (Muhammad) yang membacakan lembaran-lembaran yang suci (Al-Qur'an)," },
+    3: { arabic: "فِيهَا كُتُبٌ قَيِّمَةٌ", english: "Within which are correct writings.", indonesian: "di dalamnya terdapat (isi) kitab-kitab yang lurus (benar)." },
+    4: { arabic: "وَمَا تَفَرَّقَ الَّذِينَ أُوتُوا الْكِتَابَ إِلَّا مِن بَعْدِ مَا جَاءَتْهُمُ الْبَيِّنَةُ", english: "Nor did those who were given the Scripture become divided until after there had come to them clear evidence.", indonesian: "Dan tidaklah terpecah belah orang-orang Ahli Kitab melainkan setelah datang kepada mereka bukti yang nyata." },
+    5: { arabic: "وَمَا أُمِرُوا إِلَّا لِيَعْبُدُوا اللَّهَ مُخْلِصِينَ لَهُ الدِّينَ حُنَفَاءَ وَيُقِيمُوا الصَّلَاةَ وَيُؤْتُوا الزَّكَاةَ ۚ وَذَٰلِكَ دِينُ الْقَيِّمَةِ", english: "And they were not commanded except to worship Allah, [being] sincere to Him in religion, inclining to truth, and to establish prayer and to give zakah. And that is the correct religion.", indonesian: "Padahal mereka hanya diperintah menyembah Allah dengan ikhlas menaati-Nya semata-mata karena (menjalankan) agama, dan juga agar melaksanakan salat dan menunaikan zakat; dan yang demikian itulah agama yang lurus (benar)." },
+    6: { arabic: "إِنَّ الَّذِينَ كَفَرُوا مِنْ أَهْلِ الْكِتَابِ وَالْمُشْرِكِينَ فِي نَارِ جَهَنَّمَ خَالِدِينَ فِيهَا ۚ أُولَٰئِكَ هُمْ شَرُّ الْبَرِيَّةِ", english: "Indeed, they who disbelieved among the People of the Scripture and the polytheists will be in the fire of Hell, abiding eternally therein. Those are the worst of creatures.", indonesian: "Sungguh, orang-orang kafir dari golongan Ahli Kitab dan orang-orang musyrik (akan masuk) ke neraka Jahanam; mereka kekal di dalamnya. Mereka itu adalah sejahat-jahat makhluk." },
+    7: { arabic: "إِنَّ الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ أُولَٰئِكَ هُمْ خَيْرُ الْبَرِيَّةِ", english: "Indeed, they who have believed and done righteous deeds - those are the best of creatures.", indonesian: "Sungguh, orang-orang yang beriman dan mengerjakan kebajikan, mereka itu adalah sebaik-baik makhluk." },
+    8: { arabic: "جَزَاؤُهُمْ عِندَ رَبِّهِمْ جَنَّاتُ عَدْنٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا أَبَدًا ۖ رَّضِيَ اللَّهُ عَنْهُمْ وَرَضُوا عَنْهُ ۚ ذَٰلِكَ لِمَنْ خَشِيَ رَبَّهُ", english: "Their reward with Allah will be gardens of perpetual residence beneath which rivers flow, wherein they will abide forever, Allah being pleased with them and they with Him. That is for whoever has feared his Lord.", indonesian: "Balasan mereka di sisi Tuhan mereka ialah surga 'Adn yang mengalir di bawahnya sungai-sungai; mereka kekal di dalamnya selama-lamanya. Allah rida terhadap mereka dan mereka pun rida kepada-Nya. Yang demikian itu adalah (balasan) bagi orang yang takut kepada Tuhannya." },
+  },
+  
+  // Surah 97 - Al-Qadr (5 ayat)
+  97: {
+    1: { arabic: "إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ", english: "Indeed, We sent it [i.e., the Quran] down during the Night of Decree.", indonesian: "Sesungguhnya Kami telah menurunkannya (Al-Qur'an) pada malam qadar." },
+    2: { arabic: "وَمَا أَدْرَاكَ مَا لَيْلَةُ الْقَدْرِ", english: "And what can make you know what is the Night of Decree?", indonesian: "Dan tahukah kamu apakah malam qadar itu?" },
+    3: { arabic: "لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ", english: "The Night of Decree is better than a thousand months.", indonesian: "Malam qadar itu lebih baik dari seribu bulan." },
+    4: { arabic: "تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍ", english: "The angels and the Spirit descend therein by permission of their Lord for every matter.", indonesian: "Pada malam itu turun para malaikat dan Ruh (Jibril) dengan izin Tuhannya untuk mengatur semua urusan." },
+    5: { arabic: "سَلَامٌ هِيَ حَتَّىٰ مَطْلَعِ الْفَجْرِ", english: "Peace it is until the emergence of dawn.", indonesian: "Sejahteralah (malam itu) sampai terbit fajar." },
+  },
+  
+  // Surah 96 - Al-'Alaq (19 ayat)
+  96: {
+    1: { arabic: "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ", english: "Recite in the name of your Lord who created -", indonesian: "Bacalah dengan (menyebut) nama Tuhanmu yang menciptakan," },
+    2: { arabic: "خَلَقَ الْإِنسَانَ مِنْ عَلَقٍ", english: "Created man from a clinging substance.", indonesian: "Dia telah menciptakan manusia dari segumpal darah." },
+    3: { arabic: "اقْرَأْ وَرَبُّكَ الْأَكْرَمُ", english: "Recite, and your Lord is the most Generous -", indonesian: "Bacalah, dan Tuhanmulah Yang Maha Mulia," },
+    4: { arabic: "الَّذِي عَلَّمَ بِالْقَلَمِ", english: "Who taught by the pen -", indonesian: "yang mengajar (manusia) dengan pena." },
+    5: { arabic: "عَلَّمَ الْإِنسَانَ مَا لَمْ يَعْلَمْ", english: "Taught man that which he knew not.", indonesian: "Dia mengajarkan manusia apa yang tidak diketahuinya." },
+    6: { arabic: "كَلَّا إِنَّ الْإِنسَانَ لَيَطْغَىٰ", english: "No! [But] indeed, man transgresses", indonesian: "Sekali-kali tidak! Sungguh, manusia itu benar-benar melampaui batas," },
+    7: { arabic: "أَن رَّآهُ اسْتَغْنَىٰ", english: "Because he sees himself self-sufficient.", indonesian: "apabila melihat dirinya serba cukup." },
+    8: { arabic: "إِنَّ إِلَىٰ رَبِّكَ الرُّجْعَىٰ", english: "Indeed, to your Lord is the return.", indonesian: "Sungguh, hanya kepada Tuhanmulah tempat kembali(mu)." },
+    9: { arabic: "أَرَأَيْتَ الَّذِي يَنْهَىٰ", english: "Have you seen the one who forbids", indonesian: "Bagaimana pendapatmu tentang orang yang melarang?" },
+    10: { arabic: "عَبْدًا إِذَا صَلَّىٰ", english: "A servant when he prays?", indonesian: "seorang hamba ketika dia salat," },
+    11: { arabic: "أَرَأَيْتَ إِن كَانَ عَلَى الْهُدَىٰ", english: "Have you seen if he is upon guidance", indonesian: "bagaimana pendapatmu jika dia (yang melarang) itu berada di atas kebenaran," },
+    12: { arabic: "أَوْ أَمَرَ بِالتَّقْوَىٰ", english: "Or enjoins righteousness?", indonesian: "atau dia menyuruh bertakwa?" },
+    13: { arabic: "أَرَأَيْتَ إِن كَذَّبَ وَتَوَلَّىٰ", english: "Have you seen if he denies and turns away -", indonesian: "Bagaimana pendapatmu jika dia (yang melarang) itu mendustakan dan berpaling?" },
+    14: { arabic: "أَلَمْ يَعْلَم بِأَنَّ اللَّهَ يَرَىٰ", english: "Does he not know that Allah sees?", indonesian: "Tidakkah dia mengetahui bahwa Allah melihat?" },
+    15: { arabic: "كَلَّا لَئِن لَّمْ يَنتَهِ لَنَسْفَعًا بِالنَّاصِيَةِ", english: "No! If he does not desist, We will surely drag him by the forelock -", indonesian: "Sekali-kali tidak! Sungguh, jika dia tidak berhenti (berbuat demikian) niscaya Kami tarik ubun-ubunnya (ke dalam neraka)," },
+    16: { arabic: "نَاصِيَةٍ كَاذِبَةٍ خَاطِئَةٍ", english: "A lying, sinning forelock.", indonesian: "(yaitu) ubun-ubun orang yang mendustakan dan durhaka." },
+    17: { arabic: "فَلْيَدْعُ نَادِيَهُ", english: "Then let him call his associates;", indonesian: "Maka biarlah dia memanggil golongannya (untuk menolongnya)," },
+    18: { arabic: "سَنَدْعُ الزَّبَانِيَةَ", english: "We will call the angels of Hell.", indonesian: "Kelak Kami akan memanggil Zabaniyah (malaikat penyiksa)," },
+    19: { arabic: "كَلَّا لَا تُطِعْهُ وَاسْجُدْ وَاقْتَرِب ۩", english: "No! Do not obey him. But prostrate and draw near [to Allah].", indonesian: "Sekali-kali tidak! Janganlah kamu patuh kepadanya; dan sujudlah serta dekatkanlah (dirimu kepada Allah)." },
+  },
+  
+  // Surah 95 - At-Tin (8 ayat)
+  95: {
+    1: { arabic: "وَالتِّينِ وَالزَّيْتُونِ", english: "By the fig and the olive", indonesian: "Demi (buah) Tin dan (buah) Zaitun," },
+    2: { arabic: "وَطُورِ سِينِينَ", english: "And [by] Mount Sinai", indonesian: "dan demi Gunung Sinai," },
+    3: { arabic: "وَهَٰذَا الْبَلَدِ الْأَمِينِ", english: "And [by] this secure city [i.e., Makkah],", indonesian: "dan demi negeri (Mekah) yang aman ini," },
+    4: { arabic: "لَقَدْ خَلَقْنَا الْإِنسَانَ فِي أَحْسَنِ تَقْوِيمٍ", english: "We have certainly created man in the best of stature;", indonesian: "sungguh, Kami telah menciptakan manusia dalam bentuk yang sebaik-baiknya," },
+    5: { arabic: "ثُمَّ رَدَدْنَاهُ أَسْفَلَ سَافِلِينَ", english: "Then We return him to the lowest of the low,", indonesian: "kemudian Kami kembalikan dia ke tempat yang serendah-rendahnya (neraka)," },
+    6: { arabic: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ فَلَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍ", english: "Except for those who believe and do righteous deeds, for they will have a reward uninterrupted.", indonesian: "kecuali orang-orang yang beriman dan mengerjakan kebajikan; maka mereka akan mendapat pahala yang tidak ada putus-putusnya." },
+    7: { arabic: "فَمَا يُكَذِّبُكَ بَعْدُ بِالدِّينِ", english: "So what yet causes you to deny the Recompense?", indonesian: "Maka apa yang menyebabkan (mereka) mendustakanmu (tentang) hari pembalasan setelah (adanya keterangan-keterangan) itu?" },
+    8: { arabic: "أَلَيْسَ اللَّهُ بِأَحْكَمِ الْحَاكِمِينَ", english: "Is not Allah the most just of judges?", indonesian: "Bukankah Allah hakim yang paling adil?" },
+  },
+  
+  // Surah 94 - Asy-Syarh (8 ayat)
+  94: {
+    1: { arabic: "أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ", english: "Did We not expand for you, [O Muhammad], your breast?", indonesian: "Bukankah Kami telah melapangkan dadamu (Muhammad)?" },
+    2: { arabic: "وَوَضَعْنَا عَنكَ وِزْرَكَ", english: "And We removed from you your burden", indonesian: "Dan Kami telah menurunkan bebanmu darimu," },
+    3: { arabic: "الَّذِي أَنقَضَ ظَهْرَكَ", english: "Which had weighed upon your back", indonesian: "yang memberatkan punggungmu." },
+    4: { arabic: "وَرَفَعْنَا لَكَ ذِكْرَكَ", english: "And raised high for you your repute.", indonesian: "Dan Kami tinggikan sebutan (nama)mu bagimu." },
+    5: { arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا", english: "For indeed, with hardship [will be] ease.", indonesian: "Maka sesungguhnya bersama kesulitan ada kemudahan," },
+    6: { arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", english: "Indeed, with hardship [will be] ease.", indonesian: "sesungguhnya bersama kesulitan ada kemudahan." },
+    7: { arabic: "فَإِذَا فَرَغْتَ فَانصَبْ", english: "So when you have finished [your duties], then stand up [for worship].", indonesian: "Maka apabila engkau telah selesai (dari sesuatu urusan), tetaplah bekerja keras (untuk urusan yang lain)." },
+    8: { arabic: "وَإِلَىٰ رَبِّكَ فَارْغَب", english: "And to your Lord direct [your] longing.", indonesian: "Dan hanya kepada Tuhanmulah engkau berharap." },
+  },
+  
+  // Surah 93 - Ad-Duha (11 ayat)
+  93: {
+    1: { arabic: "وَالضُّحَىٰ", english: "By the morning brightness", indonesian: "Demi waktu Duha (ketika matahari naik sepenggalah)," },
+    2: { arabic: "وَاللَّيْلِ إِذَا سَجَىٰ", english: "And [by] the night when it covers with darkness,", indonesian: "dan demi malam apabila telah sunyi," },
+    3: { arabic: "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ", english: "Your Lord has not taken leave of you, [O Muhammad], nor has He detested [you].", indonesian: "Tuhanmu tidak meninggalkan engkau (Muhammad) dan tidak (pula) membencimu," },
+    4: { arabic: "وَلَلْآخِرَةُ خَيْرٌ لَّكَ مِنَ الْأُولَىٰ", english: "And the Hereafter is better for you than the first [life].", indonesian: "dan sungguh, yang kemudian itu lebih baik bagimu dari yang permulaan." },
+    5: { arabic: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ", english: "And your Lord is going to give you, and you will be satisfied.", indonesian: "Dan sungguh, kelak Tuhanmu pasti memberikan karunia-Nya kepadamu, sehingga engkau menjadi puas." },
+    6: { arabic: "أَلَمْ يَجِدْكَ يَتِيمًا فَآوَىٰ", english: "Did He not find you an orphan and give [you] refuge?", indonesian: "Bukankah Dia mendapatimu sebagai seorang yatim, lalu Dia melindungi?" },
+    7: { arabic: "وَوَجَدَكَ ضَالًّا فَهَدَىٰ", english: "And He found you lost and guided [you],", indonesian: "Dan Dia mendapatimu sebagai seorang yang bingung, lalu Dia memberikan petunjuk." },
+    8: { arabic: "وَوَجَدَكَ عَائِلًا فَأَغْنَىٰ", english: "And He found you poor and made [you] self-sufficient.", indonesian: "Dan Dia mendapatimu sebagai seorang yang kekurangan, lalu Dia memberikan kecukupan." },
+    9: { arabic: "فَأَمَّا الْيَتِيمَ فَلَا تَقْهَرْ", english: "So as for the orphan, do not oppress [him].", indonesian: "Maka terhadap anak yatim janganlah engkau berlaku sewenang-wenang." },
+    10: { arabic: "وَأَمَّا السَّائِلَ فَلَا تَنْهَرْ", english: "And as for the petitioner, do not repel [him].", indonesian: "Dan terhadap orang yang meminta-minta janganlah engkau menghardik." },
+    11: { arabic: "وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ", english: "But as for the favor of your Lord, report [it].", indonesian: "Dan terhadap nikmat Tuhanmu hendaklah engkau nyatakan (dengan bersyukur)." },
+  },
+  
+  // Surah 92 - Al-Lail (21 ayat)
+  92: {
+    1: { arabic: "وَاللَّيْلِ إِذَا يَغْشَىٰ", english: "By the night when it covers", indonesian: "Demi malam apabila menutupi (cahaya siang)," },
+    2: { arabic: "وَالنَّهَارِ إِذَا تَجَلَّىٰ", english: "And [by] the day when it appears", indonesian: "dan demi siang apabila terang benderang," },
+    3: { arabic: "وَمَا خَلَقَ الذَّكَرَ وَالْأُنثَىٰ", english: "And [by] He who created the male and female,", indonesian: "dan penciptaan laki-laki dan perempuan," },
+    4: { arabic: "إِنَّ سَعْيَكُمْ لَشَتَّىٰ", english: "Indeed, your efforts are diverse.", indonesian: "sesungguhnya usaha kamu memang beraneka macam." },
+    5: { arabic: "فَأَمَّا مَنْ أَعْطَىٰ وَاتَّقَىٰ", english: "As for he who gives and fears Allah", indonesian: "Maka adapun orang yang memberikan (hartanya di jalan Allah) dan bertakwa," },
+    6: { arabic: "وَصَدَّقَ بِالْحُسْنَىٰ", english: "And believes in the best [reward],", indonesian: "dan membenarkan (pahala) yang terbaik (surga)," },
+    7: { arabic: "فَسَنُيَسِّرُهُ لِلْيُسْرَىٰ", english: "We will ease him toward ease.", indonesian: "maka akan Kami mudahkan baginya jalan menuju kemudahan (kebahagiaan)." },
+    8: { arabic: "وَأَمَّا مَن بَخِلَ وَاسْتَغْنَىٰ", english: "But as for he who withholds and considers himself free of need", indonesian: "Dan adapun orang yang kikir dan merasa dirinya cukup (tidak perlu pertolongan Allah)," },
+    9: { arabic: "وَكَذَّبَ بِالْحُسْنَىٰ", english: "And denies the best [reward],", indonesian: "serta mendustakan (pahala) yang terbaik," },
+    10: { arabic: "فَسَنُيَسِّرُهُ لِلْعُسْرَىٰ", english: "We will ease him toward difficulty.", indonesian: "maka akan Kami mudahkan baginya jalan menuju kesukaran (kesengsaraan)." },
+    11: { arabic: "وَمَا يُغْنِي عَنْهُ مَالُهُ إِذَا تَرَدَّىٰ", english: "And what will his wealth avail him when he falls?", indonesian: "Dan hartanya tidak bermanfaat baginya apabila dia telah binasa." },
+    12: { arabic: "إِنَّ عَلَيْنَا لَلْهُدَىٰ", english: "Indeed, [incumbent] upon Us is guidance.", indonesian: "Sesungguhnya kewajiban Kamilah memberi petunjuk," },
+    13: { arabic: "وَإِنَّ لَنَا لَلْآخِرَةَ وَالْأُولَىٰ", english: "And indeed, to Us belongs the Hereafter and the first [life].", indonesian: "dan sesungguhnya milik Kami akhirat dan dunia." },
+    14: { arabic: "فَأَنذَرْتُكُمْ نَارًا تَلَظَّىٰ", english: "So I have warned you of a Fire which is blazing.", indonesian: "Maka Kami peringatkan kamu dengan api yang menyala-nyala." },
+    15: { arabic: "لَا يَصْلَاهَا إِلَّا الْأَشْقَى", english: "None will [enter to] burn therein except the most wretched one", indonesian: "Tidak ada yang masuk ke dalamnya kecuali orang yang paling celaka," },
+    16: { arabic: "الَّذِي كَذَّبَ وَتَوَلَّىٰ", english: "Who had denied and turned away.", indonesian: "yaitu orang yang mendustakan (kebenaran) dan berpaling (dari iman)." },
+    17: { arabic: "وَسَيُجَنَّبُهَا الْأَتْقَى", english: "But the righteous one will avoid it -", indonesian: "Dan akan dijauhkan darinya (api neraka) orang yang paling bertakwa," },
+    18: { arabic: "الَّذِي يُؤْتِي مَالَهُ يَتَزَكَّىٰ", english: "[He] who gives [from] his wealth to purify himself", indonesian: "yang menginfakkan hartanya (di jalan Allah) untuk membersihkan (dirinya)." },
+    19: { arabic: "وَمَا لِأَحَدٍ عِندَهُ مِن نِّعْمَةٍ تُجْزَىٰ", english: "And not [giving] for anyone who has [done him] a favor to be rewarded", indonesian: "Padahal tidak ada seorang pun memberikan suatu nikmat kepadanya yang harus dibalasnya," },
+    20: { arabic: "إِلَّا ابْتِغَاءَ وَجْهِ رَبِّهِ الْأَعْلَىٰ", english: "But only seeking the face of his Lord, Most High.", indonesian: "tetapi (dia memberikan itu) karena mencari keridaan Tuhannya Yang Mahatinggi." },
+    21: { arabic: "وَلَسَوْفَ يَرْضَىٰ", english: "And he is going to be satisfied.", indonesian: "Dan kelak dia pasti mendapat keridaan (Allah)." },
+  },
+  
+  // Surah 91 - Asy-Syams (15 ayat)
+  91: {
+    1: { arabic: "وَالشَّمْسِ وَضُحَاهَا", english: "By the sun and its brightness", indonesian: "Demi matahari dan sinarnya pada pagi hari," },
+    2: { arabic: "وَالْقَمَرِ إِذَا تَلَاهَا", english: "And [by] the moon when it follows it", indonesian: "dan bulan apabila mengiringinya," },
+    3: { arabic: "وَالنَّهَارِ إِذَا جَلَّاهَا", english: "And [by] the day when it displays it", indonesian: "dan siang apabila menampakkannya," },
+    4: { arabic: "وَاللَّيْلِ إِذَا يَغْشَاهَا", english: "And [by] the night when it covers it", indonesian: "dan malam apabila menutupinya," },
+    5: { arabic: "وَالسَّمَاءِ وَمَا بَنَاهَا", english: "And [by] the sky and He who constructed it", indonesian: "dan langit serta pembinaannya (yang menakjubkan)," },
+    6: { arabic: "وَالْأَرْضِ وَمَا طَحَاهَا", english: "And [by] the earth and He who spread it", indonesian: "dan bumi serta penghamparannya," },
+    7: { arabic: "وَنَفْسٍ وَمَا سَوَّاهَا", english: "And [by] the soul and He who proportioned it", indonesian: "dan jiwa serta penyempurnaannya (ciptaannya)," },
+    8: { arabic: "فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَاهَا", english: "And inspired it [with discernment of] its wickedness and its righteousness,", indonesian: "maka Dia mengilhamkan kepadanya (jalan) kejahatan dan ketakwaannya," },
+    9: { arabic: "قَدْ أَفْلَحَ مَن زَكَّاهَا", english: "He has succeeded who purifies it,", indonesian: "sungguh beruntung orang yang menyucikannya (jiwa itu)," },
+    10: { arabic: "وَقَدْ خَابَ مَن دَسَّاهَا", english: "And he has failed who instills it [with corruption].", indonesian: "dan sungguh rugi orang yang mengotorinya." },
+    11: { arabic: "كَذَّبَتْ ثَمُودُ بِطَغْوَاهَا", english: "Thamud denied [their prophet] by reason of their transgression,", indonesian: "Kaum Samud telah mendustakan (rasulnya) karena mereka melampaui batas," },
+    12: { arabic: "إِذِ انبَعَثَ أَشْقَاهَا", english: "When the most wretched of them was sent forth.", indonesian: "ketika bangkit orang yang paling celaka di antara mereka," },
+    13: { arabic: "فَقَالَ لَهُمْ رَسُولُ اللَّهِ نَاقَةَ اللَّهِ وَسُقْيَاهَا", english: "And the messenger of Allah said to them, \"[Do not harm] the she-camel of Allah or [prevent her from] her drink.\"", indonesian: "lalu utusan Allah (Saleh) berkata kepada mereka, \"(Biarkanlah) unta betina Allah dan minumannya.\"" },
+    14: { arabic: "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنبِهِمْ فَسَوَّاهَا", english: "But they denied him and hamstrung her. So their Lord brought down upon them destruction for their sin and made it equal [upon all of them].", indonesian: "Lalu mereka mendustakannya dan menyembelih unta itu, maka Tuhan mereka membinasakan mereka karena dosa mereka, lalu diratakan-Nya (dengan tanah)." },
+    15: { arabic: "وَلَا يَخَافُ عُقْبَاهَا", english: "And He does not fear the consequence thereof.", indonesian: "Dan Dia tidak takut terhadap akibat (tindakan-Nya itu)." },
+  },
+  
+  // Surah 90 - Al-Balad (20 ayat)
+  90: {
+    1: { arabic: "لَا أُقْسِمُ بِهَٰذَا الْبَلَدِ", english: "I swear by this city, [Makkah] -", indonesian: "Aku bersumpah dengan negeri ini (Mekah)," },
+    2: { arabic: "وَأَنتَ حِلٌّ بِهَٰذَا الْبَلَدِ", english: "And you, [O Muhammad], are free of restriction in this city -", indonesian: "dan engkau (Muhammad) bertempat di negeri ini," },
+    3: { arabic: "وَوَالِدٍ وَمَا وَلَدَ", english: "And [by] the father and that which was born [of him],", indonesian: "dan demi bapak dan anaknya." },
+    4: { arabic: "لَقَدْ خَلَقْنَا الْإِنسَانَ فِي كَبَدٍ", english: "We have certainly created man into hardship.", indonesian: "Sungguh, Kami telah menciptakan manusia berada dalam susah payah." },
+    5: { arabic: "أَيَحْسَبُ أَن لَّن يَقْدِرَ عَلَيْهِ أَحَدٌ", english: "Does he think that never will anyone overcome him?", indonesian: "Apakah dia mengira bahwa tidak ada sesuatu pun yang berkuasa atasnya?" },
+    6: { arabic: "يَقُولُ أَهْلَكْتُ مَالًا لُّبَدًا", english: "He says, \"I have spent wealth in abundance.\"", indonesian: "Dia berkata, \"Aku telah menghabiskan harta yang banyak.\"" },
+    7: { arabic: "أَيَحْسَبُ أَن لَّمْ يَرَهُ أَحَدٌ", english: "Does he think that no one has seen him?", indonesian: "Apakah dia mengira bahwa tidak ada seorang pun yang melihatnya?" },
+    8: { arabic: "أَلَمْ نَجْعَل لَّهُ عَيْنَيْنِ", english: "Have We not made for him two eyes?", indonesian: "Bukankah Kami telah menjadikan untuknya sepasang mata," },
+    9: { arabic: "وَلِسَانًا وَشَفَتَيْنِ", english: "And a tongue and two lips?", indonesian: "dan lidah dan dua bibir?" },
+    10: { arabic: "وَهَدَيْنَاهُ النَّجْدَيْنِ", english: "And have shown him the two ways?", indonesian: "Dan Kami telah menunjukkan kepadanya dua jalan (kebaikan dan keburukan)," },
+    11: { arabic: "فَلَا اقْتَحَمَ الْعَقَبَةَ", english: "But he has not broken through the difficult pass.", indonesian: "tetapi dia tidak menempuh jalan yang mendaki dan sukar?" },
+    12: { arabic: "وَمَا أَدْرَاكَ مَا الْعَقَبَةُ", english: "And what can make you know what is [breaking through] the difficult pass?", indonesian: "Dan tahukah kamu apakah jalan yang mendaki dan sukar itu?" },
+    13: { arabic: "فَكُّ رَقَبَةٍ", english: "It is the freeing of a slave", indonesian: "(Yaitu) memerdekakan hamba sahaya," },
+    14: { arabic: "أَوْ إِطْعَامٌ فِي يَوْمٍ ذِي مَسْغَبَةٍ", english: "Or feeding on a day of severe hunger", indonesian: "atau memberi makan pada hari terjadi kelaparan," },
+    15: { arabic: "يَتِيمًا ذَا مَقْرَبَةٍ", english: "An orphan of near relationship", indonesian: "kepada anak yatim yang ada hubungan kerabat," },
+    16: { arabic: "أَوْ مِسْكِينًا ذَا مَتْرَبَةٍ", english: "Or a needy person in misery", indonesian: "atau orang miskin yang sangat fakir." },
+    17: { arabic: "ثُمَّ كَانَ مِنَ الَّذِينَ آمَنُوا وَتَوَاصَوْا بِالصَّبْرِ وَتَوَاصَوْا بِالْمَرْحَمَةِ", english: "And then being among those who believed and advised one another to patience and advised one another to compassion.", indonesian: "Kemudian dia termasuk orang-orang yang beriman dan saling berpesan untuk bersabar dan saling berpesan untuk berkasih sayang." },
+    18: { arabic: "أُولَٰئِكَ أَصْحَابُ الْمَيْمَنَةِ", english: "Those are the companions of the right.", indonesian: "Mereka itulah golongan kanan." },
+    19: { arabic: "وَالَّذِينَ كَفَرُوا بِآيَاتِنَا هُمْ أَصْحَابُ الْمَشْأَمَةِ", english: "But they who disbelieved in Our signs - those are the companions of the left.", indonesian: "Dan orang-orang yang kafir kepada ayat-ayat Kami, mereka itulah golongan kiri." },
+    20: { arabic: "عَلَيْهِمْ نَارٌ مُّؤْصَدَةٌ", english: "Over them will be fire closed in.", indonesian: "Atas mereka api (neraka) ditutup rapat." },
+  },
+  
+  // Surah 89 - Al-Fajr (30 ayat)
+  89: {
+    1: { arabic: "وَالْفَجْرِ", english: "By the dawn", indonesian: "Demi fajar," },
+    2: { arabic: "وَلَيَالٍ عَشْرٍ", english: "And [by] ten nights", indonesian: "dan malam yang sepuluh," },
+    3: { arabic: "وَالشَّفْعِ وَالْوَتْرِ", english: "And [by] the even [number] and the odd", indonesian: "dan yang genap dan yang ganjil," },
+    4: { arabic: "وَاللَّيْلِ إِذَا يَسْرِ", english: "And [by] the night when it passes,", indonesian: "dan malam apabila berlalu." },
+    5: { arabic: "هَلْ فِي ذَٰلِكَ قَسَمٌ لِّذِي حِجْرٍ", english: "Is there [not] in [all] that an oath [sufficient] for one of perception?", indonesian: "Bukankah pada yang demikian itu terdapat sumpah (yang dapat diterima) bagi orang yang berakal?" },
+    6: { arabic: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ", english: "Have you not considered how your Lord dealt with 'Aad -", indonesian: "Tidakkah engkau (Muhammad) perhatikan bagaimana Tuhanmu berbuat terhadap kaum 'Ad?" },
+    7: { arabic: "إِرَمَ ذَاتِ الْعِمَادِ", english: "[With] Iram - who had lofty pillars,", indonesian: "(Yaitu) penduduk Iram yang mempunyai bangunan-bangunan yang tinggi," },
+    8: { arabic: "الَّتِي لَمْ يُخْلَقْ مِثْلُهَا فِي الْبِلَادِ", english: "The likes of whom had never been created in the land?", indonesian: "yang belum pernah dibangun (suatu kota) seperti itu, di negeri-negeri lain?" },
+    9: { arabic: "وَثَمُودَ الَّذِينَ جَابُوا الصَّخْرَ بِالْوَادِ", english: "And [with] Thamud, who carved out the rocks in the valley?", indonesian: "dan kaum Samud yang memotong batu-batu besar di lembah," },
+    10: { arabic: "وَفِرْعَوْنَ ذِي الْأَوْتَادِ", english: "And [with] Pharaoh, owner of the stakes? -", indonesian: "dan Fir'aun yang mempunyai pasak-pasak (tentara yang banyak)," },
+    11: { arabic: "الَّذِينَ طَغَوْا فِي الْبِلَادِ", english: "[All of] whom oppressed within the lands", indonesian: "yang berbuat sewenang-wenang dalam negeri," },
+    12: { arabic: "فَأَكْثَرُوا فِيهَا الْفَسَادَ", english: "And increased therein the corruption.", indonesian: "lalu mereka berbuat banyak kerusakan di dalamnya," },
+    13: { arabic: "فَصَبَّ عَلَيْهِمْ رَبُّكَ سَوْطَ عَذَابٍ", english: "So your Lord poured upon them a scourge of punishment.", indonesian: "karena itu Tuhanmu menimpakan cemeti azab kepada mereka." },
+    14: { arabic: "إِنَّ رَبَّكَ لَبِالْمِرْصَادِ", english: "Indeed, your Lord is in observation.", indonesian: "Sungguh, Tuhanmu benar-benar mengawasi." },
+    15: { arabic: "فَأَمَّا الْإِنسَانُ إِذَا مَا ابْتَلَاهُ رَبُّهُ فَأَكْرَمَهُ وَنَعَّمَهُ فَيَقُولُ رَبِّي أَكْرَمَنِ", english: "And as for man, when his Lord tries him and [thus] is generous to him and favors him, he says, \"My Lord has honored me.\"", indonesian: "Maka adapun manusia, apabila Tuhan mengujinya lalu memuliakannya dan memberinya kesenangan, maka dia berkata, \"Tuhanku telah memuliakanku.\"" },
+    16: { arabic: "وَأَمَّا إِذَا مَا ابْتَلَاهُ فَقَدَرَ عَلَيْهِ رِزْقَهُ فَيَقُولُ رَبِّي أَهَانَنِ", english: "But when He tries him and restricts his provision, he says, \"My Lord has humiliated me.\"", indonesian: "Tetapi apabila Tuhannya mengujinya lalu membatasi rezekinya, maka dia berkata, \"Tuhanku telah menghinaku.\"" },
+    17: { arabic: "كَلَّا ۖ بَل لَّا تُكْرِمُونَ الْيَتِيمَ", english: "No! But you do not honor the orphan", indonesian: "Sekali-kali tidak! Bahkan kamu tidak memuliakan anak yatim," },
+    18: { arabic: "وَلَا تَحَاضُّونَ عَلَىٰ طَعَامِ الْمِسْكِينِ", english: "And you do not encourage one another to feed the poor.", indonesian: "dan kamu tidak saling mengajak memberi makan orang miskin," },
+    19: { arabic: "وَتَأْكُلُونَ التُّرَاثَ أَكْلًا لَّمًّا", english: "And you consume inheritance, devouring [it] altogether,", indonesian: "sedangkan kamu memakan warisan dengan cara mencampuradukkan (yang halal dan yang haram)," },
+    20: { arabic: "وَتُحِبُّونَ الْمَالَ حُبًّا جَمًّا", english: "And you love wealth with immense love.", indonesian: "dan kamu mencintai harta dengan kecintaan yang berlebihan." },
+    21: { arabic: "كَلَّا إِذَا دُكَّتِ الْأَرْضُ دَكًّا دَكًّا", english: "No! When the earth has been leveled - pounded and crushed -", indonesian: "Sekali-kali tidak! Apabila bumi diguncangkan berturut-turut," },
+    22: { arabic: "وَجَاءَ رَبُّكَ وَالْمَلَكُ صَفًّا صَفًّا", english: "And your Lord has come and the angels, rank upon rank,", indonesian: "dan datanglah Tuhanmu, dan malaikat berbaris-baris," },
+    23: { arabic: "وَجِيءَ يَوْمَئِذٍ بِجَهَنَّمَ ۚ يَوْمَئِذٍ يَتَذَكَّرُ الْإِنسَانُ وَأَنَّىٰ لَهُ الذِّكْرَىٰ", english: "And brought [within view], that Day, is Hell - that Day, man will remember, but what good to him will be the remembrance?", indonesian: "dan pada hari itu diperlihatkan (neraka) Jahanam; pada hari itu sadarlah manusia, tetapi tidak berguna lagi kesadaran itu baginya." },
+    24: { arabic: "يَقُولُ يَا لَيْتَنِي قَدَّمْتُ لِحَيَاتِي", english: "He will say, \"Oh, I wish I had sent ahead [some good] for my life.\"", indonesian: "Dia berkata, \"Alangkah baiknya sekiranya dahulu aku mengerjakan (kebajikan) untuk hidupku ini.\"" },
+    25: { arabic: "فَيَوْمَئِذٍ لَّا يُعَذِّبُ عَذَابَهُ أَحَدٌ", english: "So on that Day, none will punish [as severely] as His punishment,", indonesian: "Maka pada hari itu tidak ada seorang pun yang mengazab seperti azab-Nya (terhadap orang-orang kafir)," },
+    26: { arabic: "وَلَا يُوثِقُ وَثَاقَهُ أَحَدٌ", english: "And none will bind [as severely] as His binding [of the evildoers].", indonesian: "dan tidak ada seorang pun yang mengikat seperti ikatan-Nya (terhadap orang-orang kafir)." },
+    27: { arabic: "يَا أَيَّتُهَا النَّفْسُ الْمُطْمَئِنَّةُ", english: "[To the righteous it will be said], \"O reassured soul,", indonesian: "Wahai jiwa yang tenang!" },
+    28: { arabic: "ارْجِعِي إِلَىٰ رَبِّكِ رَاضِيَةً مَّرْضِيَّةً", english: "Return to your Lord, well-pleased and pleasing [to Him],", indonesian: "Kembalilah kepada Tuhanmu dengan hati yang rida dan diridai-Nya." },
+    29: { arabic: "فَادْخُلِي فِي عِبَادِي", english: "And enter among My [righteous] servants", indonesian: "Maka masuklah ke dalam (golongan) hamba-hamba-Ku," },
+    30: { arabic: "وَادْخُلِي جَنَّتِي", english: "And enter My Paradise.\"", indonesian: "dan masuklah ke dalam surga-Ku." },
+  },
+  
+  // Surah 88 - Al-Gasyiyah (26 ayat)
+  88: {
+    1: { arabic: "هَلْ أَتَاكَ حَدِيثُ الْغَاشِيَةِ", english: "Has there reached you the report of the Overwhelming [event]?", indonesian: "Sudah sampaikah kepadamu berita tentang peristiwa yang dahsyat?" },
+    2: { arabic: "وُجُوهٌ يَوْمَئِذٍ خَاشِعَةٌ", english: "[Some] faces, that Day, will be humbled,", indonesian: "Pada hari itu banyak wajah yang tunduk terhina," },
+    3: { arabic: "عَامِلَةٌ نَّاصِبَةٌ", english: "Working [hard] and exhausted.", indonesian: "bekerja keras, menderita." },
+    4: { arabic: "تَصْلَىٰ نَارًا حَامِيَةً", english: "They will [enter to] burn in an intensely hot Fire.", indonesian: "Mereka masuk ke dalam api yang sangat panas," },
+    5: { arabic: "تُسْقَىٰ مِنْ عَيْنٍ آنِيَةٍ", english: "They will be given drink from a boiling spring.", indonesian: "diberi minum dari sumber yang sangat panas." },
+    6: { arabic: "لَّيْسَ لَهُمْ طَعَامٌ إِلَّا مِن ضَرِيعٍ", english: "For them there will be no food except from a poisonous, thorny plant", indonesian: "Tidak ada makanan untuk mereka selain dari pohon yang berduri," },
+    7: { arabic: "لَّا يُسْمِنُ وَلَا يُغْنِي مِن جُوعٍ", english: "Which neither nourishes nor avails against hunger.", indonesian: "yang tidak menggemukkan dan tidak pula menghilangkan lapar." },
+    8: { arabic: "وُجُوهٌ يَوْمَئِذٍ نَّاعِمَةٌ", english: "[Other] faces, that Day, will show pleasure.", indonesian: "Pada hari itu banyak wajah yang berseri-seri," },
+    9: { arabic: "لِّسَعْيِهَا رَاضِيَةٌ", english: "With their effort [they are] satisfied.", indonesian: "merasa puas dengan usahanya," },
+    10: { arabic: "فِي جَنَّةٍ عَالِيَةٍ", english: "In an elevated garden,", indonesian: "(mereka) berada dalam surga yang tinggi." },
+    11: { arabic: "لَّا تَسْمَعُ فِيهَا لَاغِيَةً", english: "Wherein they will hear no unsuitable speech.", indonesian: "Di sana tidak mereka dengar perkataan yang tidak berguna." },
+    12: { arabic: "فِيهَا عَيْنٌ جَارِيَةٌ", english: "Within it is a flowing spring.", indonesian: "Di sana ada mata air yang mengalir." },
+    13: { arabic: "فِيهَا سُرُرٌ مَّرْفُوعَةٌ", english: "Within it are couches raised high", indonesian: "Di sana ada takhta-takhta yang ditinggikan," },
+    14: { arabic: "وَأَكْوَابٌ مَّوْضُوعَةٌ", english: "And cups put in place", indonesian: "dan gelas-gelas yang terletak (di dekatnya)," },
+    15: { arabic: "وَنَمَارِقُ مَصْفُوفَةٌ", english: "And cushions lined up", indonesian: "dan bantal-bantal sandaran yang tersusun," },
+    16: { arabic: "وَزَرَابِيُّ مَبْثُوثَةٌ", english: "And carpets spread around.", indonesian: "dan permadani-permadani yang terhampar." },
+    17: { arabic: "أَفَلَا يَنظُرُونَ إِلَى الْإِبِلِ كَيْفَ خُلِقَتْ", english: "Then do they not look at the camels - how they are created?", indonesian: "Maka tidakkah mereka memperhatikan unta, bagaimana diciptakan?" },
+    18: { arabic: "وَإِلَى السَّمَاءِ كَيْفَ رُفِعَتْ", english: "And at the sky - how it is raised?", indonesian: "Dan langit, bagaimana ditinggikan?" },
+    19: { arabic: "وَإِلَى الْجِبَالِ كَيْفَ نُصِبَتْ", english: "And at the mountains - how they are erected?", indonesian: "Dan gunung-gunung, bagaimana ditegakkan?" },
+    20: { arabic: "وَإِلَى الْأَرْضِ كَيْفَ سُطِحَتْ", english: "And at the earth - how it is spread out?", indonesian: "Dan bumi, bagaimana dihamparkan?" },
+    21: { arabic: "فَذَكِّرْ إِنَّمَا أَنتَ مُذَكِّرٌ", english: "So remind, [O Muhammad]; you are only a reminder.", indonesian: "Maka berilah peringatan, karena sesungguhnya engkau hanyalah pemberi peringatan." },
+    22: { arabic: "لَّسْتَ عَلَيْهِم بِمُصَيْطِرٍ", english: "You are not over them a controller.", indonesian: "Engkau bukanlah orang yang berkuasa atas mereka," },
+    23: { arabic: "إِلَّا مَن تَوَلَّىٰ وَكَفَرَ", english: "However, he who turns away and disbelieves -", indonesian: "kecuali orang yang berpaling dan kafir," },
+    24: { arabic: "فَيُعَذِّبُهُ اللَّهُ الْعَذَابَ الْأَكْبَرَ", english: "Then Allah will punish him with the greatest punishment.", indonesian: "maka dia akan disiksa oleh Allah dengan siksa yang besar." },
+    25: { arabic: "إِنَّ إِلَيْنَا إِيَابَهُمْ", english: "Indeed, to Us is their return.", indonesian: "Sesungguhnya kepada Kami tempat kembali mereka," },
+    26: { arabic: "ثُمَّ إِنَّ عَلَيْنَا حِسَابَهُمْ", english: "Then indeed, upon Us is their account.", indonesian: "kemudian sesungguhnya kewajiban Kami menghisab mereka." },
+  },
+  
+  // Surah 87 - Al-A'la (19 ayat)
+  87: {
+    1: { arabic: "سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى", english: "Exalt the name of your Lord, the Most High,", indonesian: "Sucikanlah nama Tuhanmu Yang Mahatinggi," },
+    2: { arabic: "الَّذِي خَلَقَ فَسَوَّىٰ", english: "Who created and proportioned", indonesian: "yang menciptakan, dan menyempurnakan (penciptaan-Nya)," },
+    3: { arabic: "وَالَّذِي قَدَّرَ فَهَدَىٰ", english: "And who destined and [then] guided", indonesian: "dan yang menentukan kadar (masing-masing) dan memberi petunjuk," },
+    4: { arabic: "وَالَّذِي أَخْرَجَ الْمَرْعَىٰ", english: "And who brings out the pasture", indonesian: "dan yang menumbuhkan rumput-rumput," },
+    5: { arabic: "فَجَعَلَهُ غُثَاءً أَحْوَىٰ", english: "And [then] makes it black stubble.", indonesian: "lalu dijadikan-Nya rumput-rumput itu kering kehitam-hitaman." },
+    6: { arabic: "سَنُقْرِئُكَ فَلَا تَنسَىٰ", english: "We will make you recite, [O Muhammad], and you will not forget,", indonesian: "Kami akan membacakan (Al-Qur'an) kepadamu (Muhammad) sehingga engkau tidak akan lupa," },
+    7: { arabic: "إِلَّا مَا شَاءَ اللَّهُ ۚ إِنَّهُ يَعْلَمُ الْجَهْرَ وَمَا يَخْفَىٰ", english: "Except what Allah should will. Indeed, He knows what is declared and what is hidden.", indonesian: "kecuali jika Allah menghendaki. Sungguh, Dia mengetahui yang terang dan yang tersembunyi." },
+    8: { arabic: "وَنُيَسِّرُكَ لِلْيُسْرَىٰ", english: "And We will ease you toward ease.", indonesian: "Dan Kami akan memberi kamu taufik kepada jalan yang mudah." },
+    9: { arabic: "فَذَكِّرْ إِن نَّفَعَتِ الذِّكْرَىٰ", english: "So remind, if the reminder should benefit;", indonesian: "Oleh karena itu, berilah peringatan jika peringatan itu bermanfaat," },
+    10: { arabic: "سَيَذَّكَّرُ مَن يَخْشَىٰ", english: "He who fears [Allah] will be reminded.", indonesian: "orang yang takut (kepada Allah) akan mendapat pelajaran," },
+    11: { arabic: "وَيَتَجَنَّبُهَا الْأَشْقَى", english: "But the wretched one will avoid it -", indonesian: "dan orang yang celaka (kafir) akan menjauhinya." },
+    12: { arabic: "الَّذِي يَصْلَى النَّارَ الْكُبْرَىٰ", english: "[He] who will [enter and] burn in the greatest Fire,", indonesian: "(Yaitu) orang yang akan memasuki api yang besar (neraka)," },
+    13: { arabic: "ثُمَّ لَا يَمُوتُ فِيهَا وَلَا يَحْيَىٰ", english: "Neither dying therein nor living.", indonesian: "kemudian dia tidak mati di dalamnya dan tidak (pula) hidup." },
+    14: { arabic: "قَدْ أَفْلَحَ مَن تَزَكَّىٰ", english: "He has certainly succeeded who purifies himself", indonesian: "Sungguh beruntung orang yang menyucikan diri," },
+    15: { arabic: "وَذَكَرَ اسْمَ رَبِّهِ فَصَلَّىٰ", english: "And mentions the name of his Lord and prays.", indonesian: "dan mengingat nama Tuhannya, lalu dia salat." },
+    16: { arabic: "بَلْ تُؤْثِرُونَ الْحَيَاةَ الدُّنْيَا", english: "But you prefer the worldly life,", indonesian: "Tetapi kamu (orang-orang kafir) memilih kehidupan dunia," },
+    17: { arabic: "وَالْآخِرَةُ خَيْرٌ وَأَبْقَىٰ", english: "While the Hereafter is better and more enduring.", indonesian: "sedangkan kehidupan akhirat lebih baik dan lebih kekal." },
+    18: { arabic: "إِنَّ هَٰذَا لَفِي الصُّحُفِ الْأُولَىٰ", english: "Indeed, this is in the former scriptures,", indonesian: "Sesungguhnya ini terdapat dalam kitab-kitab yang dahulu," },
+    19: { arabic: "صُحُفِ إِبْرَاهِيمَ وَمُوسَىٰ", english: "The scriptures of Abraham and Moses.", indonesian: "(yaitu) kitab-kitab Ibrahim dan Musa." },
+  },
+  
+  // Surah 86 - At-Tariq (17 ayat)
+  86: {
+    1: { arabic: "وَالسَّمَاءِ وَالطَّارِقِ", english: "By the sky and the night comer -", indonesian: "Demi langit dan yang datang pada malam hari," },
+    2: { arabic: "وَمَا أَدْرَاكَ مَا الطَّارِقُ", english: "And what can make you know what is the night comer?", indonesian: "tahukah kamu apakah yang datang pada malam hari itu?" },
+    3: { arabic: "النَّجْمُ الثَّاقِبُ", english: "It is the piercing star -", indonesian: "(Yaitu) bintang yang bersinar terang." },
+    4: { arabic: "إِن كُلُّ نَفْسٍ لَّمَّا عَلَيْهَا حَافِظٌ", english: "There is no soul but that it has over it a protector.", indonesian: "Setiap jiwa pasti ada penjaganya." },
+    5: { arabic: "فَلْيَنظُرِ الْإِنسَانُ مِمَّ خُلِقَ", english: "So let man observe from what he was created.", indonesian: "Maka hendaklah manusia memperhatikan dari apa dia diciptakan." },
+    6: { arabic: "خُلِقَ مِن مَّاءٍ دَافِقٍ", english: "He was created from a fluid, ejected,", indonesian: "Dia diciptakan dari air (mani) yang terpancar," },
+    7: { arabic: "يَخْرُجُ مِن بَيْنِ الصُّلْبِ وَالتَّرَائِبِ", english: "Emerging from between the backbone and the ribs.", indonesian: "yang keluar dari antara tulang punggung (sulbi) dan tulang dada." },
+    8: { arabic: "إِنَّهُ عَلَىٰ رَجْعِهِ لَقَادِرٌ", english: "Indeed, He [i.e., Allah], to return him [to life], is Able.", indonesian: "Sungguh, Allah benar-benar kuasa mengembalikannya (hidup sesudah mati)." },
+    9: { arabic: "يَوْمَ تُبْلَى السَّرَائِرُ", english: "The Day when secrets will be put on trial,", indonesian: "Pada hari (ketika) semua rahasia diuji." },
+    10: { arabic: "فَمَا لَهُ مِن قُوَّةٍ وَلَا نَاصِرٍ", english: "Then he [i.e., man] will have no power or any helper.", indonesian: "Maka tidak ada bagi manusia itu kekuatan dan tidak (pula) penolong." },
+    11: { arabic: "وَالسَّمَاءِ ذَاتِ الرَّجْعِ", english: "By the sky which returns [rain]", indonesian: "Demi langit yang mengandung hujan," },
+    12: { arabic: "وَالْأَرْضِ ذَاتِ الصَّدْعِ", english: "And [by] the earth which cracks open,", indonesian: "dan bumi yang mempunyai tumbuh-tumbuhan," },
+    13: { arabic: "إِنَّهُ لَقَوْلٌ فَصْلٌ", english: "Indeed, it [i.e., the Quran] is a decisive statement,", indonesian: "sesungguhnya (Al-Qur'an) itu benar-benar firman pemisah (antara yang hak dan yang batil)," },
+    14: { arabic: "وَمَا هُوَ بِالْهَزْلِ", english: "And it is not amusement.", indonesian: "dan bukanlah dia senda gurau." },
+    15: { arabic: "إِنَّهُمْ يَكِيدُونَ كَيْدًا", english: "Indeed, they are planning a plan,", indonesian: "Sesungguhnya mereka (orang-orang kafir) merencanakan tipu daya yang jahat," },
+    16: { arabic: "وَأَكِيدُ كَيْدًا", english: "But I am planning a plan.", indonesian: "dan Aku pun membuat rencana (untuk menggagalkan tipu daya mereka) dengan sebenar-benarnya." },
+    17: { arabic: "فَمَهِّلِ الْكَافِرِينَ أَمْهِلْهُمْ رُوَيْدًا", english: "So allow time for the disbelievers. Leave them awhile.", indonesian: "Karena itu berilah tangguh orang-orang kafir itu (jangan terburu-buru). Beri tangguhlah mereka barang sebentar." },
+  },
+  
+  // Surah 85 - Al-Buruj (22 ayat)
+  85: {
+    1: { arabic: "وَالسَّمَاءِ ذَاتِ الْبُرُوجِ", english: "By the sky containing great stars", indonesian: "Demi langit yang mempunyai gugusan bintang," },
+    2: { arabic: "وَالْيَوْمِ الْمَوْعُودِ", english: "And [by] the promised Day", indonesian: "dan demi hari yang dijanjikan," },
+    3: { arabic: "وَشَاهِدٍ وَمَشْهُودٍ", english: "And [by] the witness and what is witnessed,", indonesian: "dan demi yang menyaksikan dan yang disaksikan." },
+    4: { arabic: "قُتِلَ أَصْحَابُ الْأُخْدُودِ", english: "Cursed were the companions of the trench", indonesian: "Binasa dan terlaknatlah orang-orang yang membuat parit," },
+    5: { arabic: "النَّارِ ذَاتِ الْوَقُودِ", english: "[Containing] the fire full of fuel,", indonesian: "yang berapi (dinyalakan dengan) kayu bakar," },
+    6: { arabic: "إِذْ هُمْ عَلَيْهَا قُعُودٌ", english: "When they were sitting near it", indonesian: "ketika mereka duduk di sekitarnya," },
+    7: { arabic: "وَهُمْ عَلَىٰ مَا يَفْعَلُونَ بِالْمُؤْمِنِينَ شُهُودٌ", english: "And they, to what they were doing against the believers, were witnesses.", indonesian: "dan mereka menyaksikan apa yang mereka perbuat terhadap orang-orang yang beriman." },
+    8: { arabic: "وَمَا نَقَمُوا مِنْهُمْ إِلَّا أَن يُؤْمِنُوا بِاللَّهِ الْعَزِيزِ الْحَمِيدِ", english: "And they resented them not except because they believed in Allah, the Exalted in Might, the Praiseworthy,", indonesian: "Dan mereka tidak menyiksa orang-orang mukmin itu melainkan karena orang-orang mukmin itu beriman kepada Allah Yang Maha Perkasa, Maha Terpuji," },
+    9: { arabic: "الَّذِي لَهُ مُلْكُ السَّمَاوَاتِ وَالْأَرْضِ ۚ وَاللَّهُ عَلَىٰ كُلِّ شَيْءٍ شَهِيدٌ", english: "To whom belongs the dominion of the heavens and the earth. And Allah, over all things, is Witness.", indonesian: "Yang memiliki kerajaan langit dan bumi; dan Allah Maha Menyaksikan segala sesuatu." },
+    10: { arabic: "إِنَّ الَّذِينَ فَتَنُوا الْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ ثُمَّ لَمْ يَتُوبُوا فَلَهُمْ عَذَابُ جَهَنَّمَ وَلَهُمْ عَذَابُ الْحَرِيقِ", english: "Indeed, those who have tortured the believing men and believing women and then have not repented will have the punishment of Hell, and they will have the punishment of the Burning Fire.", indonesian: "Sesungguhnya orang-orang yang mendatangkan cobaan kepada orang-orang yang beriman laki-laki dan perempuan kemudian mereka tidak bertobat, maka mereka akan mendapat azab Jahanam dan mereka akan mendapat azab (neraka) yang membakar." },
+    11: { arabic: "إِنَّ الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ لَهُمْ جَنَّاتٌ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ ۚ ذَٰلِكَ الْفَوْزُ الْكَبِيرُ", english: "Indeed, those who have believed and done righteous deeds will have gardens beneath which rivers flow. That is the great attainment.", indonesian: "Sesungguhnya orang-orang yang beriman dan mengerjakan kebajikan, mereka mendapat surga yang mengalir di bawahnya sungai-sungai; itulah keberuntungan yang besar." },
+    12: { arabic: "إِنَّ بَطْشَ رَبِّكَ لَشَدِيدٌ", english: "Indeed, the assault of your Lord is severe.", indonesian: "Sungguh, siksa Tuhanmu sangat keras." },
+    13: { arabic: "إِنَّهُ هُوَ يُبْدِئُ وَيُعِيدُ", english: "Indeed, it is He who originates [creation] and repeats.", indonesian: "Sesungguhnya Dialah yang memulai (penciptaan makhluk) dan mengulanginya." },
+    14: { arabic: "وَهُوَ الْغَفُورُ الْوَدُودُ", english: "And He is the Forgiving, the Affectionate,", indonesian: "Dan Dialah Yang Maha Pengampun, Maha Pengasih," },
+    15: { arabic: "ذُو الْعَرْشِ الْمَجِيدُ", english: "Honorable Owner of the Throne,", indonesian: "yang mempunyai 'Arsy, lagi Mahamulia," },
+    16: { arabic: "فَعَّالٌ لِّمَا يُرِيدُ", english: "Effecter of what He intends.", indonesian: "Maha Pelaksana terhadap apa yang Dia kehendaki." },
+    17: { arabic: "هَلْ أَتَاكَ حَدِيثُ الْجُنُودِ", english: "Has there reached you the story of the soldiers -", indonesian: "Sudahkah sampai kepadamu berita (tentang) bala tentara," },
+    18: { arabic: "فِرْعَوْنَ وَثَمُودَ", english: "[Those of] Pharaoh and Thamud?", indonesian: "(yaitu) Fir'aun dan (kaum) Samud?" },
+    19: { arabic: "بَلِ الَّذِينَ كَفَرُوا فِي تَكْذِيبٍ", english: "But they who disbelieve are in [persistent] denial,", indonesian: "Bahkan orang-orang kafir (terus-menerus) mendustakan (Rasul)." },
+    20: { arabic: "وَاللَّهُ مِن وَرَائِهِم مُّحِيطٌ", english: "While Allah encompasses them from behind.", indonesian: "Padahal Allah mengepung mereka dari belakang." },
+    21: { arabic: "بَلْ هُوَ قُرْآنٌ مَّجِيدٌ", english: "But this is an honored Quran", indonesian: "Bahkan (yang didustakan orang-orang kafir itu) adalah Al-Qur'an yang mulia," },
+    22: { arabic: "فِي لَوْحٍ مَّحْفُوظٍ", english: "[Inscribed] in a Preserved Slate.", indonesian: "yang (tersimpan) dalam Lauh Mahfuz." },
+  },
+  
+  // Surah 84 - Al-Insyiqaq (25 ayat)
+  84: {
+    1: { arabic: "إِذَا السَّمَاءُ انشَقَّتْ", english: "When the sky has split [open]", indonesian: "Apabila langit terbelah," },
+    2: { arabic: "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ", english: "And has listened to [i.e., obeyed] its Lord and was obligated [to do so]", indonesian: "dan patuh kepada Tuhannya, dan memang sudah semestinya patuh," },
+    3: { arabic: "وَإِذَا الْأَرْضُ مُدَّتْ", english: "And when the earth has been extended", indonesian: "dan apabila bumi diratakan," },
+    4: { arabic: "وَأَلْقَتْ مَا فِيهَا وَتَخَلَّتْ", english: "And has cast out that within it and relinquished [it]", indonesian: "dan dilemparkan apa yang ada di dalamnya dan menjadi kosong," },
+    5: { arabic: "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ", english: "And has listened to [i.e., obeyed] its Lord and was obligated [to do so].", indonesian: "dan patuh kepada Tuhannya, dan memang sudah semestinya patuh." },
+    6: { arabic: "يَا أَيُّهَا الْإِنسَانُ إِنَّكَ كَادِحٌ إِلَىٰ رَبِّكَ كَدْحًا فَمُلَاقِيهِ", english: "O mankind, indeed you are laboring toward your Lord with [great] exertion and will meet it.", indonesian: "Wahai manusia, sesungguhnya kamu telah bekerja keras menuju Tuhanmu, maka kamu akan menemui-Nya." },
+    7: { arabic: "فَأَمَّا مَنْ أُوتِيَ كِتَابَهُ بِيَمِينِهِ", english: "Then as for he who is given his record in his right hand,", indonesian: "Maka adapun orang yang diberikan kitabnya dari sebelah kanannya," },
+    8: { arabic: "فَسَوْفَ يُحَاسَبُ حِسَابًا يَسِيرًا", english: "He will be judged with an easy account", indonesian: "maka dia akan diperiksa dengan pemeriksaan yang mudah," },
+    9: { arabic: "وَيَنقَلِبُ إِلَىٰ أَهْلِهِ مَسْرُورًا", english: "And return to his people in happiness.", indonesian: "dan dia akan kembali kepada keluarganya dengan gembira." },
+    10: { arabic: "وَأَمَّا مَنْ أُوتِيَ كِتَابَهُ وَرَاءَ ظَهْرِهِ", english: "But as for he who is given his record behind his back,", indonesian: "Adapun orang yang diberikan kitabnya dari belakang punggungnya," },
+    11: { arabic: "فَسَوْفَ يَدْعُو ثُبُورًا", english: "He will cry out for destruction", indonesian: "maka dia akan berteriak, \"Celakalah aku!\"" },
+    12: { arabic: "وَيَصْلَىٰ سَعِيرًا", english: "And [enter to] burn in a Blaze.", indonesian: "Dan dia akan masuk ke dalam api yang menyala-nyala (neraka)." },
+    13: { arabic: "إِنَّهُ كَانَ فِي أَهْلِهِ مَسْرُورًا", english: "Indeed, he had [once] been among his people in happiness;", indonesian: "Sesungguhnya dahulu (di dunia) dia bergembira di tengah keluarganya." },
+    14: { arabic: "إِنَّهُ ظَنَّ أَن لَّن يَحُورَ", english: "Indeed, he had thought he would never return [to Allah].", indonesian: "Sungguh, dia mengira bahwa tidak akan kembali (kepada Tuhannya)." },
+    15: { arabic: "بَلَىٰ إِنَّ رَبَّهُ كَانَ بِهِ بَصِيرًا", english: "But yes! Indeed, his Lord was ever of him, Seeing.", indonesian: "Benar, sesungguhnya Tuhannya selalu melihat (memperhatikan)nya." },
+    16: { arabic: "فَلَا أُقْسِمُ بِالشَّفَقِ", english: "So I swear by the twilight glow", indonesian: "Maka sesungguhnya Aku bersumpah dengan cahaya merah di waktu senja," },
+    17: { arabic: "وَاللَّيْلِ وَمَا وَسَقَ", english: "And [by] the night and what it envelops", indonesian: "demi malam dan apa yang diselubunginya," },
+    18: { arabic: "وَالْقَمَرِ إِذَا اتَّسَقَ", english: "And [by] the moon when it becomes full", indonesian: "dan bulan apabila jadi purnama." },
+    19: { arabic: "لَتَرْكَبُنَّ طَبَقًا عَن طَبَقٍ", english: "[That] you will surely experience state after state.", indonesian: "Sesungguhnya kamu akan mengalami tingkat demi tingkat (peristiwa)." },
+    20: { arabic: "فَمَا لَهُمْ لَا يُؤْمِنُونَ", english: "So what is [the matter] with them [that] they do not believe,", indonesian: "Mengapa mereka tidak mau beriman?" },
+    21: { arabic: "وَإِذَا قُرِئَ عَلَيْهِمُ الْقُرْآنُ لَا يَسْجُدُونَ ۩", english: "And when the Quran is recited to them, they do not prostrate [to Allah]?", indonesian: "Dan apabila Al-Qur'an dibacakan kepada mereka, mereka tidak mau bersujud." },
+    22: { arabic: "بَلِ الَّذِينَ كَفَرُوا يُكَذِّبُونَ", english: "But those who have disbelieved deny,", indonesian: "Bahkan orang-orang kafir mendustakan (saja)." },
+    23: { arabic: "وَاللَّهُ أَعْلَمُ بِمَا يُوعُونَ", english: "And Allah is most knowing of what they keep within themselves.", indonesian: "Dan Allah lebih mengetahui apa yang mereka sembunyikan (dalam hati)." },
+    24: { arabic: "فَبَشِّرْهُم بِعَذَابٍ أَلِيمٍ", english: "So give them tidings of a painful punishment,", indonesian: "Maka sampaikanlah kabar gembira kepada mereka dengan azab yang pedih," },
+    25: { arabic: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ لَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍ", english: "Except for those who believe and do righteous deeds. For them is a reward uninterrupted.", indonesian: "kecuali orang-orang yang beriman dan mengerjakan kebajikan; mereka akan mendapat pahala yang tidak ada putus-putusnya." },
+  },
+  
+  // Surah 83 - Al-Mutaffifin (36 ayat)
+  83: {
+    1: { arabic: "وَيْلٌ لِّلْمُطَفِّفِينَ", english: "Woe to those who give less [than due],", indonesian: "Celakalah bagi orang-orang yang curang (dalam menakar dan menimbang)!" },
+    2: { arabic: "الَّذِينَ إِذَا اكْتَالُوا عَلَى النَّاسِ يَسْتَوْفُونَ", english: "Who, when they take a measure from people, take in full.", indonesian: "(Yaitu) orang-orang yang apabila menerima takaran dari orang lain mereka minta dicukupkan," },
+    3: { arabic: "وَإِذَا كَالُوهُمْ أَو وَّزَنُوهُمْ يُخْسِرُونَ", english: "But if they give by measure or by weight to them, they cause loss.", indonesian: "dan apabila mereka menakar atau menimbang (untuk orang lain), mereka mengurangi." },
+    4: { arabic: "أَلَا يَظُنُّ أُولَٰئِكَ أَنَّهُم مَّبْعُوثُونَ", english: "Do they not think that they will be resurrected", indonesian: "Tidakkah mereka itu mengira bahwa sesungguhnya mereka akan dibangkitkan," },
+    5: { arabic: "لِيَوْمٍ عَظِيمٍ", english: "For a tremendous Day -", indonesian: "pada suatu hari yang besar," },
+    6: { arabic: "يَوْمَ يَقُومُ النَّاسُ لِرَبِّ الْعَالَمِينَ", english: "The Day when mankind will stand before the Lord of the worlds?", indonesian: "(yaitu) pada hari (ketika) semua orang bangkit menghadap Tuhan seluruh alam?" },
+    7: { arabic: "كَلَّا إِنَّ كِتَابَ الْفُجَّارِ لَفِي سِجِّينٍ", english: "No! Indeed, the record of the wicked is in sijjeen.", indonesian: "Sekali-kali tidak! Sesungguhnya catatan orang-orang durhaka berada dalam Sijjin." },
+    8: { arabic: "وَمَا أَدْرَاكَ مَا سِجِّينٌ", english: "And what can make you know what is sijjeen?", indonesian: "Dan tahukah kamu apakah Sijjin itu?" },
+    9: { arabic: "كِتَابٌ مَّرْقُومٌ", english: "It is [their destination recorded in] a register inscribed.", indonesian: "(Itu adalah) kitab catatan yang berisi (segala amalan yang) ditetapkan." },
+    10: { arabic: "وَيْلٌ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ", english: "Woe, that Day, to the deniers,", indonesian: "Celakalah pada hari itu, bagi orang-orang yang mendustakan," },
+    11: { arabic: "الَّذِينَ يُكَذِّبُونَ بِيَوْمِ الدِّينِ", english: "Who deny the Day of Recompense.", indonesian: "(yaitu) orang-orang yang mendustakan hari pembalasan." },
+    12: { arabic: "وَمَا يُكَذِّبُ بِهِ إِلَّا كُلُّ مُعْتَدٍ أَثِيمٍ", english: "And none deny it except every sinful transgressor.", indonesian: "Dan tidak ada yang mendustakan hari pembalasan kecuali setiap orang yang melampaui batas lagi berdosa," },
+    13: { arabic: "إِذَا تُتْلَىٰ عَلَيْهِ آيَاتُنَا قَالَ أَسَاطِيرُ الْأَوَّلِينَ", english: "When Our verses are recited to him, he says, \"Legends of the former peoples.\"", indonesian: "apabila dibacakan kepadanya ayat-ayat Kami, dia berkata, \"Itu adalah dongeng-dongeng orang dahulu!\"" },
+    14: { arabic: "كَلَّا ۖ بَلْ ۜ رَانَ عَلَىٰ قُلُوبِهِم مَّا كَانُوا يَكْسِبُونَ", english: "No! Rather, the stain has covered their hearts of that which they were earning.", indonesian: "Sekali-kali tidak! Bahkan apa yang mereka kerjakan itu sudah menutup hati mereka." },
+    15: { arabic: "كَلَّا إِنَّهُمْ عَن رَّبِّهِمْ يَوْمَئِذٍ لَّمَحْجُوبُونَ", english: "No! Indeed, from their Lord, that Day, they will be partitioned.", indonesian: "Sekali-kali tidak! Sesungguhnya mereka pada hari itu benar-benar terhalang dari (melihat) Tuhan mereka." },
+    16: { arabic: "ثُمَّ إِنَّهُمْ لَصَالُو الْجَحِيمِ", english: "Then indeed, they will [enter and] burn in Hellfire.", indonesian: "Kemudian sesungguhnya mereka pasti masuk neraka." },
+    17: { arabic: "ثُمَّ يُقَالُ هَٰذَا الَّذِي كُنتُم بِهِ تُكَذِّبُونَ", english: "Then it will be said [to them], \"This is what you used to deny.\"", indonesian: "Lalu dikatakan (kepada mereka), \"Inilah (azab) yang dahulu kamu dustakan.\"" },
+    18: { arabic: "كَلَّا إِنَّ كِتَابَ الْأَبْرَارِ لَفِي عِلِّيِّينَ", english: "No! Indeed, the record of the righteous is in 'illiyyun.", indonesian: "Sekali-kali tidak! Sesungguhnya catatan orang-orang yang berbakti berada dalam 'Illiyyin." },
+    19: { arabic: "وَمَا أَدْرَاكَ مَا عِلِّيُّونَ", english: "And what can make you know what is 'illiyyun?", indonesian: "Dan tahukah kamu apakah 'Illiyyin itu?" },
+    20: { arabic: "كِتَابٌ مَّرْقُومٌ", english: "It is [their destination recorded in] a register inscribed", indonesian: "(Yaitu) kitab catatan yang berisi (segala amalan yang) ditetapkan." },
+    21: { arabic: "يَشْهَدُهُ الْمُقَرَّبُونَ", english: "Which is witnessed by those brought near [to Allah].", indonesian: "yang disaksikan oleh (malaikat-malaikat) yang didekatkan (kepada Allah)." },
+    22: { arabic: "إِنَّ الْأَبْرَارَ لَفِي نَعِيمٍ", english: "Indeed, the righteous will be in pleasure", indonesian: "Sesungguhnya orang-orang yang berbakti benar-benar berada dalam (surga yang penuh) kenikmatan," },
+    23: { arabic: "عَلَى الْأَرَائِكِ يَنظُرُونَ", english: "On adorned couches, observing.", indonesian: "mereka (duduk) di atas dipan-dipan sambil memandang." },
+    24: { arabic: "تَعْرِفُ فِي وُجُوهِهِمْ نَضْرَةَ النَّعِيمِ", english: "You will recognize in their faces the radiance of pleasure.", indonesian: "Kamu dapat melihat dari wajah mereka kesenangan hidup yang penuh kenikmatan." },
+    25: { arabic: "يُسْقَوْنَ مِن رَّحِيقٍ مَّخْتُومٍ", english: "They will be given to drink [pure] wine [which was] sealed.", indonesian: "Mereka diberi minum dari khamar murni yang (tempatnya) dilak (disegel)." },
+    26: { arabic: "خِتَامُهُ مِسْكٌ ۚ وَفِي ذَٰلِكَ فَلْيَتَنَافَسِ الْمُتَنَافِسُونَ", english: "The last of it is musk. So for this let the competitors compete.", indonesian: "Laknya dari misk. Dan untuk (yang demikian itu) hendaklah orang-orang berlomba-lomba." },
+    27: { arabic: "وَمِزَاجُهُ مِن تَسْنِيمٍ", english: "And its mixture is of Tasnim,", indonesian: "Dan campurannya dari Tasnim," },
+    28: { arabic: "عَيْنًا يَشْرَبُ بِهَا الْمُقَرَّبُونَ", english: "A spring from which those near [to Allah] drink.", indonesian: "(yaitu) mata air yang darinya minum orang-orang yang didekatkan kepada Allah." },
+    29: { arabic: "إِنَّ الَّذِينَ أَجْرَمُوا كَانُوا مِنَ الَّذِينَ آمَنُوا يَضْحَكُونَ", english: "Indeed, those who committed crimes used to laugh at those who believed.", indonesian: "Sesungguhnya orang-orang yang berdosa dahulu menertawakan orang-orang yang beriman," },
+    30: { arabic: "وَإِذَا مَرُّوا بِهِمْ يَتَغَامَزُونَ", english: "And when they passed by them, they would exchange derisive glances.", indonesian: "dan apabila mereka berjalan (melewati) orang-orang beriman, mereka saling mengedipkan mata," },
+    31: { arabic: "وَإِذَا انقَلَبُوا إِلَىٰ أَهْلِهِمُ انقَلَبُوا فَكِهِينَ", english: "And when they returned to their people, they would return jesting.", indonesian: "dan apabila mereka kembali kepada keluarganya, mereka kembali dengan gembira ria." },
+    32: { arabic: "وَإِذَا رَأَوْهُمْ قَالُوا إِنَّ هَٰؤُلَاءِ لَضَالُّونَ", english: "And when they saw them, they would say, \"Indeed, those are truly lost.\"", indonesian: "Dan apabila mereka melihat orang-orang mukmin, mereka berkata, \"Sesungguhnya mereka itu orang-orang yang sesat,\"" },
+    33: { arabic: "وَمَا أُرْسِلُوا عَلَيْهِمْ حَافِظِينَ", english: "But they had not been sent as guardians over them.", indonesian: "padahal mereka tidak diutus sebagai penjaga atas orang-orang yang beriman." },
+    34: { arabic: "فَالْيَوْمَ الَّذِينَ آمَنُوا مِنَ الْكُفَّارِ يَضْحَكُونَ", english: "So Today those who believed are laughing at the disbelievers,", indonesian: "Maka pada hari ini, orang-orang beriman menertawakan orang-orang kafir." },
+    35: { arabic: "عَلَى الْأَرَائِكِ يَنظُرُونَ", english: "On adorned couches, observing.", indonesian: "(mereka duduk) di atas dipan-dipan, sambil memandang." },
+    36: { arabic: "هَلْ ثُوِّبَ الْكُفَّارُ مَا كَانُوا يَفْعَلُونَ", english: "Have the disbelievers [not] been rewarded [this Day] for what they used to do?", indonesian: "Orang-orang kafir itu telah diberi ganjaran terhadap apa yang dahulu mereka kerjakan?" },
+  },
+  
+  // Surah 82 - Al-Infitar (19 ayat)
+  82: {
+    1: { arabic: "إِذَا السَّمَاءُ انفَطَرَتْ", english: "When the sky breaks apart", indonesian: "Apabila langit terbelah," },
+    2: { arabic: "وَإِذَا الْكَوَاكِبُ انتَثَرَتْ", english: "And when the stars fall, scattering,", indonesian: "dan apabila bintang-bintang jatuh berserakan," },
+    3: { arabic: "وَإِذَا الْبِحَارُ فُجِّرَتْ", english: "And when the seas are erupted", indonesian: "dan apabila lautan dijadikan meluap," },
+    4: { arabic: "وَإِذَا الْقُبُورُ بُعْثِرَتْ", english: "And when the [contents of] graves are scattered,", indonesian: "dan apabila kuburan-kuburan dibongkar," },
+    5: { arabic: "عَلِمَتْ نَفْسٌ مَّا قَدَّمَتْ وَأَخَّرَتْ", english: "A soul will [then] know what it has put forth and kept back.", indonesian: "maka setiap jiwa akan mengetahui apa yang telah dikerjakan dan yang ditinggalkannya (tidak dikerjakan)." },
+    6: { arabic: "يَا أَيُّهَا الْإِنسَانُ مَا غَرَّكَ بِرَبِّكَ الْكَرِيمِ", english: "O mankind, what has deceived you concerning your Lord, the Generous,", indonesian: "Wahai manusia! Apa yang telah memperdayakan kamu (berbuat durhaka) terhadap Tuhanmu Yang Maha Pengasih," },
+    7: { arabic: "الَّذِي خَلَقَكَ فَسَوَّاكَ فَعَدَلَكَ", english: "Who created you, proportioned you, and balanced you?", indonesian: "yang telah menciptakan kamu lalu menyempurnakan kejadianmu dan menjadikan (susunan tubuh)mu seimbang," },
+    8: { arabic: "فِي أَيِّ صُورَةٍ مَّا شَاءَ رَكَّبَكَ", english: "In whatever form He willed has He assembled you.", indonesian: "dalam bentuk apa saja yang Dia kehendaki, Dia menyusun tubuhmu." },
+    9: { arabic: "كَلَّا بَلْ تُكَذِّبُونَ بِالدِّينِ", english: "No! But you deny the Recompense.", indonesian: "Sekali-kali tidak! Bahkan kamu mendustakan hari pembalasan." },
+    10: { arabic: "وَإِنَّ عَلَيْكُمْ لَحَافِظِينَ", english: "And indeed, [appointed] over you are keepers,", indonesian: "Padahal sesungguhnya bagi kamu ada (malaikat-malaikat) yang mengawasi (pekerjaanmu)," },
+    11: { arabic: "كِرَامًا كَاتِبِينَ", english: "Noble and recording;", indonesian: "yang mulia (di sisi Allah) dan yang mencatat (perbuatanmu)," },
+    12: { arabic: "يَعْلَمُونَ مَا تَفْعَلُونَ", english: "They know whatever you do.", indonesian: "mereka mengetahui apa yang kamu kerjakan." },
+    13: { arabic: "إِنَّ الْأَبْرَارَ لَفِي نَعِيمٍ", english: "Indeed, the righteous will be in pleasure,", indonesian: "Sesungguhnya orang-orang yang banyak berbakti benar-benar berada dalam (surga yang penuh) kenikmatan," },
+    14: { arabic: "وَإِنَّ الْفُجَّارَ لَفِي جَحِيمٍ", english: "And indeed, the wicked will be in Hellfire.", indonesian: "dan sesungguhnya orang-orang yang durhaka benar-benar berada dalam neraka." },
+    15: { arabic: "يَصْلَوْنَهَا يَوْمَ الدِّينِ", english: "They will [enter to] burn therein on the Day of Recompense,", indonesian: "Mereka masuk ke dalamnya (neraka) pada hari pembalasan." },
+    16: { arabic: "وَمَا هُمْ عَنْهَا بِغَائِبِينَ", english: "And never therefrom will they be absent.", indonesian: "Dan mereka tidak dapat keluar dari neraka." },
+    17: { arabic: "وَمَا أَدْرَاكَ مَا يَوْمُ الدِّينِ", english: "And what can make you know what is the Day of Recompense?", indonesian: "Dan tahukah kamu apakah hari pembalasan itu?" },
+    18: { arabic: "ثُمَّ مَا أَدْرَاكَ مَا يَوْمُ الدِّينِ", english: "Then, what can make you know what is the Day of Recompense?", indonesian: "Kemudian tahukah kamu apakah hari pembalasan itu?" },
+    19: { arabic: "يَوْمَ لَا تَمْلِكُ نَفْسٌ لِّنَفْسٍ شَيْئًا ۖ وَالْأَمْرُ يَوْمَئِذٍ لِّلَّهِ", english: "It is the Day when a soul will not possess for another soul [power to do] a thing; and the command, that Day, is [entirely] with Allah.", indonesian: "(Yaitu) pada hari (ketika) seseorang tidak berdaya sedikit pun untuk menolong orang lain. Dan segala urusan pada hari itu dalam kekuasaan Allah." },
+  },
+  
+  // Surah 81 - At-Takwir (29 ayat)
+  81: {
+    1: { arabic: "إِذَا الشَّمْسُ كُوِّرَتْ", english: "When the sun is wrapped up [in darkness]", indonesian: "Apabila matahari digulung," },
+    2: { arabic: "وَإِذَا النُّجُومُ انكَدَرَتْ", english: "And when the stars fall, dispersing,", indonesian: "dan apabila bintang-bintang berjatuhan," },
+    3: { arabic: "وَإِذَا الْجِبَالُ سُيِّرَتْ", english: "And when the mountains are removed", indonesian: "dan apabila gunung-gunung dihancurkan," },
+    4: { arabic: "وَإِذَا الْعِشَارُ عُطِّلَتْ", english: "And when full-term she-camels are neglected", indonesian: "dan apabila unta-unta yang bunting ditinggalkan (tidak terurus)," },
+    5: { arabic: "وَإِذَا الْوُحُوشُ حُشِرَتْ", english: "And when the wild beasts are gathered", indonesian: "dan apabila binatang-binatang liar dikumpulkan," },
+    6: { arabic: "وَإِذَا الْبِحَارُ سُجِّرَتْ", english: "And when the seas are filled with flame", indonesian: "dan apabila lautan dipanaskan," },
+    7: { arabic: "وَإِذَا النُّفُوسُ زُوِّجَتْ", english: "And when the souls are paired", indonesian: "dan apabila jiwa-jiwa dipertemukan (dengan tubuh)," },
+    8: { arabic: "وَإِذَا الْمَوْءُودَةُ سُئِلَتْ", english: "And when the girl [who was] buried alive is asked", indonesian: "dan apabila bayi-bayi perempuan yang dikubur hidup-hidup ditanya," },
+    9: { arabic: "بِأَيِّ ذَنبٍ قُتِلَتْ", english: "For what sin she was killed", indonesian: "karena dosa apa dia dibunuh?" },
+    10: { arabic: "وَإِذَا الصُّحُفُ نُشِرَتْ", english: "And when the pages are made public", indonesian: "dan apabila catatan-catatan (amal) dibuka," },
+    11: { arabic: "وَإِذَا السَّمَاءُ كُشِطَتْ", english: "And when the sky is stripped away", indonesian: "dan apabila langit dilenyapkan," },
+    12: { arabic: "وَإِذَا الْجَحِيمُ سُعِّرَتْ", english: "And when Hellfire is set ablaze", indonesian: "dan apabila neraka Jahim dinyalakan," },
+    13: { arabic: "وَإِذَا الْجَنَّةُ أُزْلِفَتْ", english: "And when Paradise is brought near,", indonesian: "dan apabila surga didekatkan," },
+    14: { arabic: "عَلِمَتْ نَفْسٌ مَّا أَحْضَرَتْ", english: "A soul will [then] know what it has brought [with it].", indonesian: "(maka) setiap jiwa akan mengetahui apa yang telah dikerjakannya." },
+    15: { arabic: "فَلَا أُقْسِمُ بِالْخُنَّسِ", english: "So I swear by the retreating stars -", indonesian: "Maka sesungguhnya Aku bersumpah dengan bintang-bintang," },
+    16: { arabic: "الْجَوَارِ الْكُنَّسِ", english: "Those that run [their courses] and disappear -", indonesian: "yang beredar dan terbenam," },
+    17: { arabic: "وَاللَّيْلِ إِذَا عَسْعَسَ", english: "And by the night as it closes in", indonesian: "demi malam apabila telah larut," },
+    18: { arabic: "وَالصُّبْحِ إِذَا تَنَفَّسَ", english: "And by the dawn when it breathes", indonesian: "dan demi subuh apabila fajarnya mulai menyingsing," },
+    19: { arabic: "إِنَّهُ لَقَوْلُ رَسُولٍ كَرِيمٍ", english: "[That] indeed, it [i.e., the Quran] is a word [conveyed by] a noble messenger [i.e., Gabriel]", indonesian: "sesungguhnya (Al-Qur'an itu) benar-benar firman (Allah yang dibawa oleh) utusan yang mulia (Jibril)," },
+    20: { arabic: "ذِي قُوَّةٍ عِندَ ذِي الْعَرْشِ مَكِينٍ", english: "[Who is] possessed of power and with the Owner of the Throne, secure [in position],", indonesian: "yang mempunyai kekuatan, memiliki kedudukan yang tinggi di sisi (Allah) Yang mempunyai 'Arsy," },
+    21: { arabic: "مُّطَاعٍ ثَمَّ أَمِينٍ", english: "Obeyed there [in the heavens] and trustworthy.", indonesian: "yang ditaati di sana (alam malaikat) dan dipercaya." },
+    22: { arabic: "وَمَا صَاحِبُكُم بِمَجْنُونٍ", english: "And your companion is not [at all] mad.", indonesian: "Dan temanmu (Muhammad) itu bukanlah orang gila." },
+    23: { arabic: "وَلَقَدْ رَآهُ بِالْأُفُقِ الْمُبِينِ", english: "And he has already seen him [i.e., Gabriel] in the clear horizon.", indonesian: "Dan sungguh, dia (Muhammad) telah melihat Jibril itu di ufuk yang terang." },
+    24: { arabic: "وَمَا هُوَ عَلَى الْغَيْبِ بِضَنِينٍ", english: "And he [i.e., Muhammad] is not a withholder of [knowledge of] the unseen.", indonesian: "Dan dia (Muhammad) bukanlah orang yang kikir (pelit) untuk menerangkan yang gaib." },
+    25: { arabic: "وَمَا هُوَ بِقَوْلِ شَيْطَانٍ رَّجِيمٍ", english: "And it [i.e., the Quran] is not the word of a devil, expelled [from the heavens].", indonesian: "Dan (Al-Qur'an itu) bukanlah perkataan setan yang terkutuk." },
+    26: { arabic: "فَأَيْنَ تَذْهَبُونَ", english: "So where are you going?", indonesian: "Maka ke mana kamu akan pergi?" },
+    27: { arabic: "إِنْ هُوَ إِلَّا ذِكْرٌ لِّلْعَالَمِينَ", english: "It is not except a reminder to the worlds", indonesian: "Al-Qur'an itu tidak lain adalah peringatan bagi seluruh alam," },
+    28: { arabic: "لِمَن شَاءَ مِنكُمْ أَن يَسْتَقِيمَ", english: "For whoever wills among you to take a right course.", indonesian: "(yaitu) bagi siapa di antara kamu yang mau menempuh jalan yang lurus." },
+    29: { arabic: "وَمَا تَشَاءُونَ إِلَّا أَن يَشَاءَ اللَّهُ رَبُّ الْعَالَمِينَ", english: "And you do not will except that Allah wills - Lord of the worlds.", indonesian: "Dan kamu tidak dapat menghendaki (menempuh jalan itu) kecuali apabila dikehendaki Allah, Tuhan seluruh alam." },
+  },
+  
+  // Surah 80 - Abasa (42 ayat)
+  80: {
+    1: { arabic: "عَبَسَ وَتَوَلَّىٰ", english: "He [i.e., the Prophet] frowned and turned away", indonesian: "Dia (Muhammad) berwajah masam dan berpaling," },
+    2: { arabic: "أَن جَاءَهُ الْأَعْمَىٰ", english: "Because there came to him the blind man.", indonesian: "karena seorang buta telah datang kepadanya." },
+    3: { arabic: "وَمَا يُدْرِيكَ لَعَلَّهُ يَزَّكَّىٰ", english: "But what would make you perceive, [O Muhammad], that perhaps he might be purified", indonesian: "Dan tahukah engkau (Muhammad) barangkali dia ingin menyucikan dirinya (dari dosa)," },
+    4: { arabic: "أَوْ يَذَّكَّرُ فَتَنفَعَهُ الذِّكْرَىٰ", english: "Or be reminded and the remembrance would benefit him?", indonesian: "atau dia (ingin) mendapat pengajaran, yang akan memberi manfaat kepadanya?" },
+    5: { arabic: "أَمَّا مَنِ اسْتَغْنَىٰ", english: "As for he who thinks himself without need,", indonesian: "Adapun orang yang merasa dirinya serba cukup (pembesar-pembesar Quraisy)," },
+    6: { arabic: "فَأَنتَ لَهُ تَصَدَّىٰ", english: "To him you give attention.", indonesian: "maka engkau (Muhammad) memberi perhatian kepadanya," },
+    7: { arabic: "وَمَا عَلَيْكَ أَلَّا يَزَّكَّىٰ", english: "And not upon you [is any blame] if he will not be purified.", indonesian: "padahal tidak ada (cela) atasmu kalau dia tidak menyucikan diri (beriman)." },
+    8: { arabic: "وَأَمَّا مَن جَاءَكَ يَسْعَىٰ", english: "But as for he who came to you striving [for knowledge]", indonesian: "Dan adapun orang yang datang kepadamu dengan bersegera (untuk mendapatkan pengajaran)," },
+    9: { arabic: "وَهُوَ يَخْشَىٰ", english: "While he fears [Allah],", indonesian: "sedang dia takut (kepada Allah)," },
+    10: { arabic: "فَأَنتَ عَنْهُ تَلَهَّىٰ", english: "From him you are distracted.", indonesian: "engkau (Muhammad) malah mengabaikannya." },
+    11: { arabic: "كَلَّا إِنَّهَا تَذْكِرَةٌ", english: "No! Indeed, these verses are a reminder;", indonesian: "Sekali-kali tidak! Sesungguhnya (ajaran-ajaran Allah) itu suatu peringatan." },
+    12: { arabic: "فَمَن شَاءَ ذَكَرَهُ", english: "So whoever wills may remember it.", indonesian: "Maka barang siapa yang menghendaki, tentulah dia memperhatikannya." },
+    13: { arabic: "فِي صُحُفٍ مُّكَرَّمَةٍ", english: "[It is recorded] in honored sheets,", indonesian: "(Ajaran-ajaran itu) di dalam kitab-kitab yang dimuliakan," },
+    14: { arabic: "مَّرْفُوعَةٍ مُّطَهَّرَةٍ", english: "Exalted and purified,", indonesian: "yang ditinggikan dan disucikan," },
+    15: { arabic: "بِأَيْدِي سَفَرَةٍ", english: "[Carried] by the hands of messenger-angels,", indonesian: "di tangan para penulis (malaikat)," },
+    16: { arabic: "كِرَامٍ بَرَرَةٍ", english: "Noble and dutiful.", indonesian: "yang mulia lagi berbakti." },
+    17: { arabic: "قُتِلَ الْإِنسَانُ مَا أَكْفَرَهُ", english: "Cursed is man; how disbelieving is he.", indonesian: "Celakalah manusia! Alangkah sangat kekafirannya!" },
+    18: { arabic: "مِنْ أَيِّ شَيْءٍ خَلَقَهُ", english: "From what substance did He create him?", indonesian: "Dari apakah Allah menciptakannya?" },
+    19: { arabic: "مِن نُّطْفَةٍ خَلَقَهُ فَقَدَّرَهُ", english: "From a sperm-drop He created him and destined for him;", indonesian: "Dari setetes mani, Dia menciptakannya lalu menentukannya." },
+    20: { arabic: "ثُمَّ السَّبِيلَ يَسَّرَهُ", english: "Then He eased the way for him;", indonesian: "Kemudian Dia memudahkan jalannya," },
+    21: { arabic: "ثُمَّ أَمَاتَهُ فَأَقْبَرَهُ", english: "Then He causes his death and provides a grave for him.", indonesian: "kemudian Dia mematikannya dan memasukkannya ke dalam kubur." },
+    22: { arabic: "ثُمَّ إِذَا شَاءَ أَنشَرَهُ", english: "Then when He wills, He will resurrect him.", indonesian: "Kemudian apabila Dia menghendaki, Dia membangkitkannya kembali." },
+    23: { arabic: "كَلَّا لَمَّا يَقْضِ مَا أَمَرَهُ", english: "No! He [i.e., man] has not yet accomplished what He commanded him.", indonesian: "Sekali-kali tidak! Manusia itu belum melaksanakan apa yang diperintahkan Allah kepadanya." },
+    24: { arabic: "فَلْيَنظُرِ الْإِنسَانُ إِلَىٰ طَعَامِهِ", english: "Then let mankind look at his food -", indonesian: "Maka hendaklah manusia itu memperhatikan makanannya." },
+    25: { arabic: "أَنَّا صَبَبْنَا الْمَاءَ صَبًّا", english: "How We poured down water in torrents,", indonesian: "Kamilah yang telah mencurahkan air (hujan) melimpah ruah," },
+    26: { arabic: "ثُمَّ شَقَقْنَا الْأَرْضَ شَقًّا", english: "Then We broke open the earth, splitting [it with sprouts],", indonesian: "kemudian Kami belah bumi dengan sebaik-baiknya," },
+    27: { arabic: "فَأَنبَتْنَا فِيهَا حَبًّا", english: "And caused to grow within it grain", indonesian: "lalu Kami tumbuhkan di bumi itu biji-bijian," },
+    28: { arabic: "وَعِنَبًا وَقَضْبًا", english: "And grapes and herbage", indonesian: "dan anggur dan sayur-sayuran," },
+    29: { arabic: "وَزَيْتُونًا وَنَخْلًا", english: "And olive and palm trees", indonesian: "dan zaitun dan pohon kurma," },
+    30: { arabic: "وَحَدَائِقَ غُلْبًا", english: "And gardens of dense shrubbery", indonesian: "dan kebun-kebun yang lebat," },
+    31: { arabic: "وَفَاكِهَةً وَأَبًّا", english: "And fruit and grass -", indonesian: "dan buah-buahan serta rerumputan," },
+    32: { arabic: "مَّتَاعًا لَّكُمْ وَلِأَنْعَامِكُمْ", english: "[As] enjoyment for you and your grazing livestock.", indonesian: "sebagai kesenangan untukmu dan untuk binatang-binatang ternakmu." },
+    33: { arabic: "فَإِذَا جَاءَتِ الصَّاخَّةُ", english: "But when there comes the Deafening Blast", indonesian: "Maka apabila datang suara yang memekakkan (tiupan sangkakala)," },
+    34: { arabic: "يَوْمَ يَفِرُّ الْمَرْءُ مِنْ أَخِيهِ", english: "On the Day a man will flee from his brother", indonesian: "pada hari (ketika) seseorang lari dari saudaranya," },
+    35: { arabic: "وَأُمِّهِ وَأَبِيهِ", english: "And his mother and his father", indonesian: "dan dari ibu dan bapaknya," },
+    36: { arabic: "وَصَاحِبَتِهِ وَبَنِيهِ", english: "And his wife and his children,", indonesian: "dan dari istri dan anak-anaknya." },
+    37: { arabic: "لِكُلِّ امْرِئٍ مِّنْهُمْ يَوْمَئِذٍ شَأْنٌ يُغْنِيهِ", english: "For every man, that Day, will be a matter adequate for him.", indonesian: "Setiap orang dari mereka pada hari itu mempunyai urusan yang menyibukkannya." },
+    38: { arabic: "وُجُوهٌ يَوْمَئِذٍ مُّسْفِرَةٌ", english: "[Some] faces, that Day, will be bright -", indonesian: "Banyak wajah pada hari itu berseri-seri," },
+    39: { arabic: "ضَاحِكَةٌ مُّسْتَبْشِرَةٌ", english: "Laughing, rejoicing at good news.", indonesian: "tertawa dan bergembira ria." },
+    40: { arabic: "وَوُجُوهٌ يَوْمَئِذٍ عَلَيْهَا غَبَرَةٌ", english: "And [other] faces, that Day, will have upon them dust.", indonesian: "Dan banyak (pula) wajah pada hari itu tertutup debu," },
+    41: { arabic: "تَرْهَقُهَا قَتَرَةٌ", english: "Blackness will cover them.", indonesian: "dan diselimuti kegelapan." },
+    42: { arabic: "أُولَٰئِكَ هُمُ الْكَفَرَةُ الْفَجَرَةُ", english: "Those are the disbelievers, the wicked ones.", indonesian: "Mereka itulah orang-orang kafir lagi durhaka." },
+  },
+  
+  // Surah 79 - An-Nazi'at (46 ayat)
+  79: {
+    1: { arabic: "وَالنَّازِعَاتِ غَرْقًا", english: "By those [angels] who extract with violence", indonesian: "Demi (malaikat-malaikat) yang mencabut (nyawa) dengan keras," },
+    2: { arabic: "وَالنَّاشِطَاتِ نَشْطًا", english: "And [by] those who remove with ease", indonesian: "dan (malaikat-malaikat) yang mencabut (nyawa) dengan lemah lembut," },
+    3: { arabic: "وَالسَّابِحَاتِ سَبْحًا", english: "And [by] those who glide [as if] swimming", indonesian: "dan (malaikat-malaikat) yang turun dari langit dengan cepat," },
+    4: { arabic: "فَالسَّابِقَاتِ سَبْقًا", english: "And those who race each other in a race", indonesian: "dan (malaikat-malaikat) yang mendahului dengan kencang," },
+    5: { arabic: "فَالْمُدَبِّرَاتِ أَمْرًا", english: "And those who arrange [each] matter,", indonesian: "dan (malaikat-malaikat) yang mengatur urusan (dunia)." },
+    6: { arabic: "يَوْمَ تَرْجُفُ الرَّاجِفَةُ", english: "On the Day the blast [of the Horn] will convulse [creation],", indonesian: "(Kejadian itu akan terjadi) pada hari (ketika) tiupan pertama mengguncang (alam)," },
+    7: { arabic: "تَتْبَعُهَا الرَّادِفَةُ", english: "There will follow it the subsequent [one].", indonesian: "yang kemudian diiringi oleh tiupan kedua." },
+    8: { arabic: "قُلُوبٌ يَوْمَئِذٍ وَاجِفَةٌ", english: "Hearts, that Day, will tremble,", indonesian: "Banyak hati pada hari itu sangat takut," },
+    9: { arabic: "أَبْصَارُهَا خَاشِعَةٌ", english: "Their eyes humbled.", indonesian: "pandangannya tunduk." },
+    10: { arabic: "يَقُولُونَ أَإِنَّا لَمَرْدُودُونَ فِي الْحَافِرَةِ", english: "They are [presently] saying, \"Will we indeed be returned to [our] former state [of life]?", indonesian: "Mereka berkata, \"Apakah sesungguhnya kami benar-benar dikembalikan kepada kehidupan semula?" },
+    11: { arabic: "أَإِذَا كُنَّا عِظَامًا نَّخِرَةً", english: "Even if we should be decayed bones?\"", indonesian: "Apakah (akan dibangkitkan juga) apabila kami telah menjadi tulang belulang yang hancur?" },
+    12: { arabic: "قَالُوا تِلْكَ إِذًا كَرَّةٌ خَاسِرَةٌ", english: "They say, \"That, then, would be a losing return.\"", indonesian: "Mereka berkata, \"Kalau demikian, itu adalah pengembalian yang merugikan.\"" },
+    13: { arabic: "فَإِنَّمَا هِيَ زَجْرَةٌ وَاحِدَةٌ", english: "Indeed, it will be but one shout,", indonesian: "Sesungguhnya pengembalian itu hanya satu kali tiupan," },
+    14: { arabic: "فَإِذَا هُم بِالسَّاهِرَةِ", english: "And suddenly they will be [alert] upon the earth's surface.", indonesian: "maka tiba-tiba mereka sudah berada di bumi (yang terbentang)." },
+    15: { arabic: "هَلْ أَتَاكَ حَدِيثُ مُوسَىٰ", english: "Has there reached you the story of Moses? -", indonesian: "Sudahkah sampai kepadamu kisah Musa?" },
+    16: { arabic: "إِذْ نَادَاهُ رَبُّهُ بِالْوَادِ الْمُقَدَّسِ طُوًى", english: "When his Lord called to him in the sacred valley of Tuwa,", indonesian: "Ketika Tuhannya menyerunya di lembah suci, Tuwa," },
+    17: { arabic: "اذْهَبْ إِلَىٰ فِرْعَوْنَ إِنَّهُ طَغَىٰ", english: "\"Go to Pharaoh. Indeed, he has transgressed.", indonesian: "\"Pergilah kamu kepada Fir'aun, karena sesungguhnya dia telah melampaui batas," },
+    18: { arabic: "فَقُلْ هَل لَّكَ إِلَىٰ أَن تَزَكَّىٰ", english: "And say to him, 'Would you [be willing to] purify yourself", indonesian: "dan katakanlah (kepada Fir'aun), 'Adakah keinginanmu untuk menyucikan diri?" },
+    19: { arabic: "وَأَهْدِيَكَ إِلَىٰ رَبِّكَ فَتَخْشَىٰ", english: "And let me guide you to your Lord so you would fear [Him]?'\"", indonesian: "Dan kamu mau kubimbing ke jalan Tuhanmu agar kamu takut kepada-Nya?'" },
+    20: { arabic: "فَأَرَاهُ الْآيَةَ الْكُبْرَىٰ", english: "And he showed him the great sign,", indonesian: "Maka Musa memperlihatkan kepadanya (Fir'aun) mukjizat yang besar," },
+    21: { arabic: "فَكَذَّبَ وَعَصَىٰ", english: "But he [i.e., Pharaoh] denied and disobeyed.", indonesian: "tetapi Fir'aun mendustakan dan mendurhakai." },
+    22: { arabic: "ثُمَّ أَدْبَرَ يَسْعَىٰ", english: "Then he turned his back, striving.", indonesian: "Kemudian dia berpaling seraya berusaha (menentang Musa)." },
+    23: { arabic: "فَحَشَرَ فَنَادَىٰ", english: "And he gathered [his people] and called out", indonesian: "Lalu dia mengumpulkan (para tukang sihir) dan berseru," },
+    24: { arabic: "فَقَالَ أَنَا رَبُّكُمُ الْأَعْلَىٰ", english: "And said, \"I am your most exalted lord.\"", indonesian: "seraya berkata, \"Akulah tuhanmu yang paling tinggi!\"" },
+    25: { arabic: "فَأَخَذَهُ اللَّهُ نَكَالَ الْآخِرَةِ وَالْأُولَىٰ", english: "So Allah seized him in exemplary punishment for the last and the first [transgression].", indonesian: "Maka Allah mengazabnya dengan azab di akhirat dan di dunia." },
+    26: { arabic: "إِنَّ فِي ذَٰلِكَ لَعِبْرَةً لِّمَن يَخْشَىٰ", english: "Indeed in that is a warning for whoever would fear [Allah].", indonesian: "Sungguh, pada yang demikian itu terdapat pelajaran bagi orang yang takut (kepada Allah)." },
+    27: { arabic: "أَأَنتُمْ أَشَدُّ خَلْقًا أَمِ السَّمَاءُ ۚ بَنَاهَا", english: "Are you a more difficult creation or is the heaven? He [i.e., Allah] constructed it.", indonesian: "Apakah penciptaan kamu yang lebih sulit ataukah langit yang telah dibangun-Nya?" },
+    28: { arabic: "رَفَعَ سَمْكَهَا فَسَوَّاهَا", english: "He raised its ceiling and proportioned it.", indonesian: "Dia meninggikan bangunannya lalu menyempurnakannya," },
+    29: { arabic: "وَأَغْطَشَ لَيْلَهَا وَأَخْرَجَ ضُحَاهَا", english: "And He darkened its night and extracted its brightness.", indonesian: "dan Dia menjadikan malamnya (gelap gulita), dan menjadikan siangnya (terang benderang)." },
+    30: { arabic: "وَالْأَرْضَ بَعْدَ ذَٰلِكَ دَحَاهَا", english: "And after that He spread the earth.", indonesian: "Dan bumi setelah itu dihamparkan-Nya." },
+    31: { arabic: "أَخْرَجَ مِنْهَا مَاءَهَا وَمَرْعَاهَا", english: "He extracted from it its water and its pasture,", indonesian: "Darinya Dia pancarkan mata air, dan (tumbuhkan) tumbuh-tumbuhannya." },
+    32: { arabic: "وَالْجِبَالَ أَرْسَاهَا", english: "And the mountains He set firmly", indonesian: "Dan gunung-gunung dipancangkan-Nya dengan teguh," },
+    33: { arabic: "مَتَاعًا لَّكُمْ وَلِأَنْعَامِكُمْ", english: "As enjoyment [i.e., provision] for you and your grazing livestock.", indonesian: "(semua itu) untuk kesenanganmu dan untuk hewan-hewan ternakmu." },
+    34: { arabic: "فَإِذَا جَاءَتِ الطَّامَّةُ الْكُبْرَىٰ", english: "But when there comes the greatest Overwhelming Calamity -", indonesian: "Maka apabila malapetaka besar (hari Kiamat) telah datang." },
+    35: { arabic: "يَوْمَ يَتَذَكَّرُ الْإِنسَانُ مَا سَعَىٰ", english: "The Day when man will remember that for which he strove,", indonesian: "Pada hari (ketika) manusia teringat akan apa yang telah dikerjakannya," },
+    36: { arabic: "وَبُرِّزَتِ الْجَحِيمُ لِمَن يَرَىٰ", english: "And Hellfire will be exposed for [all] those who see -", indonesian: "dan diperlihatkan neraka dengan jelas kepada setiap orang yang melihat." },
+    37: { arabic: "فَأَمَّا مَن طَغَىٰ", english: "So as for he who transgressed", indonesian: "Maka adapun orang yang melampaui batas," },
+    38: { arabic: "وَآثَرَ الْحَيَاةَ الدُّنْيَا", english: "And preferred the life of the world,", indonesian: "dan lebih mengutamakan kehidupan dunia," },
+    39: { arabic: "فَإِنَّ الْجَحِيمَ هِيَ الْمَأْوَىٰ", english: "Then indeed, Hellfire will be [his] refuge.", indonesian: "maka sesungguhnya nerakalah tempat tinggal(nya)." },
+    40: { arabic: "وَأَمَّا مَنْ خَافَ مَقَامَ رَبِّهِ وَنَهَى النَّفْسَ عَنِ الْهَوَىٰ", english: "But as for he who feared the position of his Lord and prevented the soul from [unlawful] inclination,", indonesian: "Dan adapun orang yang takut kepada kebesaran Tuhannya dan menahan diri dari (keinginan) hawa nafsunya," },
+    41: { arabic: "فَإِنَّ الْجَنَّةَ هِيَ الْمَأْوَىٰ", english: "Then indeed, Paradise will be [his] refuge.", indonesian: "maka sesungguhnya surgalah tempat tinggal(nya)." },
+    42: { arabic: "يَسْأَلُونَكَ عَنِ السَّاعَةِ أَيَّانَ مُرْسَاهَا", english: "They ask you, [O Muhammad], about the Hour: when is its arrival?", indonesian: "Mereka bertanya kepadamu (Muhammad) tentang Kiamat, \"Kapan terjadinya?\"" },
+    43: { arabic: "فِيمَ أَنتَ مِن ذِكْرَاهَا", english: "In what [position] are you that you should mention it?", indonesian: "Untuk apa engkau harus menyebutkan (waktunya)?" },
+    44: { arabic: "إِلَىٰ رَبِّكَ مُنتَهَاهَا", english: "To your Lord is its finality.", indonesian: "Kepada Tuhanmulah dikembalikan kesudahannya (ketentuan waktunya)." },
+    45: { arabic: "إِنَّمَا أَنتَ مُنذِرُ مَن يَخْشَاهَا", english: "You are only a warner for those who fear it.", indonesian: "Engkau (Muhammad) hanyalah pemberi peringatan bagi siapa yang takut kepadanya (Kiamat)." },
+    46: { arabic: "كَأَنَّهُمْ يَوْمَ يَرَوْنَهَا لَمْ يَلْبَثُوا إِلَّا عَشِيَّةً أَوْ ضُحَاهَا", english: "It will be, on the Day they see it, as though they had not remained [in the world] except for an afternoon or a morning thereof.", indonesian: "Pada hari ketika mereka melihat (Kiamat itu), mereka merasa seakan-akan tinggal (di dunia) hanya sebentar, pada waktu sore atau pagi hari." },
+  },
+  
+  // Surah 1 - Al-Fatihah (7 ayat) - The Opening - required for all prayers
+  1: {
+    1: { arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", english: "In the name of Allah, the Entirely Merciful, the Especially Merciful.", indonesian: "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang." },
+    2: { arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", english: "[All] praise is [due] to Allah, Lord of the worlds -", indonesian: "Segala puji bagi Allah, Tuhan seluruh alam," },
+    3: { arabic: "الرَّحْمَٰنِ الرَّحِيمِ", english: "The Entirely Merciful, the Especially Merciful,", indonesian: "Yang Maha Pengasih, Maha Penyayang," },
+    4: { arabic: "مَالِكِ يَوْمِ الدِّينِ", english: "Sovereign of the Day of Recompense.", indonesian: "Pemilik hari pembalasan." },
+    5: { arabic: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ", english: "It is You we worship and You we ask for help.", indonesian: "Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami mohon pertolongan." },
+    6: { arabic: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ", english: "Guide us to the straight path -", indonesian: "Tunjukilah kami jalan yang lurus," },
+    7: { arabic: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ", english: "The path of those upon whom You have bestowed favor, not of those who have earned [Your] anger or of those who are astray.", indonesian: "(yaitu) jalan orang-orang yang telah Engkau beri nikmat kepadanya; bukan (jalan) mereka yang dimurkai, dan bukan (pula jalan) mereka yang sesat." },
+  },
+};
+
+// Helper function to check if a surah has offline data
+export const hasOfflineData = (surahNumber: number): boolean => {
+  return surahNumber in quranAyat;
+};
+
+// Helper function to get ayat from hardcoded data
+export const getOfflineAyat = (
+  surahNumber: number,
+  startAyah: number,
+  endAyah: number
+): { numberInSurah: number; arabic: string; english: string; indonesian: string }[] => {
+  const surahData = quranAyat[surahNumber];
+  if (!surahData) return [];
+  
+  const result = [];
+  for (let i = startAyah; i <= endAyah; i++) {
+    const ayah = surahData[i];
+    if (ayah) {
+      result.push({
+        numberInSurah: i,
+        arabic: ayah.arabic,
+        english: ayah.english,
+        indonesian: ayah.indonesian,
+      });
+    }
+  }
+  return result;
+};
