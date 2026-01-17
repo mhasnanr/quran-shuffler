@@ -124,7 +124,7 @@ const getInitialState = (): AppState => {
   return {
     prayers: defaultPrayers,
     selectedJuz: defaultJuz,
-    selectedChunks: generateChunksForJuz(defaultJuz, chunkSize),
+    selectedChunks: [], // Start with no chunks selected
     mandatoryChunks: [],
     usedChunks: [],
     lastShuffleDate: "",

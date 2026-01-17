@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils';
-import { BookOpen, Settings, BookOpenCheck, RotateCcw } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { BookOpen, Settings, BookOpenCheck, RotateCcw } from "lucide-react";
 
-export type TabType = 'guide' | 'schedule' | 'review' | 'config';
+export type TabType = "guide" | "schedule" | "review" | "config";
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -10,10 +10,10 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const tabs = [
-    { id: 'guide' as TabType, label: 'Guide', icon: BookOpenCheck },
-    { id: 'schedule' as TabType, label: 'Today', icon: BookOpen },
-    { id: 'review' as TabType, label: 'Review', icon: RotateCcw },
-    { id: 'config' as TabType, label: 'Settings', icon: Settings },
+    { id: "guide" as TabType, label: "Guide", icon: BookOpenCheck },
+    { id: "schedule" as TabType, label: "Schedule", icon: BookOpen },
+    { id: "review" as TabType, label: "Review", icon: RotateCcw },
+    { id: "config" as TabType, label: "Settings", icon: Settings },
   ];
 
   return (
@@ -29,13 +29,15 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                 "flex flex-1 flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-200",
                 activeTab === tab.id
                   ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
-              <Icon className={cn(
-                "h-5 w-5 transition-transform duration-200",
-                activeTab === tab.id && "scale-110"
-              )} />
+              <Icon
+                className={cn(
+                  "h-5 w-5 transition-transform duration-200",
+                  activeTab === tab.id && "scale-110",
+                )}
+              />
               <span className="text-xs font-medium">{tab.label}</span>
               {activeTab === tab.id && (
                 <div className="absolute bottom-0 h-0.5 w-12 gradient-islamic rounded-full" />
