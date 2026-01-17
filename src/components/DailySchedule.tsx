@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { DailyAssignment, PrayerAssignment, RakaatSurah } from "@/types/prayer";
+import {
+  DailyAssignment,
+  PrayerAssignment,
+  RakaatSurah,
+  Prayer,
+} from "@/types/prayer";
 import { Button } from "@/components/ui/button";
 import {
   Shuffle,
@@ -8,6 +13,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AyahViewer from "./AyahViewer";
@@ -16,7 +22,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import RecallFeedbackDialog from "./RecallFeedbackDialog";
+import TemporaryPrayerDialog from "./TemporaryPrayerDialog";
 
 interface DailyScheduleProps {
   assignment: DailyAssignment | null;
@@ -32,6 +45,15 @@ interface DailyScheduleProps {
     endAyah: number;
     prayerName?: string;
   }) => void;
+  enabledPrayers: Prayer[];
+  onAddTemporaryPrayers: (
+    entries: Array<{
+      id: string;
+      prayerId: string;
+      prayerName: string;
+      rakaat: number;
+    }>,
+  ) => void;
 }
 
 const getCategoryColor = (prayerId: string) => {
@@ -73,6 +95,8 @@ const DailySchedule = ({
   usedCount,
   totalCount,
   onAddToReview,
+  enabledPrayers,
+  onAddTemporaryPrayers,
 }: DailyScheduleProps) => {
   // Use local timezone for date key
   const now = new Date();
@@ -263,6 +287,9 @@ const DailySchedule = ({
       ),
     );
 
+    // Check if any rakaat in this round is temporary
+    const hasTemporaryRakaat = rakaatInRound.some((r) => r.isTemporary);
+
     const getRoundLabel = () => {
       if (roundSize === 1) return "1 Rakaat";
       return `${roundSize} Rakaat`;
@@ -278,16 +305,37 @@ const DailySchedule = ({
           className={cn(
             "rounded-lg bg-muted/50 overflow-hidden",
             allRakaatInRoundCompleted && "opacity-60",
+            hasTemporaryRakaat &&
+              "border-2 border-violet-500/40 bg-violet-500/5",
           )}
         >
           <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-muted/70 transition-colors">
             <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+              <span
+                className={cn(
+                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                  hasTemporaryRakaat
+                    ? "bg-violet-500/20 text-violet-600 dark:text-violet-400"
+                    : "bg-accent text-accent-foreground",
+                )}
+              >
                 {roundIndex + 1}
               </span>
               <span className="text-sm font-medium text-foreground">
                 {getRoundLabel()}
               </span>
+              {hasTemporaryRakaat && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-4 w-4 text-violet-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Added via temporary prayer</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
               {allRakaatInRoundCompleted && (
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               )}
@@ -465,23 +513,30 @@ const DailySchedule = ({
       </div>
 
       {!assignment ? (
-        <div className="flex flex-col items-center gap-4 rounded-2xl bg-card p-8 text-center shadow-card">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Shuffle className="h-8 w-8 text-primary" />
+        <div className="space-y-3">
+          <div className="flex flex-col items-center gap-4 rounded-2xl bg-card p-8 text-center shadow-card">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Shuffle className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Ready to shuffle</p>
+              <p className="text-sm text-muted-foreground">
+                Generate today's Quran recitation plan
+              </p>
+            </div>
+            <Button
+              onClick={onShuffle}
+              className="gradient-islamic w-full text-primary-foreground shadow-islamic hover:opacity-90"
+            >
+              <Shuffle className="mr-2 h-4 w-4" />
+              Shuffle for Today
+            </Button>
           </div>
-          <div>
-            <p className="font-medium text-foreground">Ready to shuffle</p>
-            <p className="text-sm text-muted-foreground">
-              Generate today's Quran recitation plan
-            </p>
-          </div>
-          <Button
-            onClick={onShuffle}
-            className="gradient-islamic w-full text-primary-foreground shadow-islamic hover:opacity-90"
-          >
-            <Shuffle className="mr-2 h-4 w-4" />
-            Shuffle for Today
-          </Button>
+
+          <TemporaryPrayerDialog
+            enabledPrayers={enabledPrayers}
+            onAddTemporaryPrayers={onAddTemporaryPrayers}
+          />
         </div>
       ) : (
         <div
@@ -580,6 +635,11 @@ const DailySchedule = ({
             />
             {isReshuffling ? "Shuffling..." : "Re-shuffle Today"}
           </Button>
+
+          <TemporaryPrayerDialog
+            enabledPrayers={enabledPrayers}
+            onAddTemporaryPrayers={onAddTemporaryPrayers}
+          />
         </div>
       )}
 

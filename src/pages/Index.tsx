@@ -36,6 +36,7 @@ const Index = () => {
     getTodayAssignment,
     forceReshuffle,
     getAllPossibleChunks,
+    addTemporaryPrayers,
   } = useAppState();
 
   const { reviewItems, addReviewItem, removeReviewItem } = useReviewItems();
@@ -55,6 +56,22 @@ const Index = () => {
     setTodayAssignment(assignment);
   };
 
+  const handleAddTemporaryPrayers = (
+    entries: Array<{
+      id: string;
+      prayerId: string;
+      prayerName: string;
+      rakaat: number;
+    }>,
+  ) => {
+    const assignment = addTemporaryPrayers(entries);
+    if (assignment) {
+      setTodayAssignment(assignment);
+    }
+  };
+
+  const enabledPrayers = state.prayers.filter((p) => p.enabled);
+
   const allPossibleChunks = getAllPossibleChunks();
 
   return (
@@ -73,6 +90,8 @@ const Index = () => {
               usedCount={state.usedChunks.length}
               totalCount={state.selectedChunks.length}
               onAddToReview={addReviewItem}
+              enabledPrayers={enabledPrayers}
+              onAddTemporaryPrayers={handleAddTemporaryPrayers}
             />
           )}
 

@@ -70,12 +70,12 @@ const FullscreenAyahViewer = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-4 pb-2 border-b shrink-0">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-start gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-full gradient-islamic text-primary-foreground text-sm font-bold">
               {surahNumber}
             </span>
-            <div>
-              <DialogTitle className="text-lg font-semibold">
+            <div className="text-left">
+              <DialogTitle className="text-lg font-semibold text-left">
                 {surahName}
               </DialogTitle>
               <p className="text-sm text-muted-foreground">{ayahRange}</p>
