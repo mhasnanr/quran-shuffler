@@ -124,7 +124,7 @@ const getInitialState = (): AppState => {
   return {
     prayers: defaultPrayers,
     selectedJuz: defaultJuz,
-    selectedChunks: [], // Start with no chunks selected
+    selectedChunks: generateChunksForJuz(defaultJuz),
     mandatoryChunks: [],
     usedChunks: [],
     lastShuffleDate: "",
@@ -263,7 +263,12 @@ export const useAppState = () => {
 
   const toggleChunk = (chunkId: string) => {
     setState((prev) => {
+      const isMandatory = prev.mandatoryChunks.includes(chunkId);
       const isRemoving = prev.selectedChunks.some((c) => c.id === chunkId);
+      // Prevent removing if chunk is mandatory
+      if (isRemoving && isMandatory) {
+        return prev;
+      }
       return {
         ...prev,
         selectedChunks: isRemoving
@@ -272,21 +277,38 @@ export const useAppState = () => {
               ...prev.selectedChunks,
               findChunkById(chunkId, prev.selectedJuz),
             ].filter(Boolean) as SurahChunkSelection[]),
-        // Also remove from mandatory if removing from selected
-        mandatoryChunks: isRemoving
-          ? prev.mandatoryChunks.filter((id) => id !== chunkId)
-          : prev.mandatoryChunks,
+        // Also remove from mandatory if removing from selected (only if not mandatory)
+        mandatoryChunks:
+          isRemoving && !isMandatory
+            ? prev.mandatoryChunks.filter((id) => id !== chunkId)
+            : prev.mandatoryChunks,
       };
     });
   };
 
   const toggleMandatory = (chunkId: string) => {
-    setState((prev) => ({
-      ...prev,
-      mandatoryChunks: prev.mandatoryChunks.includes(chunkId)
-        ? prev.mandatoryChunks.filter((id) => id !== chunkId)
-        : [...prev.mandatoryChunks, chunkId],
-    }));
+    setState((prev) => {
+      const isNowMandatory = !prev.mandatoryChunks.includes(chunkId);
+      const newMandatoryChunks = isNowMandatory
+        ? [...prev.mandatoryChunks, chunkId]
+        : prev.mandatoryChunks.filter((id) => id !== chunkId);
+      let newSelectedChunks = prev.selectedChunks;
+      // If marking as mandatory, ensure it's in selectedChunks
+      if (
+        isNowMandatory &&
+        !prev.selectedChunks.some((c) => c.id === chunkId)
+      ) {
+        const chunk = findChunkById(chunkId, prev.selectedJuz);
+        if (chunk) {
+          newSelectedChunks = [...prev.selectedChunks, chunk];
+        }
+      }
+      return {
+        ...prev,
+        mandatoryChunks: newMandatoryChunks,
+        selectedChunks: newSelectedChunks,
+      };
+    });
   };
 
   const findChunkById = (
