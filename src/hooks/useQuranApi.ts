@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { hasOfflineData, getOfflineAyat } from '@/data/quranAyat';
 
 export interface Ayah {
   number: number;
@@ -34,7 +35,6 @@ const setCache = (key: string, data: AyahWithTranslations[]) => {
   try {
     const cache = getCache();
     cache[key] = { data, timestamp: Date.now() };
-    // Keep only last 50 entries
     const keys = Object.keys(cache);
     if (keys.length > 50) {
       const oldest = keys.sort((a, b) => cache[a].timestamp - cache[b].timestamp)[0];
@@ -44,6 +44,20 @@ const setCache = (key: string, data: AyahWithTranslations[]) => {
   } catch {
     // Ignore cache errors
   }
+};
+
+// Remove bismillah from first ayat
+const removeBismillah = (text: string): string => {
+  const bismillahRegex = /^۞?\s*بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/u;
+  let cleaned = text.replace(bismillahRegex, '').trim();
+  
+  // Fallback regex for variations
+  if (cleaned === text) {
+    const altRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
+    cleaned = text.replace(altRegex, '').trim();
+  }
+  
+  return cleaned || text;
 };
 
 export const useQuranApi = () => {
@@ -64,27 +78,37 @@ export const useQuranApi = () => {
       return cached.data;
     }
 
+    // Check for offline data first
+    if (hasOfflineData(surahNumber)) {
+      const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
+      if (offlineData.length > 0) {
+        // Process to remove bismillah from first ayat
+        const result = offlineData.map(ayah => {
+          if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
+            return { ...ayah, arabic: removeBismillah(ayah.arabic) };
+          }
+          return ayah;
+        });
+        setCache(cacheKey, result);
+        return result;
+      }
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      // Fetch Arabic text
-      const arabicResponse = await fetch(
-        `https://api.alquran.cloud/v1/surah/${surahNumber}`
-      );
-      const arabicData = await arabicResponse.json();
-      
-      // Fetch English translation
-      const englishResponse = await fetch(
-        `https://api.alquran.cloud/v1/surah/${surahNumber}/en.sahih`
-      );
-      const englishData = await englishResponse.json();
-      
-      // Fetch Indonesian translation
-      const indonesianResponse = await fetch(
-        `https://api.alquran.cloud/v1/surah/${surahNumber}/id.indonesian`
-      );
-      const indonesianData = await indonesianResponse.json();
+      const [arabicResponse, englishResponse, indonesianResponse] = await Promise.all([
+        fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`),
+        fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/en.sahih`),
+        fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/id.indonesian`),
+      ]);
+
+      const [arabicData, englishData, indonesianData] = await Promise.all([
+        arabicResponse.json(),
+        englishResponse.json(),
+        indonesianResponse.json(),
+      ]);
 
       const result: AyahWithTranslations[] = [];
       
@@ -96,22 +120,9 @@ export const useQuranApi = () => {
         if (arabicAyah) {
           let arabicText = arabicAyah.text;
           
-          // Remove bismillah from first ayat of surahs (except Al-Fatihah:1 and At-Taubah:9)
+          // Remove bismillah from first ayat of surahs (except Al-Fatihah and At-Taubah)
           if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            // Universal regex to match any form of bismillah at the start
-            // Matches: بسم followed by variations of الله الرحمن الرحيم with any diacritics
-            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
-            
-            arabicText = arabicText.replace(bismillahRegex, '').trim();
-            
-            // Fallback: if regex didn't work, try removing by detecting common starting words
-            if (arabicText === arabicAyah.text && arabicAyah.text.startsWith('بِسْمِ')) {
-              // Find the end of bismillah by looking for الرحيم and removing everything before it plus the word
-              const rahimIndex = arabicAyah.text.indexOf('الرَّحِيمِ');
-              if (rahimIndex !== -1) {
-                arabicText = arabicAyah.text.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
-              }
-            }
+            arabicText = removeBismillah(arabicText);
           }
           
           result.push({
@@ -123,12 +134,22 @@ export const useQuranApi = () => {
         }
       }
 
-      // Cache the result
       setCache(cacheKey, result);
-      
       return result;
     } catch (err) {
-      setError('Failed to fetch ayahs');
+      // Fallback to offline data if available
+      if (hasOfflineData(surahNumber)) {
+        const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
+        if (offlineData.length > 0) {
+          return offlineData.map(ayah => {
+            if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
+              return { ...ayah, arabic: removeBismillah(ayah.arabic) };
+            }
+            return ayah;
+          });
+        }
+      }
+      setError('Failed to fetch ayat');
       return [];
     } finally {
       setLoading(false);

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useQuranApi, AyahWithTranslations } from '@/hooks/useQuranApi';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { BISMILLAH, BISMILLAH_ENGLISH, BISMILLAH_INDONESIAN } from '@/data/quranAyat';
 
 interface FullscreenAyahViewerProps {
   open: boolean;
@@ -31,27 +31,13 @@ const FullscreenAyahViewer = ({
   const [translationLang, setTranslationLang] = useState<TranslationLang>('id');
   const { fetchAyahs, loading, error } = useQuranApi();
 
+  // Show bismillah separately for surahs other than Al-Fatihah (1) and At-Taubah (9)
+  const showBismillah = startAyah === 1 && surahNumber !== 1 && surahNumber !== 9;
+
   useEffect(() => {
     if (open && !hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
-        // Filter out bismillah from first ayat of most surahs
-        const filteredData = data.map(ayah => {
-          if (ayah.numberInSurah === 1 && surahNumber !== 1 && surahNumber !== 9) {
-            const bismillahRegex = /^۞?\s*بِ?سْ?مِ?\s*[ٱا]?للَّ?هِ?\s*[ٱا]?لرَّ?حْ?مَ?[ٰـ]?نِ?\s*[ٱا]?لرَّ?حِ?يمِ?\s*/u;
-            let cleanedArabic = ayah.arabic.replace(bismillahRegex, '').trim();
-            
-            if (cleanedArabic === ayah.arabic && ayah.arabic.startsWith('بِسْمِ')) {
-              const rahimIndex = ayah.arabic.indexOf('الرَّحِيمِ');
-              if (rahimIndex !== -1) {
-                cleanedArabic = ayah.arabic.slice(rahimIndex + 'الرَّحِيمِ'.length).trim();
-              }
-            }
-            
-            return { ...ayah, arabic: cleanedArabic || ayah.arabic };
-          }
-          return ayah;
-        });
-        setAyahs(filteredData);
+        setAyahs(data);
         setHasLoaded(true);
       });
     }
@@ -71,24 +57,14 @@ const FullscreenAyahViewer = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-4 pb-2 border-b shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full gradient-islamic text-primary-foreground text-sm font-bold">
-                {surahNumber}
-              </span>
-              <div>
-                <DialogTitle className="text-lg font-semibold">{surahName}</DialogTitle>
-                <p className="font-arabic text-sm text-muted-foreground">{arabicName} • {ayahRange}</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full gradient-islamic text-primary-foreground text-sm font-bold">
+              {surahNumber}
+            </span>
+            <div>
+              <DialogTitle className="text-lg font-semibold">{surahName}</DialogTitle>
+              <p className="font-arabic text-sm text-muted-foreground">{arabicName} • {ayahRange}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onOpenChange(false)}
-              className="h-8 w-8"
-            >
-              <X className="h-5 w-5" />
-            </Button>
           </div>
         </DialogHeader>
 
@@ -134,6 +110,18 @@ const FullscreenAyahViewer = ({
 
           {!loading && !error && ayahs.length > 0 && (
             <div className="space-y-6">
+              {/* Bismillah - shown separately at top */}
+              {showBismillah && (
+                <div className="space-y-3 border-b border-border pb-4 bg-primary/5 rounded-lg p-4 -mx-1">
+                  <p className="font-arabic text-center text-2xl leading-[2.4] text-primary" dir="rtl">
+                    {BISMILLAH}
+                  </p>
+                  <p className="text-sm leading-relaxed text-muted-foreground text-center">
+                    {translationLang === 'id' ? BISMILLAH_INDONESIAN : BISMILLAH_ENGLISH}
+                  </p>
+                </div>
+              )}
+              
               {ayahs.map((ayah) => (
                 <div key={ayah.numberInSurah} className="space-y-3 border-b border-border pb-4 last:border-0">
                   <div className="flex items-start justify-end gap-3">
@@ -145,7 +133,7 @@ const FullscreenAyahViewer = ({
                     </span>
                   </div>
                   
-                  <div className="text-right">
+                  <div className="text-left">
                     <p className="text-sm leading-relaxed text-muted-foreground">
                       {translationLang === 'id' ? ayah.indonesian : ayah.english}
                     </p>
