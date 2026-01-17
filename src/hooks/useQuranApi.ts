@@ -83,37 +83,35 @@ export const useQuranApi = () => {
       const cacheKey = `${surahNumber}-${startAyah}-${endAyah}`;
 
       // Check cache first
-      // const cache = getCache();
-      // const cached = cache[cacheKey];
-      // if (cached && Date.now() - cached.timestamp < CACHE_EXPIRY) {
-      //   return cached.data;
-      // }
+      const cache = getCache();
+      const cached = cache[cacheKey];
+      if (cached && Date.now() - cached.timestamp < CACHE_EXPIRY) {
+        return cached.data;
+      }
 
-      // // Check for offline data first
-      // if (hasOfflineData(surahNumber)) {
-      //   const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
-      //   if (offlineData.length > 0) {
-      //     // Process to remove bismillah from first ayat
-      //     const result = offlineData.map((ayah) => {
-      //       if (
-      //         ayah.numberInSurah === 1 &&
-      //         surahNumber !== 1 &&
-      //         surahNumber !== 9
-      //       ) {
-      //         return { ...ayah, arabic: removeBismillah(ayah.arabic) };
-      //       }
-      //       return ayah;
-      //     });
-      //     setCache(cacheKey, result);
-      //     return result;
-      //   }
-      // }
+      // Check for offline data first
+      if (hasOfflineData(surahNumber)) {
+        const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
+        if (offlineData.length > 0) {
+          // Process to remove bismillah from first ayat
+          const result = offlineData.map((ayah) => {
+            if (
+              ayah.numberInSurah === 1 &&
+              surahNumber !== 1 &&
+              surahNumber !== 9
+            ) {
+              return { ...ayah, arabic: removeBismillah(ayah.arabic) };
+            }
+            return ayah;
+          });
+          setCache(cacheKey, result);
+          return result;
+        }
+      }
 
       setLoading(true);
       setError(null);
-      console.log("dek");
       try {
-        console.log("hi");
         const [arabicResponse, englishResponse, indonesianResponse] =
           await Promise.all([
             fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`),
@@ -144,7 +142,6 @@ export const useQuranApi = () => {
 
           if (arabicAyah) {
             let arabicText = arabicAyah.text;
-            console.log("ayah", i, arabicText);
             // Remove bismillah from first ayat of surahs (except Al-Fatihah and At-Taubah)
             if (i === 1 && surahNumber !== 1 && surahNumber !== 9) {
               arabicText = removeBismillah(arabicText);
