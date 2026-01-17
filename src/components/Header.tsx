@@ -1,6 +1,7 @@
-import { BookOpen, Moon, Sun } from 'lucide-react';
+import { BookOpen, Moon, Sun, HelpCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useTourContext } from '@/contexts/TourContext';
 
 const Header = () => {
   const [isDark, setIsDark] = useState(() => {
@@ -9,6 +10,7 @@ const Header = () => {
     }
     return false;
   });
+  const { restartCurrentTour } = useTourContext();
 
   useEffect(() => {
     if (isDark) {
@@ -40,14 +42,25 @@ const Header = () => {
           </div>
           <h1 className="text-sm font-semibold tracking-tight">Quran Shuffler</h1>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
-          onClick={() => setIsDark(!isDark)}
-        >
-          {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            onClick={restartCurrentTour}
+            title="Show tour guide"
+          >
+            <HelpCircle className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            onClick={() => setIsDark(!isDark)}
+          >
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
     </header>
   );

@@ -275,6 +275,7 @@ const DailySchedule = ({
     startRakaatIndex: number,
     isCompleted: boolean,
     totalRakaatForPrayer: number,
+    isFirstPrayer: boolean = false,
   ) => {
     const roundKey = `${prayerAssignment.prayerId}-round-${roundIndex}`;
     const isExpanded = expandedRounds.includes(roundKey);
@@ -297,6 +298,8 @@ const DailySchedule = ({
       return `${roundSize} Rakaat`;
     };
 
+    const isFirstRound = isFirstPrayer && roundIndex === 0;
+
     return (
       <Collapsible
         key={roundKey}
@@ -311,7 +314,10 @@ const DailySchedule = ({
               "border-2 border-violet-500/40 bg-violet-500/5",
           )}
         >
-          <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-muted/70 transition-colors">
+          <CollapsibleTrigger 
+            data-tour={isFirstRound ? "expand-round" : undefined}
+            className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-muted/70 transition-colors"
+          >
             <div className="flex items-center gap-2">
               <span
                 className={cn(
@@ -356,6 +362,7 @@ const DailySchedule = ({
                 const rakaatCompleted = isRakaatCompleted(rakaatKey);
                 const showAyahRange =
                   rakaat.startAyah !== rakaat.endAyah || rakaat.startAyah !== 1;
+                const isFirstRakaat = isFirstPrayer && roundIndex === 0 && idx === 0;
 
                 return (
                   <div
@@ -367,6 +374,7 @@ const DailySchedule = ({
                   >
                     <div className="flex items-center gap-3">
                       <button
+                        data-tour={isFirstRakaat ? "complete-rakaat" : undefined}
                         onClick={() =>
                           handleRakaatCheck(
                             rakaatKey,
@@ -437,6 +445,7 @@ const DailySchedule = ({
     return (
       <div
         key={prayerAssignment.prayerId}
+        data-tour={idx === 0 ? "prayer-card" : undefined}
         className={cn(
           "animate-slide-up rounded-2xl bg-card p-4 shadow-card transition-all",
           isCompleted && "opacity-60",
@@ -446,6 +455,7 @@ const DailySchedule = ({
         <div className="mb-3 flex items-center justify-between border-b border-border pb-2">
           <div className="flex items-center gap-2">
             <button
+              data-tour={idx === 0 ? "complete-prayer" : undefined}
               onClick={() => toggleCompleted(prayerAssignment.prayerId)}
               className={cn(
                 "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all",
@@ -483,6 +493,7 @@ const DailySchedule = ({
               rakaatIndex,
               isCompleted,
               totalPrayerRakaat,
+              idx === 0, // isFirstPrayer
             );
             rakaatIndex += roundSize;
             return component;
@@ -528,6 +539,7 @@ const DailySchedule = ({
               </p>
             </div>
             <Button
+              data-tour="shuffle-button"
               onClick={onShuffle}
               className="gradient-islamic w-full text-primary-foreground shadow-islamic hover:opacity-90"
             >
