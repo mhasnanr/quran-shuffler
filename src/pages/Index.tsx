@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import BottomNav, { TabType } from '@/components/BottomNav';
-import DailySchedule from '@/components/DailySchedule';
-import PrayerConfig from '@/components/PrayerConfig';
-import JuzSelector from '@/components/JuzSelector';
-import SurahList from '@/components/SurahList';
-import ChunkSizeConfig from '@/components/ChunkSizeConfig';
-import ChunkModeToggle from '@/components/ChunkModeToggle';
-import PrayerGuideContent from '@/components/PrayerGuideContent';
-import ReviewList from '@/components/ReviewList';
-import { useAppState } from '@/hooks/useAppState';
-import { useReviewItems } from '@/hooks/useReviewItems';
-import { Button } from '@/components/ui/button';
-import { RotateCcw } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Header from "@/components/Header";
+import BottomNav, { TabType } from "@/components/BottomNav";
+import DailySchedule from "@/components/DailySchedule";
+import PrayerConfig from "@/components/PrayerConfig";
+import JuzSelector from "@/components/JuzSelector";
+import SurahList from "@/components/SurahList";
+import ChunkSizeConfig from "@/components/ChunkSizeConfig";
+import ChunkModeToggle from "@/components/ChunkModeToggle";
+import PrayerGuideContent from "@/components/PrayerGuideContent";
+import ReviewList from "@/components/ReviewList";
+import { useAppState } from "@/hooks/useAppState";
+import { useReviewItems } from "@/hooks/useReviewItems";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('schedule');
+  const [activeTab, setActiveTab] = useState<TabType>("schedule");
   const {
     state,
     chunkSize,
@@ -51,11 +51,8 @@ const Index = () => {
   };
 
   const handleReshuffle = () => {
-    forceReshuffle();
-    setTimeout(() => {
-      const assignment = shuffleForToday();
-      setTodayAssignment(assignment);
-    }, 0);
+    const assignment = forceReshuffle();
+    setTodayAssignment(assignment);
   };
 
   const allPossibleChunks = getAllPossibleChunks();
@@ -63,14 +60,12 @@ const Index = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background geometric-pattern">
       <Header />
-      
+
       <main className="flex-1 overflow-y-auto px-4 pb-24 pt-6">
         <div className="mx-auto max-w-lg">
-          {activeTab === 'guide' && (
-            <PrayerGuideContent />
-          )}
+          {activeTab === "guide" && <PrayerGuideContent />}
 
-          {activeTab === 'schedule' && (
+          {activeTab === "schedule" && (
             <DailySchedule
               assignment={todayAssignment}
               onShuffle={handleShuffle}
@@ -81,7 +76,7 @@ const Index = () => {
             />
           )}
 
-          {activeTab === 'review' && (
+          {activeTab === "review" && (
             <ReviewList
               items={reviewItems}
               onRemove={removeReviewItem}
@@ -89,14 +84,14 @@ const Index = () => {
             />
           )}
 
-          {activeTab === 'config' && (
+          {activeTab === "config" && (
             <div className="space-y-6">
               <PrayerConfig
                 prayers={state.prayers}
                 onToggle={togglePrayer}
                 onUpdateRakaat={updatePrayerRakaat}
               />
-              
+
               <JuzSelector
                 selectedJuz={state.selectedJuz}
                 onSelectJuz={updateSelectedJuz}
@@ -131,7 +126,9 @@ const Index = () => {
               <div className="rounded-xl bg-card p-4 shadow-card">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-foreground">Reset Used Pool</p>
+                    <p className="text-sm font-medium text-foreground">
+                      Reset Used Pool
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {state.usedChunks.length} chunks used recently
                     </p>
@@ -149,7 +146,6 @@ const Index = () => {
               </div>
             </div>
           )}
-
         </div>
       </main>
 

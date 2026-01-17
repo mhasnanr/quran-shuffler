@@ -519,12 +519,108 @@ export const useAppState = () => {
     return state.dailyAssignments.find((a) => a.date === today) || null;
   };
 
-  const forceReshuffle = () => {
+  const forceReshuffle = (): DailyAssignment | null => {
     const today = getTodayDate();
+
+    // Sort prayers by order for proper daily sequence
+    const enabledPrayers = state.prayers
+      .filter((p) => p.enabled)
+      .sort((a, b) => a.order - b.order);
+
+    // Calculate total rakaat needed (considering recitationRakaat)
+    const totalRakaatNeeded = enabledPrayers.reduce((sum, p) => {
+      const recitationCount = p.recitationRakaat ?? p.rakaat;
+      return sum + recitationCount;
+    }, 0);
+
+    if (totalRakaatNeeded === 0 || state.selectedChunks.length === 0) {
+      return null;
+    }
+
+    // Get mandatory chunks first (always included)
+    const mandatoryChunkObjects = state.selectedChunks.filter((c) =>
+      state.mandatoryChunks.includes(c.id),
+    );
+
+    // Get non-mandatory chunks that haven't been used
+    let availableNonMandatory = state.selectedChunks.filter(
+      (c) =>
+        !state.mandatoryChunks.includes(c.id) &&
+        !state.usedChunks.includes(c.id),
+    );
+
+    let newUsedChunks = [...state.usedChunks];
+
+    // If not enough non-mandatory chunks, reset used pool (but keep mandatory separate)
+    if (
+      availableNonMandatory.length + mandatoryChunkObjects.length <
+      totalRakaatNeeded
+    ) {
+      availableNonMandatory = state.selectedChunks.filter(
+        (c) => !state.mandatoryChunks.includes(c.id),
+      );
+      newUsedChunks = [];
+    }
+
+    // Shuffle non-mandatory chunks
+    const shuffledNonMandatory = [...availableNonMandatory].sort(
+      () => Math.random() - 0.5,
+    );
+
+    // Build final list: mandatory first, then shuffled non-mandatory
+    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
+
+    const assignments: PrayerAssignment[] = [];
+    let chunkIndex = 0;
+
+    for (const prayer of enabledPrayers) {
+      const rakaatSurahs: RakaatSurah[] = [];
+      const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
+
+      for (let i = 0; i < recitationCount; i++) {
+        const chunk = shuffled[chunkIndex % shuffled.length];
+        const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
+
+        rakaatSurahs.push({
+          rakaatNumber: i + 1,
+          surahNumber: surah.number,
+          surahName: surah.name,
+          arabicName: surah.arabicName,
+          startAyah: chunk.startAyah,
+          endAyah: chunk.endAyah,
+        });
+
+        if (!newUsedChunks.includes(chunk.id)) {
+          newUsedChunks.push(chunk.id);
+        }
+
+        chunkIndex++;
+      }
+
+      assignments.push({
+        prayerId: prayer.id,
+        prayerName: prayer.name,
+        rakaatSurahs,
+      });
+    }
+
+    const newAssignment: DailyAssignment = {
+      date: today,
+      assignments,
+    };
+
     setState((prev) => ({
       ...prev,
-      dailyAssignments: prev.dailyAssignments.filter((a) => a.date !== today),
+      usedChunks: newUsedChunks,
+      lastShuffleDate: today,
+      // Remove old today's assignment and add new one
+      dailyAssignments: [
+        ...prev.dailyAssignments.filter((a) => a.date !== today).slice(-6),
+        newAssignment,
+      ],
     }));
+
+    return newAssignment;
   };
 
   // Get all possible chunks for the selected juz (for UI)
