@@ -1,5 +1,4 @@
-import { useState, useCallback } from "react";
-import { hasOfflineData, getOfflineAyat } from "@/data/quranAyat";
+import { useCallback, useState } from "react";
 
 export interface Ayah {
   number: number;
@@ -89,26 +88,6 @@ export const useQuranApi = () => {
         return cached.data;
       }
 
-      // Check for offline data first
-      if (hasOfflineData(surahNumber)) {
-        const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
-        if (offlineData.length > 0) {
-          // Process to remove bismillah from first ayat
-          const result = offlineData.map((ayah) => {
-            if (
-              ayah.numberInSurah === 1 &&
-              surahNumber !== 1 &&
-              surahNumber !== 9
-            ) {
-              return { ...ayah, arabic: removeBismillah(ayah.arabic) };
-            }
-            return ayah;
-          });
-          setCache(cacheKey, result);
-          return result;
-        }
-      }
-
       setLoading(true);
       setError(null);
       try {
@@ -159,22 +138,6 @@ export const useQuranApi = () => {
         setCache(cacheKey, result);
         return result;
       } catch (err) {
-        // Fallback to offline data if available
-        if (hasOfflineData(surahNumber)) {
-          const offlineData = getOfflineAyat(surahNumber, startAyah, endAyah);
-          if (offlineData.length > 0) {
-            return offlineData.map((ayah) => {
-              if (
-                ayah.numberInSurah === 1 &&
-                surahNumber !== 1 &&
-                surahNumber !== 9
-              ) {
-                return { ...ayah, arabic: removeBismillah(ayah.arabic) };
-              }
-              return ayah;
-            });
-          }
-        }
         setError("Failed to fetch ayat");
         return [];
       } finally {
