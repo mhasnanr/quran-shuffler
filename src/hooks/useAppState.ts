@@ -1,21 +1,40 @@
-import { useState, useEffect, useCallback } from 'react';
-import { AppState, Prayer, defaultPrayers, DailyAssignment, PrayerAssignment, RakaatSurah, SurahChunkSelection } from '@/types/prayer';
-import { surahs, getSurahsByJuz } from '@/data/quranData';
-import { generateDefaultChunks, CHUNK_SIZE_STORAGE_KEY, DEFAULT_CHUNK_SIZE } from '@/types/surahSelection';
+import { useState, useEffect, useCallback } from "react";
+import {
+  AppState,
+  Prayer,
+  defaultPrayers,
+  DailyAssignment,
+  PrayerAssignment,
+  RakaatSurah,
+  SurahChunkSelection,
+} from "@/types/prayer";
+import { surahs, getSurahsByJuz } from "@/data/quranData";
+import {
+  generateDefaultChunks,
+  CHUNK_SIZE_STORAGE_KEY,
+  DEFAULT_CHUNK_SIZE,
+} from "@/types/surahSelection";
 
-const STORAGE_KEY = 'quran-shuffler-state';
-const CHUNKS_ENABLED_KEY = 'quran-shuffler-chunks-enabled';
+const STORAGE_KEY = "quran-shuffler-state";
+const CHUNKS_ENABLED_KEY = "quran-shuffler-chunks-enabled";
 
 // Generate chunk ID
-const getChunkId = (surahNumber: number, startAyah: number, endAyah: number): string => {
+const getChunkId = (
+  surahNumber: number,
+  startAyah: number,
+  endAyah: number,
+): string => {
   return `${surahNumber}-${startAyah}-${endAyah}`;
 };
 
 // Generate default chunks for juz selection
-const generateChunksForJuz = (juzNumbers: number[], chunkSize: number = DEFAULT_CHUNK_SIZE): SurahChunkSelection[] => {
+const generateChunksForJuz = (
+  juzNumbers: number[],
+  chunkSize: number = DEFAULT_CHUNK_SIZE,
+): SurahChunkSelection[] => {
   const juzSurahs = getSurahsByJuz(juzNumbers);
   const chunks: SurahChunkSelection[] = [];
-  
+
   for (const surah of juzSurahs) {
     // For short surahs (<=chunkSize verses), use whole surah
     if (surah.verses <= chunkSize) {
@@ -38,7 +57,7 @@ const generateChunksForJuz = (juzNumbers: number[], chunkSize: number = DEFAULT_
       }
     }
   }
-  
+
   return chunks;
 };
 
@@ -56,22 +75,31 @@ const getStoredChunkSize = (): number => {
 const getInitialState = (): AppState => {
   const stored = localStorage.getItem(STORAGE_KEY);
   const chunkSize = getStoredChunkSize();
-  
+
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
       // Merge with default prayers to handle new prayers added
-      const mergedPrayers = defaultPrayers.map(defaultPrayer => {
-        const storedPrayer = parsed.prayers?.find((p: Prayer) => p.id === defaultPrayer.id);
+      const mergedPrayers = defaultPrayers.map((defaultPrayer) => {
+        const storedPrayer = parsed.prayers?.find(
+          (p: Prayer) => p.id === defaultPrayer.id,
+        );
         if (storedPrayer) {
-          return { ...defaultPrayer, enabled: storedPrayer.enabled, rakaat: storedPrayer.rakaat };
+          return {
+            ...defaultPrayer,
+            enabled: storedPrayer.enabled,
+            rakaat: storedPrayer.rakaat,
+          };
         }
         return defaultPrayer;
       });
-      
+
       // Handle migration from old format
       if (parsed.selectedSurahs && !parsed.selectedChunks) {
-        const defaultChunks = generateChunksForJuz(parsed.selectedJuz || [30], chunkSize);
+        const defaultChunks = generateChunksForJuz(
+          parsed.selectedJuz || [30],
+          chunkSize,
+        );
         return {
           ...parsed,
           prayers: mergedPrayers,
@@ -80,9 +108,9 @@ const getInitialState = (): AppState => {
           usedChunks: [],
         };
       }
-      
-      return { 
-        ...parsed, 
+
+      return {
+        ...parsed,
         prayers: mergedPrayers,
         mandatoryChunks: parsed.mandatoryChunks || [],
       };
@@ -90,7 +118,7 @@ const getInitialState = (): AppState => {
       // Invalid stored data, return default
     }
   }
-  
+
   const defaultJuz = [30];
   return {
     prayers: defaultPrayers,
@@ -98,7 +126,7 @@ const getInitialState = (): AppState => {
     selectedChunks: generateChunksForJuz(defaultJuz, chunkSize),
     mandatoryChunks: [],
     usedChunks: [],
-    lastShuffleDate: '',
+    lastShuffleDate: "",
     dailyAssignments: [],
   };
 };
@@ -107,20 +135,22 @@ const getTodayDate = (): string => {
   // Use local timezone for date
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
 const getStoredChunksEnabled = (): boolean => {
   const stored = localStorage.getItem(CHUNKS_ENABLED_KEY);
-  return stored === null ? true : stored === 'true';
+  return stored === null ? false : stored === "true";
 };
 
 export const useAppState = () => {
   const [state, setState] = useState<AppState>(getInitialState);
   const [chunkSize, setChunkSizeState] = useState<number>(getStoredChunkSize);
-  const [chunksEnabled, setChunksEnabledState] = useState<boolean>(getStoredChunksEnabled);
+  const [chunksEnabled, setChunksEnabledState] = useState<boolean>(
+    getStoredChunksEnabled,
+  );
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -129,31 +159,64 @@ export const useAppState = () => {
   const setChunksEnabled = (enabled: boolean) => {
     localStorage.setItem(CHUNKS_ENABLED_KEY, String(enabled));
     setChunksEnabledState(enabled);
+
+    // When enabling chunks, convert any full surahs to individual chunks
+    if (enabled) {
+      setState((prev) => {
+        const newSelectedChunks: SurahChunkSelection[] = [];
+
+        for (const chunk of prev.selectedChunks) {
+          const surah = surahs.find((s) => s.number === chunk.surahNumber);
+          if (!surah) continue;
+
+          // Check if this is a full surah (startAyah=1 and endAyah=total verses)
+          const isFullSurah =
+            chunk.startAyah === 1 && chunk.endAyah === surah.verses;
+
+          if (isFullSurah && surah.verses > chunkSize) {
+            // Convert to individual chunks
+            const surahChunks = generateChunksForJuz(
+              prev.selectedJuz,
+              chunkSize,
+            ).filter((c) => c.surahNumber === chunk.surahNumber);
+            newSelectedChunks.push(...surahChunks);
+          } else {
+            // Keep as is
+            newSelectedChunks.push(chunk);
+          }
+        }
+
+        return {
+          ...prev,
+          selectedChunks: newSelectedChunks,
+        };
+      });
+    }
   };
 
   const updatePrayers = (prayers: Prayer[]) => {
-    setState(prev => ({ ...prev, prayers }));
+    setState((prev) => ({ ...prev, prayers }));
   };
 
   const togglePrayer = (prayerId: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      prayers: prev.prayers.map(p =>
-        p.id === prayerId ? { ...p, enabled: !p.enabled } : p
+      prayers: prev.prayers.map((p) =>
+        p.id === prayerId ? { ...p, enabled: !p.enabled } : p,
       ),
     }));
   };
 
   const updatePrayerRakaat = (prayerId: string, rakaat: number) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      prayers: prev.prayers.map(p => {
+      prayers: prev.prayers.map((p) => {
         if (p.id !== prayerId) return p;
-        
+
         let newRakaat = rakaat;
         if (p.minRakaat) newRakaat = Math.max(p.minRakaat, newRakaat);
         if (p.maxRakaat) newRakaat = Math.min(p.maxRakaat, newRakaat);
-        
+
         return { ...p, rakaat: newRakaat };
       }),
     }));
@@ -163,13 +226,17 @@ export const useAppState = () => {
     // Don't auto-select all chunks when changing juz
     // Instead, keep only chunks that are still valid for the new juz selection
     const newAllPossibleChunks = generateChunksForJuz(juzNumbers, chunkSize);
-    const newChunkIds = new Set(newAllPossibleChunks.map(c => c.id));
-    
-    setState(prev => {
+    const newChunkIds = new Set(newAllPossibleChunks.map((c) => c.id));
+
+    setState((prev) => {
       // Keep only the chunks that exist in the new juz selection
-      const validChunks = prev.selectedChunks.filter(c => newChunkIds.has(c.id));
-      const validMandatory = prev.mandatoryChunks.filter(id => newChunkIds.has(id));
-      
+      const validChunks = prev.selectedChunks.filter((c) =>
+        newChunkIds.has(c.id),
+      );
+      const validMandatory = prev.mandatoryChunks.filter((id) =>
+        newChunkIds.has(id),
+      );
+
       return {
         ...prev,
         selectedJuz: juzNumbers,
@@ -181,33 +248,39 @@ export const useAppState = () => {
   };
 
   const toggleChunk = (chunkId: string) => {
-    setState(prev => {
-      const isRemoving = prev.selectedChunks.some(c => c.id === chunkId);
+    setState((prev) => {
+      const isRemoving = prev.selectedChunks.some((c) => c.id === chunkId);
       return {
         ...prev,
         selectedChunks: isRemoving
-          ? prev.selectedChunks.filter(c => c.id !== chunkId)
-          : [...prev.selectedChunks, findChunkById(chunkId, prev.selectedJuz)].filter(Boolean) as SurahChunkSelection[],
+          ? prev.selectedChunks.filter((c) => c.id !== chunkId)
+          : ([
+              ...prev.selectedChunks,
+              findChunkById(chunkId, prev.selectedJuz),
+            ].filter(Boolean) as SurahChunkSelection[]),
         // Also remove from mandatory if removing from selected
         mandatoryChunks: isRemoving
-          ? prev.mandatoryChunks.filter(id => id !== chunkId)
+          ? prev.mandatoryChunks.filter((id) => id !== chunkId)
           : prev.mandatoryChunks,
       };
     });
   };
 
   const toggleMandatory = (chunkId: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       mandatoryChunks: prev.mandatoryChunks.includes(chunkId)
-        ? prev.mandatoryChunks.filter(id => id !== chunkId)
+        ? prev.mandatoryChunks.filter((id) => id !== chunkId)
         : [...prev.mandatoryChunks, chunkId],
     }));
   };
 
-  const findChunkById = (chunkId: string, juzNumbers: number[]): SurahChunkSelection | null => {
-    const [surahNum, startAyah, endAyah] = chunkId.split('-').map(Number);
-    const surah = surahs.find(s => s.number === surahNum);
+  const findChunkById = (
+    chunkId: string,
+    juzNumbers: number[],
+  ): SurahChunkSelection | null => {
+    const [surahNum, startAyah, endAyah] = chunkId.split("-").map(Number);
+    const surah = surahs.find((s) => s.number === surahNum);
     if (!surah) return null;
     return {
       id: chunkId,
@@ -217,30 +290,36 @@ export const useAppState = () => {
     };
   };
 
-  const updateChunkRange = (surahNumber: number, startAyah: number, endAyah: number, newStart: number, newEnd: number) => {
+  const updateChunkRange = (
+    surahNumber: number,
+    startAyah: number,
+    endAyah: number,
+    newStart: number,
+    newEnd: number,
+  ) => {
     const oldId = getChunkId(surahNumber, startAyah, endAyah);
     const newId = getChunkId(surahNumber, newStart, newEnd);
-    
-    setState(prev => ({
+
+    setState((prev) => ({
       ...prev,
-      selectedChunks: prev.selectedChunks.map(c =>
+      selectedChunks: prev.selectedChunks.map((c) =>
         c.id === oldId
           ? { ...c, id: newId, startAyah: newStart, endAyah: newEnd }
-          : c
+          : c,
       ),
     }));
   };
 
   const selectAllChunks = () => {
     const allChunks = generateChunksForJuz(state.selectedJuz, chunkSize);
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       selectedChunks: allChunks,
     }));
   };
 
   const deselectAllChunks = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       selectedChunks: [],
       mandatoryChunks: [],
@@ -249,9 +328,9 @@ export const useAppState = () => {
 
   // Include all ayat for a surah as a single chunk (ignore chunk size)
   const includeAllAyahs = (surahNumber: number) => {
-    const surah = surahs.find(s => s.number === surahNumber);
+    const surah = surahs.find((s) => s.number === surahNumber);
     if (!surah) return;
-    
+
     const fullChunkId = getChunkId(surahNumber, 1, surah.verses);
     const fullChunk: SurahChunkSelection = {
       id: fullChunkId,
@@ -259,12 +338,16 @@ export const useAppState = () => {
       startAyah: 1,
       endAyah: surah.verses,
     };
-    
-    setState(prev => {
+
+    setState((prev) => {
       // Remove any existing chunks for this surah
-      const withoutSurah = prev.selectedChunks.filter(c => c.surahNumber !== surahNumber);
-      const mandatoryWithoutSurah = prev.mandatoryChunks.filter(id => !id.startsWith(`${surahNumber}-`));
-      
+      const withoutSurah = prev.selectedChunks.filter(
+        (c) => c.surahNumber !== surahNumber,
+      );
+      const mandatoryWithoutSurah = prev.mandatoryChunks.filter(
+        (id) => !id.startsWith(`${surahNumber}-`),
+      );
+
       return {
         ...prev,
         selectedChunks: [...withoutSurah, fullChunk],
@@ -275,17 +358,21 @@ export const useAppState = () => {
 
   // Revert a "full surah" selection back to chunked selection
   const revertToChunks = (surahNumber: number) => {
-    const surah = surahs.find(s => s.number === surahNumber);
+    const surah = surahs.find((s) => s.number === surahNumber);
     if (!surah) return;
-    
+
     // Generate the default chunks for this surah
-    const surahChunks = generateChunksForJuz([...state.selectedJuz], chunkSize)
-      .filter(c => c.surahNumber === surahNumber);
-    
-    setState(prev => {
+    const surahChunks = generateChunksForJuz(
+      [...state.selectedJuz],
+      chunkSize,
+    ).filter((c) => c.surahNumber === surahNumber);
+
+    setState((prev) => {
       // Remove the full surah chunk
-      const withoutFullSurah = prev.selectedChunks.filter(c => c.surahNumber !== surahNumber);
-      
+      const withoutFullSurah = prev.selectedChunks.filter(
+        (c) => c.surahNumber !== surahNumber,
+      );
+
       return {
         ...prev,
         selectedChunks: [...withoutFullSurah, ...surahChunks],
@@ -293,83 +380,95 @@ export const useAppState = () => {
     });
   };
 
-  const updateChunkSize = useCallback((newSize: number) => {
-    localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
-    setChunkSizeState(newSize);
-    
-    // Regenerate all possible chunks with new size, but preserve selection status
-    const newAllChunks = generateChunksForJuz(state.selectedJuz, newSize);
-    
-    // Keep only the chunks that were previously selected (by matching surah number)
-    // Since chunk boundaries change, we can't preserve exact selections
-    // Instead, just regenerate without auto-selecting all
-    setState(prev => ({
-      ...prev,
-      // Don't change selectedChunks - user will need to re-select if they want different chunks
-      usedChunks: [], // Reset used chunks when changing chunk size
-    }));
-  }, [state.selectedJuz]);
+  const updateChunkSize = useCallback(
+    (newSize: number) => {
+      localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
+      setChunkSizeState(newSize);
+
+      // Regenerate all possible chunks with new size, but preserve selection status
+      const newAllChunks = generateChunksForJuz(state.selectedJuz, newSize);
+
+      // Keep only the chunks that were previously selected (by matching surah number)
+      // Since chunk boundaries change, we can't preserve exact selections
+      // Instead, just regenerate without auto-selecting all
+      setState((prev) => ({
+        ...prev,
+        // Don't change selectedChunks - user will need to re-select if they want different chunks
+        usedChunks: [], // Reset used chunks when changing chunk size
+      }));
+    },
+    [state.selectedJuz],
+  );
 
   const shuffleForToday = (): DailyAssignment | null => {
     const today = getTodayDate();
-    
-    const existingAssignment = state.dailyAssignments.find(a => a.date === today);
+
+    const existingAssignment = state.dailyAssignments.find(
+      (a) => a.date === today,
+    );
     if (existingAssignment) {
       return existingAssignment;
     }
 
     // Sort prayers by order for proper daily sequence
     const enabledPrayers = state.prayers
-      .filter(p => p.enabled)
+      .filter((p) => p.enabled)
       .sort((a, b) => a.order - b.order);
-    
+
     // Calculate total rakaat needed (considering recitationRakaat)
     const totalRakaatNeeded = enabledPrayers.reduce((sum, p) => {
       const recitationCount = p.recitationRakaat ?? p.rakaat;
       return sum + recitationCount;
     }, 0);
-    
+
     if (totalRakaatNeeded === 0 || state.selectedChunks.length === 0) {
       return null;
     }
 
     // Get mandatory chunks first (always included)
-    const mandatoryChunkObjects = state.selectedChunks.filter(c => 
-      state.mandatoryChunks.includes(c.id)
+    const mandatoryChunkObjects = state.selectedChunks.filter((c) =>
+      state.mandatoryChunks.includes(c.id),
     );
-    
+
     // Get non-mandatory chunks that haven't been used
-    let availableNonMandatory = state.selectedChunks.filter(c => 
-      !state.mandatoryChunks.includes(c.id) && !state.usedChunks.includes(c.id)
+    let availableNonMandatory = state.selectedChunks.filter(
+      (c) =>
+        !state.mandatoryChunks.includes(c.id) &&
+        !state.usedChunks.includes(c.id),
     );
-    
+
     let newUsedChunks = [...state.usedChunks];
-    
+
     // If not enough non-mandatory chunks, reset used pool (but keep mandatory separate)
-    if (availableNonMandatory.length + mandatoryChunkObjects.length < totalRakaatNeeded) {
-      availableNonMandatory = state.selectedChunks.filter(c => 
-        !state.mandatoryChunks.includes(c.id)
+    if (
+      availableNonMandatory.length + mandatoryChunkObjects.length <
+      totalRakaatNeeded
+    ) {
+      availableNonMandatory = state.selectedChunks.filter(
+        (c) => !state.mandatoryChunks.includes(c.id),
       );
       newUsedChunks = [];
     }
 
     // Shuffle non-mandatory chunks
-    const shuffledNonMandatory = [...availableNonMandatory].sort(() => Math.random() - 0.5);
-    
+    const shuffledNonMandatory = [...availableNonMandatory].sort(
+      () => Math.random() - 0.5,
+    );
+
     // Build final list: mandatory first, then shuffled non-mandatory
     const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
-    
+
     const assignments: PrayerAssignment[] = [];
     let chunkIndex = 0;
 
     for (const prayer of enabledPrayers) {
       const rakaatSurahs: RakaatSurah[] = [];
       const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
-      
+
       for (let i = 0; i < recitationCount; i++) {
         const chunk = shuffled[chunkIndex % shuffled.length];
-        const surah = surahs.find(s => s.number === chunk.surahNumber)!;
-        
+        const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
+
         rakaatSurahs.push({
           rakaatNumber: i + 1,
           surahNumber: surah.number,
@@ -378,11 +477,11 @@ export const useAppState = () => {
           startAyah: chunk.startAyah,
           endAyah: chunk.endAyah,
         });
-        
+
         if (!newUsedChunks.includes(chunk.id)) {
           newUsedChunks.push(chunk.id);
         }
-        
+
         chunkIndex++;
       }
 
@@ -398,7 +497,7 @@ export const useAppState = () => {
       assignments,
     };
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       usedChunks: newUsedChunks,
       lastShuffleDate: today,
@@ -409,7 +508,7 @@ export const useAppState = () => {
   };
 
   const resetUsedChunks = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       usedChunks: [],
     }));
@@ -417,14 +516,14 @@ export const useAppState = () => {
 
   const getTodayAssignment = (): DailyAssignment | null => {
     const today = getTodayDate();
-    return state.dailyAssignments.find(a => a.date === today) || null;
+    return state.dailyAssignments.find((a) => a.date === today) || null;
   };
 
   const forceReshuffle = () => {
     const today = getTodayDate();
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      dailyAssignments: prev.dailyAssignments.filter(a => a.date !== today),
+      dailyAssignments: prev.dailyAssignments.filter((a) => a.date !== today),
     }));
   };
 
