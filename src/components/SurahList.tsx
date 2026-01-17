@@ -8,9 +8,12 @@ import {
   Star,
   Maximize2,
   Minimize2,
+  Search,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
   Collapsible,
@@ -49,6 +52,22 @@ const SurahList = ({
     selectedJuz.length === 1 ? selectedJuz : [],
   );
   const [expandedSurahs, setExpandedSurahs] = useState<number[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter surahs based on search query
+  const filterSurah = (surah: {
+    name: string;
+    arabicName: string;
+    number: number;
+  }) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      surah.name.toLowerCase().includes(query) ||
+      surah.arabicName.includes(searchQuery) ||
+      surah.number.toString() === query
+    );
+  };
 
   // Group chunks by surah
   const getChunksForSurah = (surahNumber: number) => {
@@ -190,11 +209,113 @@ const SurahList = ({
         </div>
       </div>
 
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Search surah..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-9 pr-8 h-9 text-sm"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       <div className="max-h-96 space-y-2 overflow-y-auto rounded-xl bg-card p-3 shadow-card">
         {selectedJuz.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground py-4">
             Select a Juz first
           </p>
+        ) : searchQuery.trim() ? (
+          // When searching, show flat list of matching surahs
+          (() => {
+            const allJuzSurahs = selectedJuz.flatMap((juz) =>
+              surahs.filter((surah) => surah.juz.includes(juz)),
+            );
+            // Remove duplicates
+            const uniqueSurahs = allJuzSurahs.filter(
+              (surah, index, self) =>
+                index === self.findIndex((s) => s.number === surah.number),
+            );
+            const filteredSurahs = uniqueSurahs.filter(filterSurah);
+
+            if (filteredSurahs.length === 0) {
+              return (
+                <p className="text-center text-sm text-muted-foreground py-4">
+                  No surahs found
+                </p>
+              );
+            }
+
+            return filteredSurahs.map((surah) => {
+              const surahChunks = getChunksForSurah(surah.number);
+              const hasMultipleChunks = surahChunks.length > 1 && chunksEnabled;
+              const isExpanded = expandedSurahs.includes(surah.number);
+              const fullySelected = isSurahFullySelected(surah.number);
+              const partiallySelected = isSurahPartiallySelected(surah.number);
+              const isFullSurah = isSurahIncludedAsFull(surah.number);
+
+              return (
+                <div key={surah.number} className="rounded-lg overflow-hidden">
+                  {/* Surah Header */}
+                  <div
+                    className={cn(
+                      "flex w-full items-center justify-between px-4 py-3 text-left transition-all duration-200 rounded-lg",
+                      fullySelected || isFullSurah
+                        ? "bg-primary/10 text-primary"
+                        : partiallySelected
+                          ? "bg-primary/5 text-foreground"
+                          : "text-foreground hover:bg-muted",
+                    )}
+                  >
+                    <button
+                      onClick={() =>
+                        handleSurahClick(surah.number, hasMultipleChunks)
+                      }
+                      className="flex flex-1 items-center gap-4"
+                    >
+                      <span
+                        className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium",
+                          fullySelected || isFullSurah
+                            ? "gradient-islamic text-primary-foreground"
+                            : partiallySelected
+                              ? "bg-primary/20 text-primary"
+                              : "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {surah.number}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium truncate">
+                            {surah.name}
+                          </p>
+                          {isFullSurah && (
+                            <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded font-medium">
+                              All {surah.verses} ayat
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                    <div className="flex items-center gap-1">
+                      {(fullySelected || isFullSurah) && (
+                        <Check className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            });
+          })()
         ) : (
           selectedJuz
             .sort((a, b) => a - b)
