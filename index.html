@@ -1,19 +1,50 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Quran Shuffler</title>
-    <meta name="description" content="Daily Quran recitation planner for your prayers">
-    <meta name="author" content="Lovable" />
+    <title>Quran Shuffler | Daily Quran Recitation Planner</title>
+    <link rel="canonical" href="https://quran-shuffler.web.app/" />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme");
+          if (
+            theme === "dark" ||
+            (!theme &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches)
+          ) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta
+      name="description"
+      content="Quran Shuffler helps you plan and track your daily Quran recitation, making it easier to complete the Quran and stay consistent in your prayers. Accessible, mobile-friendly, and privacy-focused."
+    />
+    <meta
+      name="keywords"
+      content="Quran, Quran planner, Quran recitation, daily Quran, Islamic app, prayer planner, Quran schedule, hafalan, tilawah, jadwal Quran, Muslim, Islam, murojaah"
+    />
+    <meta name="author" content="Hasnan" />
+    <meta name="application-name" content="Quran Shuffler" />
+    <meta name="referrer" content="origin-when-cross-origin" />
     <meta name="theme-color" content="#228B5B" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Quran Shuffler" />
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,32 +53,80 @@
     />
 
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/social-images/social-1768646700446-Gemini_Generated_Image_xrmeorxrmeorxrme.png">
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Quran Shuffler" />
+    <meta property="og:url" content="https://quran-shuffler.web.app/" />
+    <meta
+      property="og:image:alt"
+      content="Quran Shuffler - Daily Quran Recitation Planner"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image"
+      content="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/social-images/social-1768646700446-Gemini_Generated_Image_xrmeorxrmeorxrme.png"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/social-images/social-1768646700446-Gemini_Generated_Image_xrmeorxrmeorxrme.png">
-    
-    
-    
-    
-    <link rel="icon" type="image/png" href="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/uploads/1768646727223-Gemini_Generated_Image_xrmeorxrmeorxrme.png">
-    
-  
-  
-  
-  
-  
-  
-  
-  <meta property="og:title" content="Quran Shuffler">
-  <meta name="twitter:title" content="Quran Shuffler">
-  <meta property="og:description" content="Daily Quran recitation planner for your prayers">
-  <meta name="twitter:description" content="Daily Quran recitation planner for your prayers">
-</head>
+    <!-- Removed Lovable twitter handles for branding clarity -->
+    <meta name="twitter:url" content="https://quran-shuffler.web.app/" />
+    <meta
+      name="twitter:image:alt"
+      content="Quran Shuffler - Daily Quran Recitation Planner"
+    />
+    <meta
+      name="twitter:image"
+      content="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/social-images/social-1768646700446-Gemini_Generated_Image_xrmeorxrmeorxrme.png"
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://storage.googleapis.com/gpt-engineer-file-uploads/l6rpC29fJ5a5zi0Qpl7wi5PDjQn1/uploads/1768646727223-Gemini_Generated_Image_xrmeorxrmeorxrme.png"
+    />
+
+    <meta
+      property="og:title"
+      content="Quran Shuffler | Daily Quran Recitation Planner"
+    />
+    <meta
+      name="twitter:title"
+      content="Quran Shuffler | Daily Quran Recitation Planner"
+    />
+    <meta
+      property="og:description"
+      content="Quran Shuffler helps you plan and track your daily Quran recitation, making it easier to complete the Quran and stay consistent in your prayers. Accessible, mobile-friendly, and privacy-focused."
+    />
+    <meta
+      name="twitter:description"
+      content="Quran Shuffler helps you plan and track your daily Quran recitation, making it easier to complete the Quran and stay consistent in your prayers. Accessible, mobile-friendly, and privacy-focused."
+    />
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Quran Shuffler",
+        "url": "https://quran-shuffler.web.app/",
+        "description": "Quran Shuffler helps you plan and track your daily Quran recitation, making it easier to complete the Quran and stay consistent in your prayers.",
+        "applicationCategory": "Religion",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Hasnan"
+        }
+      }
+    </script>
+  </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root" role="main" aria-label="Quran Shuffler main content"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
