@@ -28,7 +28,7 @@ Quran Shuffler is a daily Quran recitation planner and tracker. It helps you pla
 1. **Clone the repository:**
 
    ```sh
-   git clone <YOUR_GIT_URL>
+   git clone https://github.com/mhasnanr/quran-shuffler
    cd quran-shuffler
    ```
 
