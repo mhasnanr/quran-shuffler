@@ -20,7 +20,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Poppins", "system-ui", "sans-serif"],
-        arabic: ["Amiri Quran", "Noto Naskh Arabic", "Amiri", "serif"],
+        arabic: ["Amiri", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
