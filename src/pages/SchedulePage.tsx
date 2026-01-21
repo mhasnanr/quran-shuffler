@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DailySchedule from "@/components/DailySchedule";
 import { useAppState } from "@/hooks/useAppState";
 import { useReviewItems } from "@/hooks/useReviewItems";
+import { useStats } from "@/hooks/useStats";
 
 const SchedulePage = () => {
   const {
@@ -14,6 +15,7 @@ const SchedulePage = () => {
   } = useAppState();
 
   const { addReviewItem } = useReviewItems();
+  const { recordAyatRead, recordWeakSpot } = useStats();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
   useEffect(() => {
@@ -57,6 +59,8 @@ const SchedulePage = () => {
       enabledPrayers={enabledPrayers}
       onAddTemporaryPrayers={handleAddTemporaryPrayers}
       showTranslation={showTranslation}
+      onRecordAyatRead={recordAyatRead}
+      onRecordWeakSpot={recordWeakSpot}
     />
   );
 };

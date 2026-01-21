@@ -8,6 +8,7 @@ import SchedulePage from "./pages/SchedulePage";
 import GuidePage from "./pages/GuidePage";
 import ReviewPage from "./pages/ReviewPage";
 import SettingsPage from "./pages/SettingsPage";
+import StatsPage from "./pages/StatsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route element={<Layout />}>
             <Route path="/" element={<SchedulePage />} />
             <Route path="/guide" element={<GuidePage />} />
+            <Route path="/stats" element={<StatsPage />} />
             <Route path="/review" element={<ReviewPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
