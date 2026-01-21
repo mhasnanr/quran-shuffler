@@ -55,6 +55,8 @@ interface DailyScheduleProps {
     }>,
   ) => void;
   showTranslation?: boolean;
+  onRecordAyatRead?: (ayatCount: number, surahNumber: number, surahName: string, arabicName: string) => void;
+  onRecordWeakSpot?: (surahNumber: number, surahName: string, arabicName: string) => void;
 }
 
 const getCategoryColor = (prayerId: string) => {
@@ -99,6 +101,8 @@ const DailySchedule = ({
   enabledPrayers,
   onAddTemporaryPrayers,
   showTranslation = true,
+  onRecordAyatRead,
+  onRecordWeakSpot,
 }: DailyScheduleProps) => {
   // Use local timezone for date key
   const now = new Date();
@@ -180,6 +184,10 @@ const DailySchedule = ({
     const { rakaatKey, rakaat } = feedbackDialog;
     if (!rakaat) return;
 
+    // Record stats
+    const ayatCount = rakaat.endAyah - rakaat.startAyah + 1;
+    onRecordAyatRead?.(ayatCount, rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
+
     // Mark as completed
     completeRakaat(rakaatKey);
     setFeedbackDialog({
@@ -193,6 +201,13 @@ const DailySchedule = ({
   const handleFeedbackForgot = () => {
     const { rakaat, prayerName, rakaatKey } = feedbackDialog;
     if (!rakaat) return;
+
+    // Record stats (still counts as read)
+    const ayatCount = rakaat.endAyah - rakaat.startAyah + 1;
+    onRecordAyatRead?.(ayatCount, rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
+    
+    // Record as weak spot
+    onRecordWeakSpot?.(rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
 
     // Add to review list
     onAddToReview({

@@ -5,6 +5,7 @@ import BottomNav, { TabType } from "@/components/BottomNav";
 const routeToTab: Record<string, TabType> = {
   "/": "schedule",
   "/guide": "guide",
+  "/stats": "stats",
   "/review": "review",
   "/settings": "config",
 };
@@ -12,6 +13,7 @@ const routeToTab: Record<string, TabType> = {
 const tabToRoute: Record<TabType, string> = {
   schedule: "/",
   guide: "/guide",
+  stats: "/stats",
   review: "/review",
   config: "/settings",
 };
