@@ -174,11 +174,11 @@ export const useAppState = () => {
     localStorage.setItem(CHUNKS_ENABLED_KEY, String(enabled));
     setChunksEnabledState(enabled);
 
-    // When enabling chunks, convert any full surahs to individual chunks
-    if (enabled) {
-      setState((prev) => {
-        const newSelectedChunks: SurahChunkSelection[] = [];
+    setState((prev) => {
+      const newSelectedChunks: SurahChunkSelection[] = [];
 
+      if (enabled) {
+        // When enabling chunks, convert any full surahs to individual chunks
         for (const chunk of prev.selectedChunks) {
           const surah = surahs.find((s) => s.number === chunk.surahNumber);
           if (!surah) continue;
@@ -199,13 +199,32 @@ export const useAppState = () => {
             newSelectedChunks.push(chunk);
           }
         }
+      } else {
+        // When disabling chunks, convert ALL chunks to full surahs
+        const surahNumbers = new Set(prev.selectedChunks.map((c) => c.surahNumber));
+        
+        for (const surahNumber of surahNumbers) {
+          const surah = surahs.find((s) => s.number === surahNumber);
+          if (!surah) continue;
+          
+          // Create a single full surah chunk
+          const fullChunkId = getChunkId(surahNumber, 1, surah.verses);
+          newSelectedChunks.push({
+            id: fullChunkId,
+            surahNumber,
+            startAyah: 1,
+            endAyah: surah.verses,
+          });
+        }
+      }
 
-        return {
-          ...prev,
-          selectedChunks: newSelectedChunks,
-        };
-      });
-    }
+      return {
+        ...prev,
+        selectedChunks: newSelectedChunks,
+        // Clear mandatory chunks when disabling since chunk IDs change
+        mandatoryChunks: enabled ? prev.mandatoryChunks : [],
+      };
+    });
   };
 
   const updatePrayers = (prayers: Prayer[]) => {
@@ -700,12 +719,24 @@ export const useAppState = () => {
       return null;
     }
 
-    // Calculate total rakaat needed for temporary prayers (considering recitationRakaat for main prayers)
-    const totalRakaatNeeded = temporaryEntries.reduce((sum, e) => {
+    // Get existing enabled prayers (from template)
+    const enabledPrayers = state.prayers
+      .filter((p) => p.enabled)
+      .sort((a, b) => a.order - b.order);
+
+    // Calculate total rakaat needed for ALL prayers (existing + temporary)
+    const existingRakaatNeeded = enabledPrayers.reduce((sum, p) => {
+      const recitationCount = p.recitationRakaat ?? p.rakaat;
+      return sum + recitationCount;
+    }, 0);
+
+    const temporaryRakaatNeeded = temporaryEntries.reduce((sum, e) => {
       const prayerDef = defaultPrayers.find((p) => p.id === e.prayerId);
       const recitationRakaat = prayerDef?.recitationRakaat ?? e.rakaat;
       return sum + recitationRakaat;
     }, 0);
+
+    const totalRakaatNeeded = existingRakaatNeeded + temporaryRakaatNeeded;
 
     // Get mandatory chunks first (always included)
     const mandatoryChunkObjects = state.selectedChunks.filter((c) =>
@@ -719,7 +750,7 @@ export const useAppState = () => {
         !state.usedChunks.includes(c.id),
     );
 
-    let newUsedChunks = [...state.usedChunks];
+    let newUsedChunks: string[] = [];
 
     // If not enough non-mandatory chunks, reset used pool
     if (
@@ -732,39 +763,30 @@ export const useAppState = () => {
       newUsedChunks = [];
     }
 
-    // Shuffle non-mandatory chunks
-    const shuffledNonMandatory = [...availableNonMandatory].sort(
-      () => Math.random() - 0.5,
-    );
+    // Shuffle ALL chunks together (mandatory + non-mandatory) for equal randomization
+    const allChunks = [...mandatoryChunkObjects, ...availableNonMandatory];
+    const shuffled = [...allChunks].sort(() => Math.random() - 0.5);
 
-    // Build final list: mandatory first, then shuffled non-mandatory
-    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
-
-    // Generate new rakaat surahs for each entry
-    const newRakaatByPrayerId: Record<string, RakaatSurah[]> = {};
     let chunkIndex = 0;
 
-    for (const entry of temporaryEntries) {
-      if (!newRakaatByPrayerId[entry.prayerId]) {
-        newRakaatByPrayerId[entry.prayerId] = [];
-      }
+    // Build assignments for existing enabled prayers first
+    const assignments: PrayerAssignment[] = [];
 
-      // For main prayers (Dzuhur, Ashar, Maghrib, Isya), only assign surahs for recitationRakaat (2)
-      const prayerDef = defaultPrayers.find((p) => p.id === entry.prayerId);
-      const recitationRakaat = prayerDef?.recitationRakaat ?? entry.rakaat;
+    for (const prayer of enabledPrayers) {
+      const rakaatSurahs: RakaatSurah[] = [];
+      const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
 
-      for (let i = 0; i < recitationRakaat; i++) {
+      for (let i = 0; i < recitationCount; i++) {
         const chunk = shuffled[chunkIndex % shuffled.length];
         const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
 
-        newRakaatByPrayerId[entry.prayerId].push({
-          rakaatNumber: i + 1, // Will be renumbered when merging
+        rakaatSurahs.push({
+          rakaatNumber: i + 1,
           surahNumber: surah.number,
           surahName: surah.name,
           arabicName: surah.arabicName,
           startAyah: chunk.startAyah,
           endAyah: chunk.endAyah,
-          isTemporary: true, // Mark as temporary rakaat
         });
 
         if (!newUsedChunks.includes(chunk.id)) {
@@ -773,181 +795,99 @@ export const useAppState = () => {
 
         chunkIndex++;
       }
-    }
 
-    setState((prev) => {
-      const existingAssignment = prev.dailyAssignments.find(
-        (a) => a.date === today,
-      );
-
-      if (existingAssignment) {
-        // Merge with existing prayers or add new ones
-        const updatedAssignments = [...existingAssignment.assignments];
-
-        for (const [prayerId, newRakaat] of Object.entries(
-          newRakaatByPrayerId,
-        )) {
-          // Find existing prayer with same ID
-          const existingIndex = updatedAssignments.findIndex(
-            (a) => a.prayerId === prayerId,
-          );
-
-          if (existingIndex !== -1) {
-            // Merge: append new rakaat to existing prayer
-            const existingPrayer = updatedAssignments[existingIndex];
-            const currentRakaatCount = existingPrayer.rakaatSurahs.length;
-
-            // Renumber the new rakaat to continue from existing
-            const renumberedRakaat = newRakaat.map((r, idx) => ({
-              ...r,
-              rakaatNumber: currentRakaatCount + idx + 1,
-            }));
-
-            updatedAssignments[existingIndex] = {
-              ...existingPrayer,
-              rakaatSurahs: [
-                ...existingPrayer.rakaatSurahs,
-                ...renumberedRakaat,
-              ],
-            };
-          } else {
-            // No existing prayer, create new one marked as temporary
-            const entry = temporaryEntries.find((e) => e.prayerId === prayerId);
-            const prayerOrder = getPrayerOrder(prayerId);
-            updatedAssignments.push({
-              prayerId,
-              prayerName: entry?.prayerName || prayerId,
-              rakaatSurahs: newRakaat.map((r, idx) => ({
-                ...r,
-                rakaatNumber: idx + 1,
-              })),
-              isTemporary: true,
-              order: prayerOrder,
-            });
-          }
-        }
-
-        // Sort assignments by prayer order
-        const sortedAssignments = sortAssignmentsByOrder(updatedAssignments);
-
-        const updatedAssignment: DailyAssignment = {
-          ...existingAssignment,
-          assignments: sortedAssignments,
-        };
-
-        return {
-          ...prev,
-          usedChunks: newUsedChunks,
-          dailyAssignments: prev.dailyAssignments.map((a) =>
-            a.date === today ? updatedAssignment : a,
-          ),
-        };
-      } else {
-        // Create new assignment with the temporary prayers
-        const newAssignments: PrayerAssignment[] = [];
-
-        for (const [prayerId, rakaat] of Object.entries(newRakaatByPrayerId)) {
-          const entry = temporaryEntries.find((e) => e.prayerId === prayerId);
-          const prayerOrder = getPrayerOrder(prayerId);
-          newAssignments.push({
-            prayerId,
-            prayerName: entry?.prayerName || prayerId,
-            rakaatSurahs: rakaat.map((r, idx) => ({
-              ...r,
-              rakaatNumber: idx + 1,
-            })),
-            isTemporary: true,
-            order: prayerOrder,
-          });
-        }
-
-        // Sort assignments by prayer order
-        const sortedAssignments = sortAssignmentsByOrder(newAssignments);
-
-        const newAssignment: DailyAssignment = {
-          date: today,
-          assignments: sortedAssignments,
-        };
-
-        return {
-          ...prev,
-          usedChunks: newUsedChunks,
-          lastShuffleDate: today,
-          dailyAssignments: [...prev.dailyAssignments.slice(-6), newAssignment],
-        };
-      }
-    });
-
-    // Return the updated assignment (recalculate after setState)
-    const existingAssignment = state.dailyAssignments.find(
-      (a) => a.date === today,
-    );
-
-    if (existingAssignment) {
-      const updatedAssignments = [...existingAssignment.assignments];
-
-      for (const [prayerId, newRakaat] of Object.entries(newRakaatByPrayerId)) {
-        const existingIndex = updatedAssignments.findIndex(
-          (a) => a.prayerId === prayerId,
-        );
-
-        if (existingIndex !== -1) {
-          const existingPrayer = updatedAssignments[existingIndex];
-          const currentRakaatCount = existingPrayer.rakaatSurahs.length;
-
-          const renumberedRakaat = newRakaat.map((r, idx) => ({
-            ...r,
-            rakaatNumber: currentRakaatCount + idx + 1,
-          }));
-
-          updatedAssignments[existingIndex] = {
-            ...existingPrayer,
-            rakaatSurahs: [...existingPrayer.rakaatSurahs, ...renumberedRakaat],
-          };
-        } else {
-          const entry = temporaryEntries.find((e) => e.prayerId === prayerId);
-          const prayerOrder = getPrayerOrder(prayerId);
-          updatedAssignments.push({
-            prayerId,
-            prayerName: entry?.prayerName || prayerId,
-            rakaatSurahs: newRakaat.map((r, idx) => ({
-              ...r,
-              rakaatNumber: idx + 1,
-            })),
-            isTemporary: true,
-            order: prayerOrder,
-          });
-        }
-      }
-
-      return {
-        ...existingAssignment,
-        assignments: sortAssignmentsByOrder(updatedAssignments),
-      };
-    }
-
-    // No existing assignment, create new return value
-    const returnAssignments: PrayerAssignment[] = [];
-    for (const [prayerId, rakaat] of Object.entries(newRakaatByPrayerId)) {
-      const entry = temporaryEntries.find((e) => e.prayerId === prayerId);
-      const prayerOrder = getPrayerOrder(prayerId);
-      returnAssignments.push({
-        prayerId,
-        prayerName: entry?.prayerName || prayerId,
-        rakaatSurahs: rakaat.map((r, idx) => ({
-          ...r,
-          rakaatNumber: idx + 1,
-        })),
-        isTemporary: true,
-        order: prayerOrder,
+      assignments.push({
+        prayerId: prayer.id,
+        prayerName: prayer.name,
+        rakaatSurahs,
+        order: prayer.order,
       });
     }
 
-    return {
+    // Build assignments for temporary prayers
+    for (const entry of temporaryEntries) {
+      const prayerDef = defaultPrayers.find((p) => p.id === entry.prayerId);
+      const recitationRakaat = prayerDef?.recitationRakaat ?? entry.rakaat;
+      const prayerOrder = getPrayerOrder(entry.prayerId);
+
+      // Check if this prayer already exists in assignments
+      const existingIndex = assignments.findIndex(
+        (a) => a.prayerId === entry.prayerId,
+      );
+
+      const rakaatSurahs: RakaatSurah[] = [];
+
+      for (let i = 0; i < recitationRakaat; i++) {
+        const chunk = shuffled[chunkIndex % shuffled.length];
+        const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
+
+        rakaatSurahs.push({
+          rakaatNumber: i + 1,
+          surahNumber: surah.number,
+          surahName: surah.name,
+          arabicName: surah.arabicName,
+          startAyah: chunk.startAyah,
+          endAyah: chunk.endAyah,
+          isTemporary: true,
+        });
+
+        if (!newUsedChunks.includes(chunk.id)) {
+          newUsedChunks.push(chunk.id);
+        }
+
+        chunkIndex++;
+      }
+
+      if (existingIndex !== -1) {
+        // Merge: append new rakaat to existing prayer
+        const existingPrayer = assignments[existingIndex];
+        const currentRakaatCount = existingPrayer.rakaatSurahs.length;
+
+        const renumberedRakaat = rakaatSurahs.map((r, idx) => ({
+          ...r,
+          rakaatNumber: currentRakaatCount + idx + 1,
+        }));
+
+        assignments[existingIndex] = {
+          ...existingPrayer,
+          rakaatSurahs: [...existingPrayer.rakaatSurahs, ...renumberedRakaat],
+        };
+      } else {
+        // Add new prayer
+        assignments.push({
+          prayerId: entry.prayerId,
+          prayerName: entry.prayerName,
+          rakaatSurahs: rakaatSurahs.map((r, idx) => ({
+            ...r,
+            rakaatNumber: idx + 1,
+          })),
+          isTemporary: true,
+          order: prayerOrder,
+        });
+      }
+    }
+
+    // Sort assignments by prayer order
+    const sortedAssignments = sortAssignmentsByOrder(assignments);
+
+    const newAssignment: DailyAssignment = {
       date: today,
-      assignments: sortAssignmentsByOrder(returnAssignments),
+      assignments: sortedAssignments,
     };
+
+    setState((prev) => ({
+      ...prev,
+      usedChunks: newUsedChunks,
+      lastShuffleDate: today,
+      dailyAssignments: [
+        ...prev.dailyAssignments.filter((a) => a.date !== today).slice(-6),
+        newAssignment,
+      ],
+    }));
+
+    return newAssignment;
   };
+
 
   return {
     state,
