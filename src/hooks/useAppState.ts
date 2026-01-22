@@ -30,6 +30,7 @@ const getChunkId = (
 
 // Generate default chunks for juz selection
 const generateChunksForJuz = (
+  chunksEnabled: boolean,
   juzNumbers: number[],
   chunkSize: number = DEFAULT_CHUNK_SIZE,
 ): SurahChunkSelection[] => {
@@ -38,7 +39,7 @@ const generateChunksForJuz = (
 
   for (const surah of juzSurahs) {
     // For short surahs (<=chunkSize verses), use whole surah
-    if (surah.verses <= chunkSize) {
+    if (surah.verses <= chunkSize || chunkSize === 0 || !chunksEnabled) {
       chunks.push({
         id: getChunkId(surah.number, 1, surah.verses),
         surahNumber: surah.number,
@@ -98,6 +99,7 @@ const getInitialState = (): AppState => {
       // Handle migration from old format
       if (parsed.selectedSurahs && !parsed.selectedChunks) {
         const defaultChunks = generateChunksForJuz(
+          false,
           parsed.selectedJuz || [30],
           chunkSize,
         );
@@ -124,7 +126,7 @@ const getInitialState = (): AppState => {
   return {
     prayers: defaultPrayers,
     selectedJuz: defaultJuz,
-    selectedChunks: generateChunksForJuz(defaultJuz),
+    selectedChunks: generateChunksForJuz(false, defaultJuz),
     mandatoryChunks: [],
     usedChunks: [],
     lastShuffleDate: "",
@@ -190,6 +192,7 @@ export const useAppState = () => {
           if (isFullSurah && surah.verses > chunkSize) {
             // Convert to individual chunks
             const surahChunks = generateChunksForJuz(
+              enabled,
               prev.selectedJuz,
               chunkSize,
             ).filter((c) => c.surahNumber === chunk.surahNumber);
@@ -239,7 +242,11 @@ export const useAppState = () => {
   const updateSelectedJuz = (juzNumbers: number[]) => {
     // Don't auto-select all chunks when changing juz
     // Instead, keep only chunks that are still valid for the new juz selection
-    const newAllPossibleChunks = generateChunksForJuz(juzNumbers, chunkSize);
+    const newAllPossibleChunks = generateChunksForJuz(
+      chunksEnabled,
+      juzNumbers,
+      chunkSize,
+    );
     const newChunkIds = new Set(newAllPossibleChunks.map((c) => c.id));
 
     setState((prev) => {
@@ -347,7 +354,11 @@ export const useAppState = () => {
   };
 
   const selectAllChunks = () => {
-    const allChunks = generateChunksForJuz(state.selectedJuz, chunkSize);
+    const allChunks = generateChunksForJuz(
+      chunksEnabled,
+      state.selectedJuz,
+      chunkSize,
+    );
     setState((prev) => ({
       ...prev,
       selectedChunks: allChunks,
@@ -399,6 +410,7 @@ export const useAppState = () => {
 
     // Generate the default chunks for this surah
     const surahChunks = generateChunksForJuz(
+      chunksEnabled,
       [...state.selectedJuz],
       chunkSize,
     ).filter((c) => c.surahNumber === surahNumber);
@@ -416,25 +428,19 @@ export const useAppState = () => {
     });
   };
 
-  const updateChunkSize = useCallback(
-    (newSize: number) => {
-      localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
-      setChunkSizeState(newSize);
+  const updateChunkSize = useCallback((newSize: number) => {
+    localStorage.setItem(CHUNK_SIZE_STORAGE_KEY, String(newSize));
+    setChunkSizeState(newSize);
 
-      // Regenerate all possible chunks with new size, but preserve selection status
-      const newAllChunks = generateChunksForJuz(state.selectedJuz, newSize);
-
-      // Keep only the chunks that were previously selected (by matching surah number)
-      // Since chunk boundaries change, we can't preserve exact selections
-      // Instead, just regenerate without auto-selecting all
-      setState((prev) => ({
-        ...prev,
-        // Don't change selectedChunks - user will need to re-select if they want different chunks
-        usedChunks: [], // Reset used chunks when changing chunk size
-      }));
-    },
-    [state.selectedJuz],
-  );
+    // Keep only the chunks that were previously selected (by matching surah number)
+    // Since chunk boundaries change, we can't preserve exact selections
+    // Instead, just regenerate without auto-selecting all
+    setState((prev) => ({
+      ...prev,
+      // Don't change selectedChunks - user will need to re-select if they want different chunks
+      usedChunks: [], // Reset used chunks when changing chunk size
+    }));
+  }, []);
 
   const shuffleForToday = (): DailyAssignment | null => {
     const today = getTodayDate();
@@ -491,8 +497,10 @@ export const useAppState = () => {
       () => Math.random() - 0.5,
     );
 
-    // Build final list: mandatory first, then shuffled non-mandatory
-    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
+    // Build final list and shuffle everything together (including mandatory)
+    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory].sort(
+      () => Math.random() - 0.5,
+    );
 
     const assignments: PrayerAssignment[] = [];
     let chunkIndex = 0;
@@ -605,8 +613,10 @@ export const useAppState = () => {
       () => Math.random() - 0.5,
     );
 
-    // Build final list: mandatory first, then shuffled non-mandatory
-    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
+    // Build final list and shuffle everything together (including mandatory)
+    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory].sort(
+      () => Math.random() - 0.5,
+    );
 
     const assignments: PrayerAssignment[] = [];
     let chunkIndex = 0;
@@ -665,7 +675,44 @@ export const useAppState = () => {
 
   // Get all possible chunks for the selected juz (for UI)
   const getAllPossibleChunks = () => {
-    return generateChunksForJuz(state.selectedJuz, chunkSize);
+    const baseChunks = generateChunksForJuz(chunksEnabled, state.selectedJuz, chunkSize);
+
+    // Check if any surahs are set as "full" (all ayat as one)
+    const fullSurahNumbers = new Set<number>();
+    state.selectedChunks.forEach(chunk => {
+      const surah = surahs.find(s => s.number === chunk.surahNumber);
+      if (surah && chunk.startAyah === 1 && chunk.endAyah === surah.verses) {
+        fullSurahNumbers.add(chunk.surahNumber);
+      }
+    });
+
+    // Replace chunks for "full" surahs
+    if (fullSurahNumbers.size === 0) {
+      return baseChunks;
+    }
+
+    const result: SurahChunkSelection[] = [];
+    const processedSurahs = new Set<number>();
+
+    for (const chunk of baseChunks) {
+      if (fullSurahNumbers.has(chunk.surahNumber)) {
+        // Only add the full chunk once per surah
+        if (!processedSurahs.has(chunk.surahNumber)) {
+          const surah = surahs.find(s => s.number === chunk.surahNumber)!;
+          result.push({
+            id: getChunkId(chunk.surahNumber, 1, surah.verses),
+            surahNumber: chunk.surahNumber,
+            startAyah: 1,
+            endAyah: surah.verses,
+          });
+          processedSurahs.add(chunk.surahNumber);
+        }
+      } else {
+        result.push(chunk);
+      }
+    }
+
+    return result;
   };
 
   // Helper to get prayer order from defaultPrayers
@@ -737,8 +784,10 @@ export const useAppState = () => {
       () => Math.random() - 0.5,
     );
 
-    // Build final list: mandatory first, then shuffled non-mandatory
-    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory];
+    // Build final list and shuffle everything together (including mandatory)
+    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory].sort(
+      () => Math.random() - 0.5,
+    );
 
     // Generate new rakaat surahs for each entry
     const newRakaatByPrayerId: Record<string, RakaatSurah[]> = {};

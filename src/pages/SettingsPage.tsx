@@ -46,11 +46,6 @@ const SettingsPage = () => {
         onSelectJuz={updateSelectedJuz}
       />
 
-      <ChunkModeToggle
-        chunksEnabled={chunksEnabled}
-        onToggle={setChunksEnabled}
-      />
-
       {/* Translation Visibility Toggle */}
       <div className="rounded-xl bg-card p-4 shadow-card">
         <div className="flex items-center justify-between">
@@ -73,6 +68,11 @@ const SettingsPage = () => {
         </div>
       </div>
 
+      <ChunkModeToggle
+        chunksEnabled={chunksEnabled}
+        onToggle={setChunksEnabled}
+      />
+
       {chunksEnabled && (
         <ChunkSizeConfig
           chunkSize={chunkSize}
@@ -86,6 +86,7 @@ const SettingsPage = () => {
         mandatoryChunks={state.mandatoryChunks}
         allPossibleChunks={allPossibleChunks}
         chunksEnabled={chunksEnabled}
+        chunkSize={chunkSize}
         onToggleChunk={toggleChunk}
         onToggleMandatory={toggleMandatory}
         onSelectAll={selectAllChunks}

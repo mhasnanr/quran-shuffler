@@ -27,6 +27,7 @@ interface SurahListProps {
   mandatoryChunks: string[];
   allPossibleChunks: SurahChunkSelection[];
   chunksEnabled: boolean;
+  chunkSize: number;
   onToggleChunk: (chunkId: string) => void;
   onToggleMandatory: (chunkId: string) => void;
   onSelectAll: () => void;
@@ -41,6 +42,7 @@ const SurahList = ({
   mandatoryChunks,
   allPossibleChunks,
   chunksEnabled,
+  chunkSize,
   onToggleChunk,
   onToggleMandatory,
   onSelectAll,
@@ -255,8 +257,8 @@ const SurahList = ({
 
             return filteredSurahs.map((surah) => {
               const surahChunks = getChunksForSurah(surah.number);
-              const hasMultipleChunks = surahChunks.length > 1 && chunksEnabled;
-              const isExpanded = expandedSurahs.includes(surah.number);
+              const canBeChunked = surah.verses > chunkSize && chunkSize > 0;
+              const hasMultipleChunks = canBeChunked && chunksEnabled;
               const fullySelected = isSurahFullySelected(surah.number);
               const partiallySelected = isSurahPartiallySelected(surah.number);
               const isFullSurah = isSurahIncludedAsFull(surah.number);
@@ -350,8 +352,8 @@ const SurahList = ({
                   <CollapsibleContent className="pl-4 pt-2 space-y-1">
                     {juzSurahs.map((surah) => {
                       const surahChunks = getChunksForSurah(surah.number);
-                      const hasMultipleChunks =
-                        surahChunks.length > 1 && chunksEnabled;
+                      const canBeChunked = surah.verses > chunkSize && chunkSize > 0;
+                      const hasMultipleChunks = canBeChunked && chunksEnabled;
                       const isExpanded = expandedSurahs.includes(surah.number);
                       const fullySelected = isSurahFullySelected(surah.number);
                       const partiallySelected = isSurahPartiallySelected(
@@ -418,11 +420,12 @@ const SurahList = ({
                             </button>
 
                             <div className="flex items-center gap-1">
-                              {/* Star button for single-chunk surahs or when chunks disabled */}
+                              {/* Star button for single-chunk surahs, full surahs, or when chunks disabled */}
                               {((!chunksEnabled &&
                                 (fullySelected || isFullSurah)) ||
                                 (!hasMultipleChunks &&
-                                  isChunkSelected(surahChunks[0]?.id))) &&
+                                  isChunkSelected(surahChunks[0]?.id)) ||
+                                (chunksEnabled && isFullSurah)) &&
                                 surahChunks[0] && (
                                   <Button
                                     variant="ghost"
