@@ -1,11 +1,12 @@
 import { ReviewItem } from "@/types/review";
 import {
-  Trash2,
   CheckCircle2,
   BookOpen,
   ChevronDown,
   ChevronUp,
   Maximize2,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ import {
 interface ReviewListProps {
   items: ReviewItem[];
   onComplete: (id: string) => void;
+  showTranslation: boolean;
 }
 
 type TranslationLang = "id" | "en";
@@ -35,17 +37,45 @@ interface InlineAyahViewerProps {
   surahNumber: number;
   startAyah: number;
   endAyah: number;
+  showTranslation: boolean;
 }
 
 const InlineAyahViewer = ({
   surahNumber,
   startAyah,
   endAyah,
+  showTranslation,
 }: InlineAyahViewerProps) => {
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [translationLang, setTranslationLang] = useState<TranslationLang>("id");
+  const [hideAyahText, setHideAyahText] = useState(false);
+  const [revealedAyahs, setRevealedAyahs] = useState<Set<number>>(new Set());
   const { fetchAyahs, loading, error } = useQuranApi();
+
+  // Toggle individual ayah visibility
+  const toggleAyahVisibility = (ayahNumber: number) => {
+    setRevealedAyahs((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(ayahNumber)) {
+        newSet.delete(ayahNumber);
+      } else {
+        newSet.add(ayahNumber);
+      }
+      return newSet;
+    });
+  };
+
+  // Check if ayah should be blurred
+  const isAyahBlurred = (ayahNumber: number) => {
+    const isToggled = revealedAyahs.has(ayahNumber);
+    return hideAyahText ? !isToggled : isToggled;
+  };
+
+  // Reset toggled ayahs when global hide mode changes
+  useEffect(() => {
+    setRevealedAyahs(new Set());
+  }, [hideAyahText]);
 
   // Show bismillah separately for surahs other than Al-Fatihah (1) and At-Taubah (9)
   const showBismillah =
@@ -62,30 +92,60 @@ const InlineAyahViewer = ({
 
   return (
     <div className="mt-2">
-      {/* Translation Language Tabs */}
-      <div className="flex gap-1 mb-3 p-1 bg-muted rounded-lg">
-        <button
-          onClick={() => setTranslationLang("id")}
+      {/* Controls Row */}
+      <div className="flex gap-2 mb-3">
+        {/* Translation Language Tabs */}
+        {showTranslation && (
+          <div className="flex gap-1 flex-1 p-1 bg-muted rounded-lg">
+            <button
+              onClick={() => setTranslationLang("id")}
+              className={cn(
+                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                translationLang === "id"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Indonesia
+            </button>
+            <button
+              onClick={() => setTranslationLang("en")}
+              className={cn(
+                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                translationLang === "en"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              English
+            </button>
+          </div>
+        )}
+        {/* Murojaah Toggle */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setHideAyahText(!hideAyahText)}
           className={cn(
-            "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-            translationLang === "id"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground",
+            "h-8 gap-1.5 text-xs",
+            hideAyahText &&
+              "bg-amber-500/10 border-amber-500/30 text-amber-600 hover:bg-amber-500/20",
           )}
+          title={
+            hideAyahText
+              ? "Show ayah text"
+              : "Hide ayah text for murojaah"
+          }
         >
-          Indonesia
-        </button>
-        <button
-          onClick={() => setTranslationLang("en")}
-          className={cn(
-            "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-            translationLang === "en"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground",
+          {hideAyahText ? (
+            <Eye className="h-3.5 w-3.5" />
+          ) : (
+            <EyeOff className="h-3.5 w-3.5" />
           )}
-        >
-          English
-        </button>
+          <span className="hidden sm:inline">
+            {hideAyahText ? "Show" : "Hide"}
+          </span>
+        </Button>
       </div>
 
       {loading && (
@@ -97,21 +157,27 @@ const InlineAyahViewer = ({
       {error && <p className="text-center text-xs text-destructive">{error}</p>}
 
       {!loading && !error && ayahs.length > 0 && (
-        <div className="space-y-4 max-h-48 overflow-y-auto">
+        <div className="space-y-4 max-h-64 overflow-y-auto">
           {/* Bismillah - shown separately at top */}
           {showBismillah && (
             <div className="space-y-2 border-b border-border pb-3 bg-primary/5 rounded-lg p-3 -mx-1">
               <p
-                className="font-arabic text-center text-lg leading-[2.2] text-primary"
+                className={cn(
+                  "font-arabic text-center text-lg leading-[2.2] text-primary transition-all cursor-pointer",
+                  isAyahBlurred(0) && "blur-md select-none",
+                )}
                 dir="rtl"
+                onClick={() => toggleAyahVisibility(0)}
               >
                 {BISMILLAH}
               </p>
-              <p className="text-xs leading-relaxed text-muted-foreground text-center">
-                {translationLang === "id"
-                  ? BISMILLAH_INDONESIAN
-                  : BISMILLAH_ENGLISH}
-              </p>
+              {showTranslation && (
+                <p className="text-xs leading-relaxed text-muted-foreground text-center">
+                  {translationLang === "id"
+                    ? BISMILLAH_INDONESIAN
+                    : BISMILLAH_ENGLISH}
+                </p>
+              )}
             </div>
           )}
 
@@ -122,8 +188,13 @@ const InlineAyahViewer = ({
             >
               <div className="flex items-start justify-end gap-2">
                 <p
-                  className="font-arabic text-right text-xl leading-[2.2] text-foreground flex-1"
+                  className={cn(
+                    "font-arabic text-right text-xl leading-[2.2] text-foreground flex-1 transition-all cursor-pointer",
+                    isAyahBlurred(ayah.numberInSurah) &&
+                      "blur-md select-none",
+                  )}
                   dir="rtl"
+                  onClick={() => toggleAyahVisibility(ayah.numberInSurah)}
                 >
                   {ayah.arabic}
                 </p>
@@ -131,11 +202,13 @@ const InlineAyahViewer = ({
                   {ayah.numberInSurah}
                 </span>
               </div>
-              <div className="text-left">
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  {translationLang === "id" ? ayah.indonesian : ayah.english}
-                </p>
-              </div>
+              {showTranslation && (
+                <div className="text-left">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    {translationLang === "id" ? ayah.indonesian : ayah.english}
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -144,7 +217,7 @@ const InlineAyahViewer = ({
   );
 };
 
-const ReviewList = ({ items, onComplete }: ReviewListProps) => {
+const ReviewList = ({ items, onComplete, showTranslation }: ReviewListProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [fullscreenItem, setFullscreenItem] = useState<ReviewItem | null>(null);
 
@@ -301,6 +374,7 @@ const ReviewList = ({ items, onComplete }: ReviewListProps) => {
                               surahNumber={chunk.surahNumber}
                               startAyah={chunk.startAyah}
                               endAyah={chunk.endAyah}
+                              showTranslation={showTranslation}
                             />
                           </div>
                         </CollapsibleContent>
