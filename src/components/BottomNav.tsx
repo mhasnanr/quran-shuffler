@@ -12,7 +12,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const tabs = [
     { id: "guide" as TabType, label: "Guide", icon: BookOpenCheck },
     { id: "schedule" as TabType, label: "Today", icon: BookOpen },
-    { id: "stats" as TabType, label: "Stats", icon: BarChart3 },
+    // { id: "stats" as TabType, label: "Stats", icon: BarChart3 }, 
     { id: "review" as TabType, label: "Review", icon: RotateCcw },
     { id: "config" as TabType, label: "Settings", icon: Settings },
   ];
