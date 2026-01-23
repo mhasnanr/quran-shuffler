@@ -87,14 +87,14 @@ const RecallFeedbackDialog = ({
           <>
             <DialogHeader>
               <DialogTitle className="text-center">How did it go?</DialogTitle>
-              <DialogDescription className="text-center pt-2">
+              <DialogDescription className="text-center pt-3">
                 <span className="font-medium text-foreground">{surahName}</span>
                 {ayahRange && (
                   <span className="text-muted-foreground"> ({ayahRange})</span>
                 )}
               </DialogDescription>
             </DialogHeader>
-            <div className="flex gap-3 mt-0">
+            <div className="flex gap-3 mt-2">
               <Button
                 variant="outline"
                 onClick={handleNeedReview}
