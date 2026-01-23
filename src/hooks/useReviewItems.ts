@@ -16,13 +16,14 @@ export const useReviewItems = () => {
       ...item,
       id: `${item.surahNumber}-${item.startAyah}-${item.endAyah}-${Date.now()}`,
       addedAt: new Date().toISOString(),
+      forgottenAyahs: item.forgottenAyahs || [],
     };
-    
+
     // Check if already exists (same surah and range)
     setReviewItems(prev => {
       const exists = prev.some(
-        r => r.surahNumber === item.surahNumber && 
-             r.startAyah === item.startAyah && 
+        r => r.surahNumber === item.surahNumber &&
+             r.startAyah === item.startAyah &&
              r.endAyah === item.endAyah
       );
       if (exists) return prev;

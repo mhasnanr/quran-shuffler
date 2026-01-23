@@ -255,7 +255,6 @@ const AyahViewer = ({
         onOpenChange={setShowFullscreen}
         surahNumber={surahNumber}
         surahName={surahName}
-        arabicName={arabicName}
         startAyah={startAyah}
         endAyah={endAyah}
         showTranslation={showTranslation}

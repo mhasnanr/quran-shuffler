@@ -44,6 +44,7 @@ interface DailyScheduleProps {
     startAyah: number;
     endAyah: number;
     prayerName?: string;
+    forgottenAyahs?: number[];
   }) => void;
   enabledPrayers: Prayer[];
   onAddTemporaryPrayers: (
@@ -198,14 +199,14 @@ const DailySchedule = ({
     });
   };
 
-  const handleFeedbackForgot = () => {
+  const handleFeedbackForgot = (forgottenAyahs: number[]) => {
     const { rakaat, prayerName, rakaatKey } = feedbackDialog;
     if (!rakaat) return;
 
     // Record stats (still counts as read)
     const ayatCount = rakaat.endAyah - rakaat.startAyah + 1;
     onRecordAyatRead?.(ayatCount, rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
-    
+
     // Record as weak spot
     onRecordWeakSpot?.(rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
 
@@ -217,6 +218,7 @@ const DailySchedule = ({
       startAyah: rakaat.startAyah,
       endAyah: rakaat.endAyah,
       prayerName,
+      forgottenAyahs,
     });
 
     // Still mark as completed
@@ -682,10 +684,14 @@ const DailySchedule = ({
             });
           }
         }}
+        surahNumber={feedbackDialog.rakaat?.surahNumber || 1}
         surahName={feedbackDialog.rakaat?.surahName || ""}
+        startAyah={feedbackDialog.rakaat?.startAyah || 1}
+        endAyah={feedbackDialog.rakaat?.endAyah || 1}
         ayahRange={getAyahRangeText(feedbackDialog.rakaat)}
         onRemembered={handleFeedbackRemembered}
         onForgot={handleFeedbackForgot}
+        showTranslation={showTranslation}
       />
     </div>
   );

@@ -20,10 +20,10 @@ interface FullscreenAyahViewerProps {
   onOpenChange: (open: boolean) => void;
   surahNumber: number;
   surahName: string;
-  arabicName: string;
   startAyah: number;
   endAyah: number;
   showTranslation?: boolean;
+  forgottenAyahs?: number[];
 }
 
 type TranslationLang = "id" | "en";
@@ -33,10 +33,10 @@ const FullscreenAyahViewer = ({
   onOpenChange,
   surahNumber,
   surahName,
-  arabicName,
   startAyah,
   endAyah,
   showTranslation = true,
+  forgottenAyahs = [],
 }: FullscreenAyahViewerProps) => {
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -157,7 +157,9 @@ const FullscreenAyahViewer = ({
                   "bg-amber-500/10 border-amber-500/30 text-amber-600 hover:bg-amber-500/20",
               )}
               title={
-                hideAyahText ? "Show ayah text" : "Hide ayah text for murojaah"
+                hideAyahText
+                  ? "Show ayah text"
+                  : "Hide ayah text for murojaah"
               }
             >
               {hideAyahText ? (
@@ -188,12 +190,8 @@ const FullscreenAyahViewer = ({
               {showBismillah && (
                 <div className="space-y-3 border-b border-border pb-4 bg-primary/5 rounded-lg p-4 -mx-1">
                   <p
-                    className={cn(
-                      "font-arabic text-center text-2xl leading-[2.4] text-primary transition-all cursor-pointer",
-                      isAyahBlurred(0) && "blur-md select-none",
-                    )}
+                    className="font-arabic text-center text-2xl leading-[2.4] text-primary"
                     dir="rtl"
-                    onClick={() => toggleAyahVisibility(0)}
                   >
                     {BISMILLAH}
                   </p>
@@ -207,39 +205,45 @@ const FullscreenAyahViewer = ({
                 </div>
               )}
 
-              {ayahs.map((ayah) => (
-                <div
-                  key={ayah.numberInSurah}
-                  className="space-y-3 border-b border-border pb-4 last:border-0"
-                >
-                  <div className="flex items-start justify-end gap-3">
-                    <p
-                      className={cn(
-                        "font-arabic text-right text-2xl leading-[2.4] text-foreground flex-1 transition-all cursor-pointer",
-                        isAyahBlurred(ayah.numberInSurah) &&
-                          "blur-md select-none",
-                      )}
-                      dir="rtl"
-                      onClick={() => toggleAyahVisibility(ayah.numberInSurah)}
-                    >
-                      {ayah.arabic}
-                    </p>
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                      {ayah.numberInSurah}
-                    </span>
-                  </div>
-
-                  {showTranslation && (
-                    <div className="text-left">
-                      <p className="text-sm leading-relaxed text-muted-foreground">
-                        {translationLang === "id"
-                          ? ayah.indonesian
-                          : ayah.english}
+              {ayahs.map((ayah) => {
+                const isForgotten = forgottenAyahs.includes(ayah.numberInSurah);
+                return (
+                  <div
+                    key={ayah.numberInSurah}
+                    className={cn(
+                      "space-y-3 border-b border-border pb-4 last:border-0",
+                      isForgotten &&
+                        "bg-amber-200/50 dark:bg-amber-900/30 rounded-lg px-3 -mx-3 py-3",
+                    )}
+                  >
+                    <div className="flex items-start justify-end gap-3">
+                      <p
+                        className={cn(
+                          "font-arabic text-right text-2xl leading-[2.4] text-foreground flex-1 transition-all cursor-pointer",
+                          isAyahBlurred(ayah.numberInSurah) && "blur-md select-none",
+                        )}
+                        dir="rtl"
+                        onClick={() => toggleAyahVisibility(ayah.numberInSurah)}
+                      >
+                        {ayah.arabic}
                       </p>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                        {ayah.numberInSurah}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {showTranslation && (
+                      <div className="text-left">
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                          {translationLang === "id"
+                            ? ayah.indonesian
+                            : ayah.english}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

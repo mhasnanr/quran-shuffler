@@ -38,6 +38,7 @@ interface InlineAyahViewerProps {
   startAyah: number;
   endAyah: number;
   showTranslation: boolean;
+  forgottenAyahs?: number[];
 }
 
 const InlineAyahViewer = ({
@@ -45,6 +46,7 @@ const InlineAyahViewer = ({
   startAyah,
   endAyah,
   showTranslation,
+  forgottenAyahs = [],
 }: InlineAyahViewerProps) => {
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -93,59 +95,59 @@ const InlineAyahViewer = ({
   return (
     <div className="mt-2">
       {/* Controls Row */}
-      <div className="flex gap-2 mb-3">
-        {/* Translation Language Tabs */}
-        {showTranslation && (
-          <div className="flex gap-1 flex-1 p-1 bg-muted rounded-lg">
-            <button
-              onClick={() => setTranslationLang("id")}
-              className={cn(
-                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-                translationLang === "id"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              Indonesia
-            </button>
-            <button
-              onClick={() => setTranslationLang("en")}
-              className={cn(
-                "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
-                translationLang === "en"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              English
-            </button>
-          </div>
-        )}
-        {/* Murojaah Toggle */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setHideAyahText(!hideAyahText)}
-          className={cn(
-            "h-8 gap-1.5 text-xs",
-            hideAyahText &&
-              "bg-amber-500/10 border-amber-500/30 text-amber-600 hover:bg-amber-500/20",
+      <div className="flex flex-col gap-2 mb-3">
+        <div className="flex gap-2">
+          {/* Translation Language Tabs */}
+          {showTranslation && (
+            <div className="flex gap-1 flex-1 p-1 bg-muted rounded-lg">
+              <button
+                onClick={() => setTranslationLang("id")}
+                className={cn(
+                  "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                  translationLang === "id"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                Indonesia
+              </button>
+              <button
+                onClick={() => setTranslationLang("en")}
+                className={cn(
+                  "flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-all",
+                  translationLang === "en"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                English
+              </button>
+            </div>
           )}
-          title={
-            hideAyahText
-              ? "Show ayah text"
-              : "Hide ayah text for murojaah"
-          }
-        >
-          {hideAyahText ? (
-            <Eye className="h-3.5 w-3.5" />
-          ) : (
-            <EyeOff className="h-3.5 w-3.5" />
-          )}
-          <span className="hidden sm:inline">
-            {hideAyahText ? "Show" : "Hide"}
-          </span>
-        </Button>
+          {/* Murojaah Toggle */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setHideAyahText(!hideAyahText)}
+            className={cn(
+              "h-8 gap-1.5 text-xs",
+              hideAyahText &&
+                "bg-amber-500/10 border-amber-500/30 text-amber-600 hover:bg-amber-500/20",
+            )}
+            title={
+              hideAyahText ? "Show ayah text" : "Hide ayah text for murojaah"
+            }
+          >
+            {hideAyahText ? (
+              <Eye className="h-3.5 w-3.5" />
+            ) : (
+              <EyeOff className="h-3.5 w-3.5" />
+            )}
+            <span className="hidden sm:inline">
+              {hideAyahText ? "Show" : "Hide"}
+            </span>
+          </Button>
+        </div>
       </div>
 
       {loading && (
@@ -181,43 +183,55 @@ const InlineAyahViewer = ({
             </div>
           )}
 
-          {ayahs.map((ayah) => (
-            <div
-              key={ayah.numberInSurah}
-              className="space-y-2 border-b border-border pb-3 last:border-0"
-            >
-              <div className="flex items-start justify-end gap-2">
-                <p
-                  className={cn(
-                    "font-arabic text-right text-xl leading-[2.2] text-foreground flex-1 transition-all cursor-pointer",
-                    isAyahBlurred(ayah.numberInSurah) &&
-                      "blur-md select-none",
-                  )}
-                  dir="rtl"
-                  onClick={() => toggleAyahVisibility(ayah.numberInSurah)}
-                >
-                  {ayah.arabic}
-                </p>
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
-                  {ayah.numberInSurah}
-                </span>
-              </div>
-              {showTranslation && (
-                <div className="text-left">
-                  <p className="text-xs leading-relaxed text-muted-foreground">
-                    {translationLang === "id" ? ayah.indonesian : ayah.english}
+          {ayahs.map((ayah) => {
+            const isForgotten = forgottenAyahs.includes(ayah.numberInSurah);
+            return (
+              <div
+                key={ayah.numberInSurah}
+                className={cn(
+                  "space-y-2 border-b border-border pb-3 last:border-0",
+                  isForgotten &&
+                    "bg-amber-200/50 dark:bg-amber-900/30 rounded-lg px-2 -mx-2 py-2",
+                )}
+              >
+                <div className="flex items-start justify-end gap-2">
+                  <p
+                    className={cn(
+                      "font-arabic text-right text-xl leading-[2.2] text-foreground flex-1 transition-all cursor-pointer",
+                      isAyahBlurred(ayah.numberInSurah) && "blur-md select-none",
+                    )}
+                    dir="rtl"
+                    onClick={() => toggleAyahVisibility(ayah.numberInSurah)}
+                  >
+                    {ayah.arabic}
                   </p>
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
+                    {ayah.numberInSurah}
+                  </span>
                 </div>
-              )}
-            </div>
-          ))}
+                {showTranslation && (
+                  <div className="text-left">
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {translationLang === "id"
+                        ? ayah.indonesian
+                        : ayah.english}
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 };
 
-const ReviewList = ({ items, onComplete, showTranslation }: ReviewListProps) => {
+const ReviewList = ({
+  items,
+  onComplete,
+  showTranslation,
+}: ReviewListProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [fullscreenItem, setFullscreenItem] = useState<ReviewItem | null>(null);
 
@@ -375,6 +389,7 @@ const ReviewList = ({ items, onComplete, showTranslation }: ReviewListProps) => 
                               startAyah={chunk.startAyah}
                               endAyah={chunk.endAyah}
                               showTranslation={showTranslation}
+                              forgottenAyahs={chunk.forgottenAyahs}
                             />
                           </div>
                         </CollapsibleContent>
@@ -394,9 +409,10 @@ const ReviewList = ({ items, onComplete, showTranslation }: ReviewListProps) => 
           onOpenChange={(open) => !open && setFullscreenItem(null)}
           surahNumber={fullscreenItem.surahNumber}
           surahName={fullscreenItem.surahName}
-          arabicName={fullscreenItem.arabicName}
           startAyah={fullscreenItem.startAyah}
           endAyah={fullscreenItem.endAyah}
+          showTranslation={showTranslation}
+          forgottenAyahs={fullscreenItem.forgottenAyahs}
         />
       )}
     </>
