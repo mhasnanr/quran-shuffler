@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Poppins", "system-ui", "sans-serif"],
+        sans: ["Kollektif", "system-ui", "sans-serif"],
         arabic: ["Amiri", "serif"],
       },
       colors: {
