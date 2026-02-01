@@ -24,6 +24,7 @@ interface AyahViewerProps {
   startAyah: number;
   endAyah: number;
   showTranslation?: boolean;
+  forgottenAyahs?: number[]; // Array of ayah numbers that were forgotten and need review
 }
 
 type TranslationLang = "id" | "en";
@@ -34,6 +35,7 @@ const AyahViewer = ({
   startAyah,
   endAyah,
   showTranslation = true,
+  forgottenAyahs = [],
 }: AyahViewerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ayahs, setAyahs] = useState<AyahWithTranslations[]>([]);
@@ -79,6 +81,14 @@ const AyahViewer = ({
   const showBismillah =
     startAyah === 1 && surahNumber !== 1 && surahNumber !== 9;
 
+  // Check if any ayahs in this range were forgotten
+  const hasForgottenAyahs = forgottenAyahs.length > 0;
+
+  // Helper to check if a specific ayah was forgotten
+  const isAyahForgotten = (ayahNumber: number) => {
+    return forgottenAyahs.includes(ayahNumber);
+  };
+
   useEffect(() => {
     if (isOpen && !hasLoaded) {
       fetchAyahs(surahNumber, startAyah, endAyah).then((data) => {
@@ -96,10 +106,16 @@ const AyahViewer = ({
         <div className="flex gap-2">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex flex-1 items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+            className={cn(
+              "flex flex-1 items-center justify-between rounded-lg px-3 py-2 text-xs transition-colors",
+              hasForgottenAyahs
+                ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-900 dark:text-yellow-200 hover:bg-yellow-200 dark:hover:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-800"
+                : "bg-muted/30 text-muted-foreground hover:bg-muted/50"
+            )}
           >
             <span>
               {isFullSurah ? "View Ayat" : `Ayat ${startAyah}-${endAyah}`}
+              {hasForgottenAyahs && " ⭐"}
             </span>
             {isOpen ? (
               <ChevronUp className="h-3.5 w-3.5" />
@@ -214,7 +230,11 @@ const AyahViewer = ({
                 {ayahs.map((ayah) => (
                   <div
                     key={ayah.numberInSurah}
-                    className="space-y-2 border-b border-border pb-3 last:border-0"
+                    className={cn(
+                      "space-y-2 border-b border-border pb-3 last:border-0 rounded-lg p-2 -mx-1 transition-colors",
+                      isAyahForgotten(ayah.numberInSurah) &&
+                        "bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-800"
+                    )}
                   >
                     <div className="flex items-start justify-end gap-2">
                       <p
@@ -258,6 +278,7 @@ const AyahViewer = ({
         startAyah={startAyah}
         endAyah={endAyah}
         showTranslation={showTranslation}
+        forgottenAyahs={forgottenAyahs}
       />
     </>
   );

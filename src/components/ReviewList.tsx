@@ -189,9 +189,9 @@ const InlineAyahViewer = ({
               <div
                 key={ayah.numberInSurah}
                 className={cn(
-                  "space-y-2 border-b border-border pb-3 last:border-0",
+                  "space-y-2 border-b border-border pb-3 last:border-0 rounded-lg p-2 -mx-1 transition-colors",
                   isForgotten &&
-                    "bg-amber-200/50 dark:bg-amber-900/30 rounded-lg px-2 -mx-2 py-2",
+                    "bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-800",
                 )}
               >
                 <div className="flex items-start justify-end gap-2">

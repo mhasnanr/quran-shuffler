@@ -46,6 +46,7 @@ const Index = () => {
   } = useAppState();
 
   const { reviewItems, addReviewItem, removeReviewItem } = useReviewItems();
+  const { recordAyatRead, recordWeakSpot } = useStats();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
   useEffect(() => {
@@ -99,11 +100,18 @@ const Index = () => {
               enabledPrayers={enabledPrayers}
               onAddTemporaryPrayers={handleAddTemporaryPrayers}
               showTranslation={showTranslation}
+              onRecordAyatRead={recordAyatRead}
+              onRecordWeakSpot={recordWeakSpot}
+              reviewItems={reviewItems}
             />
           )}
 
           {activeTab === "review" && (
-            <ReviewList items={reviewItems} onComplete={removeReviewItem} />
+            <ReviewList
+              items={reviewItems}
+              onComplete={removeReviewItem}
+              showTranslation={showTranslation}
+            />
           )}
 
           {activeTab === "config" && (

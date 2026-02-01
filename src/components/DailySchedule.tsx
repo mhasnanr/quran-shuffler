@@ -5,6 +5,7 @@ import {
   RakaatSurah,
   Prayer,
 } from "@/types/prayer";
+import { ReviewItem } from "@/types/review";
 import { Button } from "@/components/ui/button";
 import {
   Shuffle,
@@ -58,6 +59,7 @@ interface DailyScheduleProps {
   showTranslation?: boolean;
   onRecordAyatRead?: (ayatCount: number, surahNumber: number, surahName: string, arabicName: string) => void;
   onRecordWeakSpot?: (surahNumber: number, surahName: string, arabicName: string) => void;
+  reviewItems?: ReviewItem[];
 }
 
 const getCategoryColor = (prayerId: string) => {
@@ -104,7 +106,19 @@ const DailySchedule = ({
   showTranslation = true,
   onRecordAyatRead,
   onRecordWeakSpot,
+  reviewItems = [],
 }: DailyScheduleProps) => {
+  // Helper to get forgotten ayahs for a specific rakaat
+  const getForgottenAyahsForRakaat = (rakaat: RakaatSurah): number[] => {
+    const matchingReview = reviewItems.find(
+      (item) =>
+        item.surahNumber === rakaat.surahNumber &&
+        item.startAyah === rakaat.startAyah &&
+        item.endAyah === rakaat.endAyah
+    );
+    return matchingReview?.forgottenAyahs || [];
+  };
+
   // Use local timezone for date key
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
@@ -439,6 +453,7 @@ const DailySchedule = ({
                       startAyah={rakaat.startAyah}
                       endAyah={rakaat.endAyah}
                       showTranslation={showTranslation}
+                      forgottenAyahs={getForgottenAyahsForRakaat(rakaat)}
                     />
                   </div>
                 );

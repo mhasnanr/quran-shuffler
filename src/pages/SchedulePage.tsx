@@ -14,7 +14,7 @@ const SchedulePage = () => {
     addTemporaryPrayers,
   } = useAppState();
 
-  const { addReviewItem } = useReviewItems();
+  const { reviewItems, addReviewItem } = useReviewItems();
   const { recordAyatRead, recordWeakSpot } = useStats();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
@@ -61,6 +61,7 @@ const SchedulePage = () => {
       showTranslation={showTranslation}
       onRecordAyatRead={recordAyatRead}
       onRecordWeakSpot={recordWeakSpot}
+      reviewItems={reviewItems}
     />
   );
 };

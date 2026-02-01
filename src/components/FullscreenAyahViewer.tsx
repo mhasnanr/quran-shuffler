@@ -23,7 +23,7 @@ interface FullscreenAyahViewerProps {
   startAyah: number;
   endAyah: number;
   showTranslation?: boolean;
-  forgottenAyahs?: number[];
+  forgottenAyahs?: number[]; // Ayahs that were forgotten and need review highlighting
 }
 
 type TranslationLang = "id" | "en";
@@ -211,9 +211,9 @@ const FullscreenAyahViewer = ({
                   <div
                     key={ayah.numberInSurah}
                     className={cn(
-                      "space-y-3 border-b border-border pb-4 last:border-0",
+                      "space-y-3 border-b border-border pb-4 last:border-0 rounded-lg px-3 -mx-3 py-3 transition-colors",
                       isForgotten &&
-                        "bg-amber-200/50 dark:bg-amber-900/30 rounded-lg px-3 -mx-3 py-3",
+                        "bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-800",
                     )}
                   >
                     <div className="flex items-start justify-end gap-3">
