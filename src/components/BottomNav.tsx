@@ -1,21 +1,28 @@
 import { cn } from "@/lib/utils";
-import { BookOpen, Settings, BookOpenCheck, RotateCcw, BarChart3 } from "lucide-react";
+import { BookOpen, Settings, BookOpenCheck, RotateCcw, BarChart3, Library } from "lucide-react";
 
-export type TabType = "guide" | "schedule" | "stats" | "review" | "config";
+export type TabType = "guide" | "schedule" | "stats" | "review" | "murojaah" | "config";
 
 interface BottomNavProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  murojaahEnabled?: boolean;
 }
 
-const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
-  const tabs = [
+const BottomNav = ({ activeTab, onTabChange, murojaahEnabled = false }: BottomNavProps) => {
+  const baseTabs = [
     { id: "guide" as TabType, label: "Guide", icon: BookOpenCheck },
     { id: "schedule" as TabType, label: "Today", icon: BookOpen },
-    // { id: "stats" as TabType, label: "Stats", icon: BarChart3 }, 
+    // { id: "stats" as TabType, label: "Stats", icon: BarChart3 },
     { id: "review" as TabType, label: "Review", icon: RotateCcw },
-    { id: "config" as TabType, label: "Settings", icon: Settings },
   ];
+
+  const murojaahTab = { id: "murojaah" as TabType, label: "Murojaah", icon: Library };
+  const settingsTab = { id: "config" as TabType, label: "Settings", icon: Settings };
+
+  const tabs = murojaahEnabled
+    ? [...baseTabs, murojaahTab, settingsTab]
+    : [...baseTabs, settingsTab];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-lg">

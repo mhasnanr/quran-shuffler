@@ -3,6 +3,7 @@ import DailySchedule from "@/components/DailySchedule";
 import { useAppState } from "@/hooks/useAppState";
 import { useReviewItems } from "@/hooks/useReviewItems";
 import { useStats } from "@/hooks/useStats";
+import { useMurojaahState } from "@/hooks/useMurojaahState";
 
 const SchedulePage = () => {
   const {
@@ -16,6 +17,7 @@ const SchedulePage = () => {
 
   const { reviewItems, addReviewItem, removeReviewItem } = useReviewItems();
   const { recordAyatRead, recordWeakSpot } = useStats();
+  const { markSurahCompleted } = useMurojaahState();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
   useEffect(() => {
@@ -46,6 +48,19 @@ const SchedulePage = () => {
     }
   };
 
+  // Wrapper function that also syncs with murojaah
+  const handleRecordAyatRead = (
+    ayatCount: number,
+    surahNumber: number,
+    surahName: string,
+    arabicName: string,
+  ) => {
+    // Record stats as usual
+    recordAyatRead(ayatCount, surahNumber, surahName, arabicName);
+    // Also mark in murojaah session if it exists
+    markSurahCompleted(surahNumber);
+  };
+
   const enabledPrayers = state.prayers.filter((p) => p.enabled);
 
   return (
@@ -60,7 +75,7 @@ const SchedulePage = () => {
       enabledPrayers={enabledPrayers}
       onAddTemporaryPrayers={handleAddTemporaryPrayers}
       showTranslation={showTranslation}
-      onRecordAyatRead={recordAyatRead}
+      onRecordAyatRead={handleRecordAyatRead}
       onRecordWeakSpot={recordWeakSpot}
       reviewItems={reviewItems}
     />

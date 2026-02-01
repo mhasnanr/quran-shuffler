@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import SchedulePage from "./pages/SchedulePage";
 import GuidePage from "./pages/GuidePage";
 import ReviewPage from "./pages/ReviewPage";
+import MurojaahPage from "./pages/MurojaahPage";
 import SettingsPage from "./pages/SettingsPage";
 import StatsPage from "./pages/StatsPage";
 import NotFound from "./pages/NotFound";
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/guide" element={<GuidePage />} />
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/review" element={<ReviewPage />} />
+            <Route path="/murojaah" element={<MurojaahPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

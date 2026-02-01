@@ -4,6 +4,7 @@ import SurahList from "@/components/SurahList";
 import ChunkSizeConfig from "@/components/ChunkSizeConfig";
 import ChunkModeToggle from "@/components/ChunkModeToggle";
 import { useAppState } from "@/hooks/useAppState";
+import { useMurojaahState } from "@/hooks/useMurojaahState";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -30,6 +31,8 @@ const SettingsPage = () => {
     resetUsedChunks,
     getAllPossibleChunks,
   } = useAppState();
+
+  const { murojaahEnabled, setMurojaahEnabled } = useMurojaahState();
 
   const allPossibleChunks = getAllPossibleChunks();
 
@@ -94,6 +97,31 @@ const SettingsPage = () => {
         onIncludeAllAyahs={includeAllAyahs}
         onRevertToChunks={revertToChunks}
       />
+
+      {/* Beta Features */}
+      <div className="rounded-xl bg-card p-4 shadow-card">
+        <div className="mb-3">
+          <h3 className="text-sm font-semibold text-foreground">Beta Features</h3>
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <Label
+              htmlFor="murojaah-mode"
+              className="text-sm font-medium text-foreground"
+            >
+              Free Murojaah Mode
+            </Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Review surahs independently from prayer schedule
+            </p>
+          </div>
+          <Switch
+            id="murojaah-mode"
+            checked={murojaahEnabled}
+            onCheckedChange={setMurojaahEnabled}
+          />
+        </div>
+      </div>
 
       <div className="rounded-xl bg-card p-4 shadow-card">
         <div className="flex items-center justify-between">

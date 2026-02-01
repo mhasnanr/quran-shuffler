@@ -1,12 +1,14 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomNav, { TabType } from "@/components/BottomNav";
+import { useMurojaahState } from "@/hooks/useMurojaahState";
 
 const routeToTab: Record<string, TabType> = {
   "/": "schedule",
   "/guide": "guide",
   "/stats": "stats",
   "/review": "review",
+  "/murojaah": "murojaah",
   "/settings": "config",
 };
 
@@ -15,12 +17,14 @@ const tabToRoute: Record<TabType, string> = {
   guide: "/guide",
   stats: "/stats",
   review: "/review",
+  murojaah: "/murojaah",
   config: "/settings",
 };
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { murojaahEnabled } = useMurojaahState();
 
   const activeTab = routeToTab[location.pathname] || "schedule";
 
@@ -38,7 +42,11 @@ const Layout = () => {
         </div>
       </main>
 
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      <BottomNav
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        murojaahEnabled={murojaahEnabled}
+      />
     </div>
   );
 };
