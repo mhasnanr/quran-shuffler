@@ -97,6 +97,7 @@ const Index = () => {
               usedCount={state.usedChunks.length}
               totalCount={state.selectedChunks.length}
               onAddToReview={addReviewItem}
+              onRemoveFromReview={removeReviewItem}
               enabledPrayers={enabledPrayers}
               onAddTemporaryPrayers={handleAddTemporaryPrayers}
               showTranslation={showTranslation}

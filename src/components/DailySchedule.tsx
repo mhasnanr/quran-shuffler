@@ -47,6 +47,7 @@ interface DailyScheduleProps {
     prayerName?: string;
     forgottenAyahs?: number[];
   }) => void;
+  onRemoveFromReview?: (id: string) => void;
   enabledPrayers: Prayer[];
   onAddTemporaryPrayers: (
     entries: Array<{
@@ -101,6 +102,7 @@ const DailySchedule = ({
   usedCount,
   totalCount,
   onAddToReview,
+  onRemoveFromReview,
   enabledPrayers,
   onAddTemporaryPrayers,
   showTranslation = true,
@@ -202,6 +204,17 @@ const DailySchedule = ({
     // Record stats
     const ayatCount = rakaat.endAyah - rakaat.startAyah + 1;
     onRecordAyatRead?.(ayatCount, rakaat.surahNumber, rakaat.surahName, rakaat.arabicName);
+
+    // Remove from review list if it exists
+    const matchingReview = reviewItems.find(
+      (item) =>
+        item.surahNumber === rakaat.surahNumber &&
+        item.startAyah === rakaat.startAyah &&
+        item.endAyah === rakaat.endAyah
+    );
+    if (matchingReview && onRemoveFromReview) {
+      onRemoveFromReview(matchingReview.id);
+    }
 
     // Mark as completed
     completeRakaat(rakaatKey);

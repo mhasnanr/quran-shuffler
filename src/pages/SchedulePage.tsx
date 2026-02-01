@@ -14,7 +14,7 @@ const SchedulePage = () => {
     addTemporaryPrayers,
   } = useAppState();
 
-  const { reviewItems, addReviewItem } = useReviewItems();
+  const { reviewItems, addReviewItem, removeReviewItem } = useReviewItems();
   const { recordAyatRead, recordWeakSpot } = useStats();
   const [todayAssignment, setTodayAssignment] = useState(getTodayAssignment());
 
@@ -56,6 +56,7 @@ const SchedulePage = () => {
       usedCount={state.usedChunks.length}
       totalCount={state.selectedChunks.length}
       onAddToReview={addReviewItem}
+      onRemoveFromReview={removeReviewItem}
       enabledPrayers={enabledPrayers}
       onAddTemporaryPrayers={handleAddTemporaryPrayers}
       showTranslation={showTranslation}
