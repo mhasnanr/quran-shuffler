@@ -5,16 +5,83 @@ import PrayerTimesCard from './PrayerTimesCard';
 
 type TranslationLang = 'id' | 'en';
 
+const PrayerReadingCard = ({
+  readings,
+  translationLang
+}: {
+  readings: PrayerReading[];
+  translationLang: TranslationLang;
+}) => {
+  const [activeTab, setActiveTab] = useState(0);
+  const hasVariants = readings.length > 1;
+  const currentReading = readings[activeTab];
+
+  return (
+    <div className="rounded-xl bg-card p-4 shadow-card space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-sm font-medium text-primary">
+          {currentReading.name}
+        </h3>
+      </div>
+
+      {/* Tabs for variants */}
+      {hasVariants && (
+        <div className="flex justify-end">
+          <div className="inline-flex gap-1 p-1 bg-muted/50 rounded-lg">
+            {readings.map((reading, index) => {
+              const variantLabel = reading.variant
+                ? `${translationLang === 'id' ? 'Versi' : 'Version'} ${reading.variant}`
+                : `${translationLang === 'id' ? 'Versi' : 'Version'} ${index + 1}`;
+
+              return (
+                <button
+                  key={reading.id}
+                  onClick={() => setActiveTab(index)}
+                  className={cn(
+                    "py-1.5 px-3 text-xs font-medium rounded-md transition-all whitespace-nowrap",
+                    activeTab === index
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {variantLabel}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <p
+        className="font-arabic text-lg leading-loose text-foreground text-right"
+        dir="rtl"
+      >
+        {currentReading.arabic}
+      </p>
+
+      <div className="pt-2 border-t border-border">
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {translationLang === 'id' ? currentReading.indonesian : currentReading.english}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const PrayerGuideContent = () => {
   const [translationLang, setTranslationLang] = useState<TranslationLang>('id');
 
+  // Group readings by category and then by name
   const groupedReadings = prayerReadings.reduce((acc, reading) => {
     if (!acc[reading.category]) {
-      acc[reading.category] = [];
+      acc[reading.category] = {};
     }
-    acc[reading.category].push(reading);
+    if (!acc[reading.category][reading.name]) {
+      acc[reading.category][reading.name] = [];
+    }
+    acc[reading.category][reading.name].push(reading);
     return acc;
-  }, {} as Record<string, PrayerReading[]>);
+  }, {} as Record<string, Record<string, PrayerReading[]>>);
 
   const categoryOrder = ['opening', 'standing', 'bowing', 'prostration', 'sitting', 'closing'];
 
@@ -52,43 +119,27 @@ const PrayerGuideContent = () => {
 
       {/* Content */}
       {categoryOrder.map((category) => {
-        const readings = groupedReadings[category];
-        if (!readings) return null;
+        const readingsByName = groupedReadings[category];
+        if (!readingsByName) return null;
 
         return (
           <div key={category} className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="h-1.5 w-1.5 rounded-full bg-primary" />
               <h2 className="text-sm font-semibold text-foreground">
-                {translationLang === 'id' 
-                  ? categoryLabels[category].id 
+                {translationLang === 'id'
+                  ? categoryLabels[category].id
                   : categoryLabels[category].en}
               </h2>
             </div>
 
             <div className="space-y-3">
-              {readings.map((reading) => (
-                <div 
-                  key={reading.id}
-                  className="rounded-xl bg-card p-4 shadow-card space-y-3"
-                >
-                  <h3 className="text-sm font-medium text-primary">
-                    {reading.name}
-                  </h3>
-                  
-                  <p 
-                    className="font-arabic text-lg leading-loose text-foreground text-right"
-                    dir="rtl"
-                  >
-                    {reading.arabic}
-                  </p>
-
-                  <div className="pt-2 border-t border-border">
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {translationLang === 'id' ? reading.indonesian : reading.english}
-                    </p>
-                  </div>
-                </div>
+              {Object.values(readingsByName).map((readings) => (
+                <PrayerReadingCard
+                  key={readings[0].id}
+                  readings={readings}
+                  translationLang={translationLang}
+                />
               ))}
             </div>
           </div>
