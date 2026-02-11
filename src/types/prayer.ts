@@ -246,6 +246,17 @@ export const defaultPrayers: Prayer[] = [
     isRawatib: true,
     order: 15,
   },
+  {
+    id: "tarawih",
+    name: "Tarawih",
+    arabicName: "تراويح",
+    rakaat: 8,
+    enabled: false,
+    category: "sunnah",
+    minRakaat: 2,
+    maxRakaat: 20,
+    order: 16,
+  },
 ];
 
 export const categoryLabels: Record<
