@@ -4,6 +4,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useReviewItems } from "@/hooks/useReviewItems";
 import { useStats } from "@/hooks/useStats";
 import { useMurojaahState } from "@/hooks/useMurojaahState";
+import { Seo } from "@/components/Seo";
 
 const SchedulePage = () => {
   const {
