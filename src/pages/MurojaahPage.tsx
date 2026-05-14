@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { surahs } from "@/data/quranData";
 import { Shuffle, Edit, Play } from "lucide-react";
 import { useState } from "react";
+import { Seo } from "@/components/Seo";
 
 const MurojaahPage = () => {
   const {
