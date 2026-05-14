@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { RotateCcw } from "lucide-react";
+import { Seo } from "@/components/Seo";
 
 const SettingsPage = () => {
   const {
