@@ -39,6 +39,11 @@ const SettingsPage = () => {
 
   return (
     <div className="space-y-6">
+      <Seo
+        title="Settings — Quran Shuffler"
+        description="Configure your prayers, chunk size, selected Juz, and translation preferences."
+        path="/settings"
+      />
       <PrayerConfig
         prayers={state.prayers}
         onToggle={togglePrayer}
