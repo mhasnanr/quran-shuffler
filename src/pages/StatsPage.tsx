@@ -72,6 +72,11 @@ const StatsPage = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <Seo
+        title="Stats — Quran Shuffler"
+        description="Track your daily and all-time Quran reading: ayat read, surahs completed, streaks, and weak spots."
+        path="/stats"
+      />
       <div className="text-center mb-6">
         <h1 className="text-2xl font-bold text-foreground">Progress Hafalan</h1>
         <p className="text-sm text-muted-foreground">Statistik dan pencapaianmu</p>
