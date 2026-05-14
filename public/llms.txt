@@ -1,0 +1,14 @@
+# Quran Shuffler
+
+> Daily Quran recitation planner that shuffles Juz 30 ayat across your daily prayers, helping you stay consistent with tilawah and murojaah.
+
+Quran Shuffler is a mobile-first PWA. It assigns Quran ayat to each daily prayer (Subuh, Dzuhur, Ashar, Maghrib, Isya), tracks recall feedback, and surfaces a spaced-repetition review list of weak spots.
+
+## Pages
+
+- [Today's Schedule](/): Daily randomized Quran recitation assigned to each prayer.
+- [Prayer Guide](/guide): Step-by-step Islamic prayer guide with rakaat structure and recommended surahs.
+- [Stats](/stats): Daily and all-time stats — ayat read, surahs completed, streaks, weak spots.
+- [Review](/review): Spaced-repetition list of ayat marked as forgotten for focused murojaah.
+- [Murojaah](/murojaah): Customize which surahs are included in your daily memorization rotation.
+- [Settings](/settings): Configure prayers, chunk size, and selected Juz.

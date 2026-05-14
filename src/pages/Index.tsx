@@ -168,6 +168,7 @@ const Index = () => {
                 mandatoryChunks={state.mandatoryChunks}
                 allPossibleChunks={allPossibleChunks}
                 chunksEnabled={chunksEnabled}
+                chunkSize={chunkSize}
                 onToggleChunk={toggleChunk}
                 onToggleMandatory={toggleMandatory}
                 onSelectAll={selectAllChunks}

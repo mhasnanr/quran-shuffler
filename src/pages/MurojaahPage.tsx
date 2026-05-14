@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { surahs } from "@/data/quranData";
 import { Shuffle, Edit, Play } from "lucide-react";
 import { useState } from "react";
+import { Seo } from "@/components/Seo";
 
 const MurojaahPage = () => {
   const {
@@ -140,6 +141,11 @@ const MurojaahPage = () => {
   // Session state - show randomized list
   return (
     <div className="space-y-6">
+      <Seo
+        title="Murojaah — Quran Shuffler"
+        description="Customize your daily memorization rotation. Pick the surahs you're actively memorizing for focused murojaah."
+        path="/murojaah"
+      />
       {/* Progress Card */}
       <div className="rounded-xl bg-card p-6 shadow-card">
         <div className="flex items-start justify-between mb-4">
