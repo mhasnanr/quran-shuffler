@@ -65,21 +65,28 @@ const SchedulePage = () => {
   const enabledPrayers = state.prayers.filter((p) => p.enabled);
 
   return (
-    <DailySchedule
-      assignment={todayAssignment}
-      onShuffle={handleShuffle}
-      onReshuffle={handleReshuffle}
-      usedCount={state.usedChunks.length}
-      totalCount={state.selectedChunks.length}
-      onAddToReview={addReviewItem}
-      onRemoveFromReview={removeReviewItem}
-      enabledPrayers={enabledPrayers}
-      onAddTemporaryPrayers={handleAddTemporaryPrayers}
-      showTranslation={showTranslation}
-      onRecordAyatRead={handleRecordAyatRead}
-      onRecordWeakSpot={recordWeakSpot}
-      reviewItems={reviewItems}
-    />
+    <>
+      <Seo
+        title="Quran Shuffler — Daily Quran Recitation Planner"
+        description="Plan and track your daily Quran recitation across your prayers. Stay consistent with tilawah and murojaah."
+        path="/"
+      />
+      <DailySchedule
+        assignment={todayAssignment}
+        onShuffle={handleShuffle}
+        onReshuffle={handleReshuffle}
+        usedCount={state.usedChunks.length}
+        totalCount={state.selectedChunks.length}
+        onAddToReview={addReviewItem}
+        onRemoveFromReview={removeReviewItem}
+        enabledPrayers={enabledPrayers}
+        onAddTemporaryPrayers={handleAddTemporaryPrayers}
+        showTranslation={showTranslation}
+        onRecordAyatRead={handleRecordAyatRead}
+        onRecordWeakSpot={recordWeakSpot}
+        reviewItems={reviewItems}
+      />
+    </>
   );
 };
 
