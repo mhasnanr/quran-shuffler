@@ -1,5 +1,6 @@
 import { useStats } from "@/hooks/useStats";
 import { useReviewItems } from "@/hooks/useReviewItems";
+import { Seo } from "@/components/Seo";
 import { Card } from "@/components/ui/card";
 import { 
   Flame, 
