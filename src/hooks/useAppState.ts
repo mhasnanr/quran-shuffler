@@ -156,10 +156,13 @@ const buildSlotList = (
   });
 
   // Fill remaining slots with shuffled others
+  // (fall back to cycling mandatory if no other chunks exist)
+  const filler =
+    shuffledOthers.length > 0 ? shuffledOthers : shuffledMandatory;
   let otherIndex = 0;
   for (let i = 0; i < slots; i++) {
     if (!result[i]) {
-      result[i] = shuffledOthers[otherIndex % shuffledOthers.length];
+      result[i] = filler[otherIndex % filler.length];
       otherIndex++;
     }
   }
