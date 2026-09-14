@@ -134,6 +134,39 @@ const getInitialState = (): AppState => {
   };
 };
 
+// Build slot list guaranteeing mandatory chunks always appear,
+// distributed evenly across slots, rest filled with shuffled others
+const buildSlotList = (
+  mandatory: SurahChunkSelection[],
+  others: SurahChunkSelection[],
+  totalSlots: number,
+): SurahChunkSelection[] => {
+  const shuffledOthers = [...others].sort(() => Math.random() - 0.5);
+  const slots = Math.max(totalSlots, mandatory.length);
+  const result: SurahChunkSelection[] = new Array(slots);
+
+  // Place mandatory chunks at evenly spaced indices
+  const shuffledMandatory = [...mandatory].sort(() => Math.random() - 0.5);
+  const usedIndices = new Set<number>();
+  shuffledMandatory.forEach((chunk, i) => {
+    let idx = Math.floor((i * slots) / shuffledMandatory.length);
+    while (usedIndices.has(idx)) idx++;
+    usedIndices.add(idx);
+    result[idx] = chunk;
+  });
+
+  // Fill remaining slots with shuffled others
+  let otherIndex = 0;
+  for (let i = 0; i < slots; i++) {
+    if (!result[i]) {
+      result[i] = shuffledOthers[otherIndex % shuffledOthers.length];
+      otherIndex++;
+    }
+  }
+
+  return result;
+};
+
 const getTodayDate = (): string => {
   // Use local timezone for date
   const now = new Date();
