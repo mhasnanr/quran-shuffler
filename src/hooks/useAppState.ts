@@ -837,9 +837,13 @@ export const useAppState = () => {
       newUsedChunks = [];
     }
 
-    // Shuffle ALL chunks together (mandatory + non-mandatory) for equal randomization
-    const allChunks = [...mandatoryChunkObjects, ...availableNonMandatory];
-    const shuffled = [...allChunks].sort(() => Math.random() - 0.5);
+    // Build slot list: mandatory chunks guaranteed, temporary prayers
+    // draw from the same shuffled pool as regular prayers
+    const shuffled = buildSlotList(
+      mandatoryChunkObjects,
+      availableNonMandatory,
+      totalRakaatNeeded,
+    );
 
     let chunkIndex = 0;
 
