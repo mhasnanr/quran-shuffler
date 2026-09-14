@@ -657,14 +657,11 @@ export const useAppState = () => {
       newUsedChunks = [];
     }
 
-    // Shuffle non-mandatory chunks
-    const shuffledNonMandatory = [...availableNonMandatory].sort(
-      () => Math.random() - 0.5,
-    );
-
-    // Build final list and shuffle everything together (including mandatory)
-    const shuffled = [...mandatoryChunkObjects, ...shuffledNonMandatory].sort(
-      () => Math.random() - 0.5,
+    // Build slot list: mandatory chunks guaranteed and evenly spread
+    const shuffled = buildSlotList(
+      mandatoryChunkObjects,
+      availableNonMandatory,
+      totalRakaatNeeded,
     );
 
     const assignments: PrayerAssignment[] = [];
@@ -675,7 +672,7 @@ export const useAppState = () => {
       const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
 
       for (let i = 0; i < recitationCount; i++) {
-        const chunk = shuffled[chunkIndex % shuffled.length];
+        const chunk = shuffled[chunkIndex];
         const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
 
         rakaatSurahs.push({
