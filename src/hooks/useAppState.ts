@@ -855,7 +855,7 @@ export const useAppState = () => {
       const recitationCount = prayer.recitationRakaat ?? prayer.rakaat;
 
       for (let i = 0; i < recitationCount; i++) {
-        const chunk = shuffled[chunkIndex % shuffled.length];
+        const chunk = shuffled[chunkIndex];
         const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
 
         rakaatSurahs.push({
@@ -896,7 +896,7 @@ export const useAppState = () => {
       const rakaatSurahs: RakaatSurah[] = [];
 
       for (let i = 0; i < recitationRakaat; i++) {
-        const chunk = shuffled[chunkIndex % shuffled.length];
+        const chunk = shuffled[chunkIndex];
         const surah = surahs.find((s) => s.number === chunk.surahNumber)!;
 
         rakaatSurahs.push({
